@@ -57,6 +57,7 @@ public:
 	bool addDoctor(Doctor& doctor);
 	bool addNurse(Nurse& nurse);
 	bool addDepartmant(const char* name);
+
 	Patient* getPatient(int id);
 	// Function to search for a patient by ID
 	Patient* findPatientById(int id);

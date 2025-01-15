@@ -16,7 +16,11 @@ patient and then prints his details (name and the department he is in).
 Part 2:
 * Add operator += to hospital and department which adds a doctor and a nurse (overloading operator +=)
 * Add operator > which compares researchers according to the number of their articles
-(In my opinion, the best thing is to create a field of an array of article strings that is dynamically allocated - each cell in the array is also an article string that needs to be dynamically allocated.
-Then create a field of the number of articles in the researcher department which is simply the size of the array of strings, which will be updated all the time and then the operator will be much easier to compare).
+(In my opinion, the best thing is to create a field of an array of article strings that is 
+dynamically allocated - each cell in the array is also an article string that needs to be 
+dynamically allocated).
+Then create a field of the number of articles in the researcher department 
+which is simply the size of the array of strings,
+which will be updated all the time and then the operator will be much easier to compare).
 
 Of course, the menu needs to be adapted to everything
