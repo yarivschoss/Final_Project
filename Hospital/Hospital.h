@@ -9,6 +9,7 @@
 #include "Doctor.h"
 #include "Nurse.h"
 #include "Patient.h"
+#include "Visit.h"
 
 
 class Hospital 
@@ -18,18 +19,20 @@ public:
 
 	int const DEFAULT_NUM_OF_DEPARTMENTS = 7; // Default number of departments
 	int const DEFAULT_STAFF_SIZE = DEFAULT_NUM_OF_DEPARTMENTS * 20; // Default size of hospital 
-
+	int numOfPatients, numOfVisits;
 private:
 
 	char* name;
 	int numOfDoctors, numOfNurses, numOfDepartments;
-	int maxNumOfDoctors, maxNumOfNurses, maxNumOfDepartments;
+	int maxNumOfDoctors, maxNumOfNurses, maxNumOfDepartments, maxNumOfPatients, maxNumOfVisits;
 
 	ResearchCenter* researchCenter; // need to update initillization values
 
 	Doctor** doctors = nullptr;
 	Nurse** nurses = nullptr;
 	Department** departments = nullptr;
+	Patient** patients;
+	Visit** visits;
 
 	Hospital(const Hospital& other) = delete; // coping a hospital is not allowed 
 	void operator=(const Hospital& other) = delete; // coping a hospital is not allowed
@@ -57,15 +60,25 @@ public:
 	bool addDoctor(Doctor& doctor);
 	bool addNurse(Nurse& nurse);
 	bool addDepartmant(const char* name);
+	Visit* getVisitByPatientId(int patientID) const;
 
-	Patient* getPatient(int id);
-	// Function to search for a patient by ID
-	Patient* findPatientById(int id);
 
-	// Function to add a visit for a patient
-	void addVisitForPatient(int id);
+	// Functions to add patients and visits
+	bool addVisit(int patientID, const char* purpose, const char* departmentName, const char* staffName, time_t visitDate);
+	int addPatient(const Person& person);
+
+	int getNumOfPatients() const;
+	Patient* getPatient(int index) const;
+
 
 	
+
+	Patient* findPatientById(int id);
+	Department* getDepartmentForpatient(const char* name) const;
+	Employee* getStaff(const char* name) const;
+
+	void showPatientsInDepartment(const char* departmentName) const;
+
 	void showAll() const;
 	void showDepartments() const;
 	void showDoctors() const;
