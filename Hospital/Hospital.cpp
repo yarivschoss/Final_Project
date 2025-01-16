@@ -18,15 +18,15 @@ researchCenter(nullptr)
 
 Hospital::~Hospital()
 {
-	for (int i = 0; i < maxNumOfDoctors; i++) // fire doctors
+	for (int i = 0; i < numOfDoctors; i++) // fire doctors
 		delete doctors[i];
 	delete[]doctors;
 
-	for (int i = 0; i < maxNumOfNurses; i++) // fire nurses
+	for (int i = 0; i < numOfNurses; i++) // fire nurses
 		delete nurses[i];
 	delete[]nurses;
 
-	for (int i = 0; i < maxNumOfDepartments; i++) // destroy departments
+	for (int i = 0; i < numOfDepartments; i++) // destroy departments
 		delete departments[i];
 	delete[]departments;
 

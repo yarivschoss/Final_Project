@@ -21,6 +21,7 @@ private:
 	Department* department;
 
 	Nurse(const Nurse& other) : Employee(other), department(nullptr) { *this = other; } // only allowing department and hospital to use the copy c'tor for adding 
+	const Nurse& operator=(const Nurse& other);
 
 public:
 
@@ -29,10 +30,8 @@ public:
 
 	~Nurse() { cout << "fire Nurse" << endl; }
 
-	const Nurse& operator=(const Nurse& other);
 	friend ostream& operator<<(ostream& os, const Nurse& n);
 
-	
 	inline bool setExperience(const int& experience);
 	bool setDepartment(Department * department);
 

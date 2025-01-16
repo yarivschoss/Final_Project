@@ -8,20 +8,19 @@ class Employee : public Person
 protected:
 
     int employeeNumber; 
+    Employee(const Employee& other) : Person(other) { *this = other; } // going to the copy c'tor of the base first
+    const Employee& operator=(const Employee& other);
 
 public:
 
     Employee(const Person& e);
-    Employee(const Employee& other): Person(other) { *this = other; } // going to the copy c'tor of the base first
+   
     ~Employee() { cout << "fire employee" << endl; } // console out for debugging
 
     const int getEmployeeNumber() const { return employeeNumber; }
 
     friend ostream& operator<<(ostream& os, const Employee& e);
 
-    const Employee& operator=(const Employee& other);
-
-    
 };
 
 #endif // __EMPLOYEE_H

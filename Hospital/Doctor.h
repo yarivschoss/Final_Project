@@ -25,6 +25,7 @@ private:
 	Department* department;
 
 	Doctor(const Doctor& other) : Employee(other), department(nullptr) { *this = other; } // only allowing department and hospital to use the copy c'tor for adding
+	const Doctor& operator=(const Doctor& other);
 
 public:
 
@@ -37,7 +38,6 @@ public:
 
 	eOccupation getOccupation() const { return occupation; }
 
-	const Doctor& operator=(const Doctor& other);
 
 	friend ostream& operator<<(ostream& os, const Doctor& d);
 	

@@ -31,14 +31,14 @@ private:
 	Nurse** nurses = nullptr;
 	Department** departments = nullptr;
 
+	Hospital(const Hospital& other) = delete; // coping a hospital is not allowed 
+	void operator=(const Hospital& other) = delete; // coping a hospital is not allowed
+
 public:
 
 	Hospital(const char* name);
 	~Hospital();
-	Hospital(const Hospital& other) = delete; // coping a hospital is not allowed 
-
-	void operator=(const Hospital& other) = delete; // coping a hospital is not allowed
-
+	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
 
 	bool operator()(const char* name); // prints data according to name

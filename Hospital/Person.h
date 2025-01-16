@@ -14,6 +14,9 @@ protected:
     char gender;
     static int counter;
 
+    Person(const Person& other) { *this = other; }
+    const Person& operator=(const Person& other);
+
 private:
     bool setBirthYear(int birthYear);
     bool setGender(char gender);
@@ -21,7 +24,7 @@ private:
 public:
 
     Person(const char* name, int birthYear, char gender);  // Constructor to initialize the name
-    Person(const Person& other) { *this = other; }
+   
     virtual ~Person();  // Virtual destructor to ensure proper memory management if needed
 
     bool setName(const char* name); // Sets the person's name
@@ -35,7 +38,6 @@ public:
     //operator const char* () const { return getName(); } // returns name of Person
 
     friend ostream& operator<<(ostream& os, const Person& p); // Overloaded stream insertion operator to print Person data
-    const Person& operator=(const Person& other);
 };
 
 #endif // __PERSON_H

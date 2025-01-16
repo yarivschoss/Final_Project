@@ -26,13 +26,13 @@ private:
 	Doctor** doctors;
 	Nurse** nurses;
 
+	void operator=(const Department& other) = delete; // coping a department is not allowed
+	Department(const Department& other) = delete; // coping a department is not allowed 
+
 public:
 
 	Department(const char* name);
 	~Department();
-
-	Department(const Department& other) = delete; // coping a department is not allowed 
-	void operator=(const Department& other) = delete; // coping a department is not allowed
 
 	friend ostream& operator<<(ostream& os, const Department& d); // prints department's data
 
@@ -44,9 +44,8 @@ public:
 	bool setName(const char* name);
 	const char* getName() const { return name; }
 
-
 	bool addDoctor(Doctor& doctor); // adding a doctor to this department - returns false if department is full
-	bool addNurse(Nurse&nurse); // adding a nurse to this department - returns false if department is full
+	bool addNurse(Nurse& nurse); // adding a nurse to this department - returns false if department is full
 
 	void showAll() const;
 	void showDoctors() const;

@@ -2,7 +2,6 @@
 #define __VISIT_H
 
 #include "Patient.h"
-#include "Doctor.h"
 #include "Department.h"
 #include <ctime>
 
