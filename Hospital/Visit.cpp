@@ -49,8 +49,10 @@ const char* Visit::getPurpose() const
 {
     return purpose;
 }
-Department* Visit::getDepartmentForPatient(const Patient* patient) const {
-    if (this->patient == patient) {
+Department* Visit::getDepartmentForPatient(const Patient* patient) const 
+{
+    if (this->patient == patient) 
+    {
         return department; // Return the department if the patient matches
     }
     return nullptr; // Return nullptr if no match
@@ -107,13 +109,16 @@ void Visit::show() const
 ostream& operator<<(ostream& os, const Visit& v)
 {
     os << "Visit for patient ";
-    if (v.patient) {
-        os << v.patient->getName() << " (ID: " << v.patient->getId() << ")";
-    }
-    else {
-        os << "Unknown";
-    }
 
+    if (v.patient) 
+        os << v.patient->getName() << " (ID: " << v.patient->getId() << ")";
+
+    else
+    {
+        os << "Unknown";
+        return os;
+    }
+     
     os << ", Purpose: " << v.purpose;
 
     os << ", Date: " << ctime(&v.visitDate);

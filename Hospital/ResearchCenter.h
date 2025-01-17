@@ -38,8 +38,9 @@ public:
 
 
 	bool setName(const char* name);
-	const char* getName() const { return name; }
 
+	const char* getName() const { return name; }
+	Researcher* getResearcher(const char* name) const;  //searches through the array of researchers and returns a pointer to the researcher with the specified name
 };
 
 

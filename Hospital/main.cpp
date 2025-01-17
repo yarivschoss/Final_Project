@@ -1,3 +1,6 @@
+// Yariv Shossberger 316523406
+// Gal Fridman 207495524
+
 #pragma warning(disable: 4996)
 using namespace std;
 
@@ -6,41 +9,52 @@ using namespace std;
 #include "Hospital.h"
 
 
-enum eChoice { AddDepartment = 1, AddDoctorHospital , AddNurseHospital, AddDoctorDepartment, AddNurseDepartment, AddPatient,AddVisit,
-    ShowPatientsByDepartment,FindPatientById,ShowDepartments, ShowDoctorsByNameOnly, ShowNursesByNameOnly, ShowHospitalcrewdata , ClearConsole, Exit };
+enum eChoice { AddDepartment = 1, AddDoctorHospital , AddNurseHospital,
+    AddResearcher, AddDoctorDepartment, AddNurseDepartment, AddPaper, AddPatient,AddVisit,
+    ShowPatientsByDepartment,FindPatientById, ShowResearchers, ShowDepartments, ShowDoctorsByNameOnly,
+    ShowNursesByNameOnly, ShowHospitalcrewdata , ClearConsole, Exit };
 
 
 int main() 
 {
     
-    char name[100];
+    char Hname[100];
     cout << "Enter Hospital name: ";
     cin.ignore();
-    cin.getline(name, 100);
+    cin.getline(Hname, 100);
 
-    Hospital hospital(name);
+    char Rname[100];
+    cout << "Enter Research Center name: ";
+    cin.ignore();
+    cin.getline(Rname, 100);
+
+    Hospital hospital(Hname, Rname);
 
     int choice;
     bool running = true;
 
-    while (running) {
+    while (running) 
+    {
        
         cout << "\nMenu:" << endl;
         cout << "1. Add Department to Hospital" << endl;
         cout << "2. Add Doctor to Hospital" << endl;
         cout << "3. Add Nurse to Hospital" << endl;
-        cout << "4. Add Doctor to Department" << endl;
-        cout << "5. Add Nurse to Department" << endl;
-        cout << "6. AddPatient" << endl;
-        cout << "7. Add Visit" << endl;
-        cout << "8. Show Patients by Department" << endl;
-        cout << "9. Find Patient by ID" << endl;
-        cout << "10. Show Departments in Hospital" << endl;
-        cout << "11. Show Doctors in Hospital by name only" << endl;
-        cout << "12. Show Nurses in Hospital by name only" << endl;
-        cout << "13. Show Hospital crew data" << endl;
-        cout << "14. Clear console" << endl;
-        cout << "15. Exit" << endl;
+        cout << "4. Add Researcher to Research Center" << endl; //* need to check
+        cout << "5. Add Doctor to Department" << endl;
+        cout << "6. Add Nurse to Department" << endl;
+        cout << "7. Add Paper to Researcher" << endl; 
+        cout << "8. Add Patient" << endl;
+        cout << "9. Add Visit" << endl;
+        cout << "10. Show Patients by Department" << endl; 
+        cout << "11. Find Patient by ID" << endl;
+        cout << "12. Show Researchers in Research Center" << endl; 
+        cout << "13. Show Departments in Hospital" << endl;
+        cout << "14. Show Doctors in Hospital by name only" << endl;
+        cout << "15. Show Nurses in Hospital by name only" << endl;
+        cout << "16. Show Hospital crew data" << endl;
+        cout << "17. Clear console" << endl;
+        cout << "18. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -49,6 +63,77 @@ int main()
         switch (choice) 
         {
 
+        case(AddResearcher):
+        {
+            char name[100], gender;
+            int birthYear;
+
+            cout << "Enter Researcher name: ";
+            cin.ignore();
+            cin.getline(name, 100);
+
+            cout << "Enter Researcher gender: ";
+            cin >> gender;
+
+            cout << "Enter Researcher birth year: ";
+            cin >> birthYear;
+
+            Researcher r(Employee(Person(name, birthYear, gender)));
+
+            hospital.getResearchCenter().addResearcher(r);
+             
+            break;
+        }
+
+        case(AddPaper):
+        {
+            char name[100];
+            
+            hospital.getResearchCenter().showResearchers();
+            cout << "Choose researcher: ";
+            cin.ignore();
+            cin.getline(name, 100);
+
+            Researcher* r = hospital.getResearchCenter().getResearcher(name);
+
+            if (!r)
+            {
+                cout << "no existing researcher found" << endl;
+                choice = AddPaper;
+                break;
+            }
+
+            cout << "Enter paper name: ";
+            cin.ignore();
+            cin.getline(name, 100);
+
+            cout << "Enter publish date (YYYY-MM-DD): ";
+            int year, month, day;
+            char separator;
+            cin >> year >> separator >> month >> separator >> day;
+
+            struct tm timeStruct = { 0 };
+            timeStruct.tm_year = year - 1900;
+            timeStruct.tm_mon = month - 1;
+            timeStruct.tm_mday = day;
+            time_t publishDate = mktime(&timeStruct);
+
+            char magazineName[100];
+            cout << "Enter magazine name: ";
+            cin.ignore();
+            cin.getline(magazineName, 100);
+
+            r->addPaper(Paper(name, magazineName, publishDate));
+
+            break;
+        }
+
+        case(ShowResearchers):
+        {
+            hospital.getResearchCenter().showResearchers();
+            break;
+        }
+            
         case AddDoctorHospital:
         {
             char name[100], gender;
@@ -116,14 +201,28 @@ int main()
             cout << "choose doctor: ";
             cin.ignore();
             cin.getline(name, 100);
+
             Doctor* D = hospital.getDoctor(name); //by pointer so we will not create another doctor with the same parameters
+
+            if (!D)
+            {
+                cout << "no existing doctor found" << endl;
+                choice = AddDoctorDepartment;
+                break;
+            }
 
             hospital.showDepartments();
             cout << "\nchoose department: ";
             cin.getline(name, 100);
             
-           hospital.getDepartment(name)->addDoctor(*D); // using the operator overloading '[]'
-
+            if (!hospital.getDepartment(name)->addDoctor(*D))
+            {
+                cout << "no existing department found" << endl;
+                choice = AddDoctorDepartment;
+                break;
+            }
+           
+           
             break;
         }
 
@@ -137,15 +236,25 @@ int main()
             cin.getline(name, 100);
             Nurse* N = hospital.getNurse(name); //by pointer so we will not create another nurse with the same parameters
 
+            if (!N)
+            {
+                cout << "no existing nurse found" << endl;
+                choice = AddNurseDepartment;
+                break;
+            }
+
             hospital.showDepartments();
             cout << "\nchoose department: ";
             cin.getline(name, 100);
 
-            hospital.getDepartment(name)->addNurse(*N); 
-
+            if (!hospital.getDepartment(name)->addNurse(*N))
+            {
+                cout << "no existing department found" << endl;
+                choice = AddNurseDepartment;
+                break;
+            }
             break;
         }
-
 
         case AddPatient:
         {
@@ -168,20 +277,17 @@ int main()
 
             // Add the patient to the hospital and get the new ID
             int patientID = hospital.addPatient(p);
-            if (patientID != -1) {
+            if (patientID != -1) 
+            {
                 cout << "Patient added successfully! ID: " << patientID << endl;
             }
-            else {
+            else 
+            {
                 cout << "Failed to add patient. Hospital might be full." << endl;
             }
             break;
         }
 
-
-
-
-
-       
         case AddVisit:
         {
             int patientID;
@@ -277,13 +383,6 @@ int main()
             break;
         }
 
-
-
-
-
-
-
-
         case ShowPatientsByDepartment:
         {
             // Show patients by department
@@ -300,7 +399,6 @@ int main()
 
         case FindPatientById:
         {
-
             // Display all patient IDs
             cout << "Existing patient IDs:" << endl;
             for (int i = 0; i < hospital.getNumOfPatients(); ++i)
@@ -339,8 +437,6 @@ int main()
             }
             break;
         }
-
-
 
         case ShowDepartments:
         {

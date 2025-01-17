@@ -106,6 +106,8 @@ bool Department::setName(const char* name)
 
 bool Department::addDoctor(Doctor& doctor)
 {
+	if (!this) return false;
+
 	if (numOfDoctors < maxNumOfDoctors)
 	{
 		doctors[numOfDoctors] = &doctor; // allocates the doctor to the department's doctor array
@@ -119,6 +121,8 @@ bool Department::addDoctor(Doctor& doctor)
 
 bool Department::addNurse(Nurse& nurse) 
 {
+	if (!this) return false;
+
 	if (numOfNurses < maxNumOfNurses) 
 	{
 		nurses[numOfNurses] = &nurse; // allocates the nurse to the department's nurse array

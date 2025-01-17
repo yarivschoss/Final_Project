@@ -8,8 +8,8 @@ class Employee : public Person
 protected:
 
     int employeeNumber; 
-    Employee(const Employee& other) : Person(other) { *this = other; } // going to the copy c'tor of the base first
-    const Employee& operator=(const Employee& other);
+    Employee(const Employee& other) = default;
+    //const Employee& operator=(const Employee& other) =default;
 
 public:
 

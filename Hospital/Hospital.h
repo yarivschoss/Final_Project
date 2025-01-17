@@ -20,13 +20,14 @@ public:
 	int const DEFAULT_NUM_OF_DEPARTMENTS = 7; // Default number of departments
 	int const DEFAULT_STAFF_SIZE = DEFAULT_NUM_OF_DEPARTMENTS * 20; // Default size of hospital 
 	int numOfPatients, numOfVisits;
+
 private:
 
 	char* name;
 	int numOfDoctors, numOfNurses, numOfDepartments;
 	int maxNumOfDoctors, maxNumOfNurses, maxNumOfDepartments, maxNumOfPatients, maxNumOfVisits;
 
-	ResearchCenter* researchCenter; // need to update initillization values
+	ResearchCenter researchCenter; // need to update initillization values
 
 	Doctor** doctors = nullptr;
 	Nurse** nurses = nullptr;
@@ -39,7 +40,7 @@ private:
 
 public:
 
-	Hospital(const char* name);
+	Hospital(const char* name, ResearchCenter r);
 	~Hospital();
 	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
@@ -51,33 +52,31 @@ public:
 	operator const char* () const { return getName(); } // returns name of hospital
 
 	bool setName(const char* name);
+
 	const char* getName() const { return name; }
-	
 	Department* getDepartment(const char* name) const; //searches through the array of departments and returns a pointer to the department with the specified name
+	ResearchCenter& getResearchCenter() { return researchCenter; }
 	Doctor* getDoctor(const char* name) const; //searches through the array of doctors and returns a pointer to the doctor with the specified name
 	Nurse* getNurse(const char* name) const; //searches through the array of nurses and returns a pointer to the nurse with the specified name
+	Visit* getVisitByPatientId(int patientID) const;
+	int getNumOfPatients() const { return numOfPatients; }
+	Patient* getPatient(int index) const;
+	Department* getDepartmentForPatient(const char* name) const; // Get Department by name
+	Employee* getStaff(const char* name) const; // Get Staff by name
+
 
 	bool addDoctor(Doctor& doctor);
 	bool addNurse(Nurse& nurse);
 	bool addDepartmant(const char* name);
-	Visit* getVisitByPatientId(int patientID) const;
-
-
+	
 	// Functions to add patients and visits
 	bool addVisit(int patientID, const char* purpose, const char* departmentName, const char* staffName, time_t visitDate);
-	int addPatient(const Person& person);
+	int addPatient(const Person& person); // Add Patient
 
-	int getNumOfPatients() const;
-	Patient* getPatient(int index) const;
+	Patient* findPatientById(int id); // Find Patient by ID
 
 
-	
-
-	Patient* findPatientById(int id);
-	Department* getDepartmentForpatient(const char* name) const;
-	Employee* getStaff(const char* name) const;
-
-	void showPatientsInDepartment(const char* departmentName) const;
+	bool showPatientsInDepartment(const char* departmentName) const;
 
 	void showAll() const;
 	void showDepartments() const;

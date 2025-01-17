@@ -1,13 +1,15 @@
 #include <iostream>
+#include <cstring>
 #pragma warning(disable: 4996)
 using namespace std;
 
 #include "Hospital.h"
+#include "Visit.h"
 
 
-Hospital::Hospital(const char* name) :  
+Hospital::Hospital(const char* name, ResearchCenter r) :
 maxNumOfDepartments(DEFAULT_NUM_OF_DEPARTMENTS), maxNumOfDoctors(DEFAULT_STAFF_SIZE), maxNumOfNurses(DEFAULT_STAFF_SIZE), 
-researchCenter(nullptr) ,maxNumOfPatients(100), maxNumOfVisits(200), numOfPatients(0), numOfVisits(0)
+maxNumOfPatients(100), maxNumOfVisits(200), numOfPatients(0), numOfVisits(0), researchCenter(r.getName())
 {
 	setName(name);
 
@@ -180,9 +182,10 @@ Nurse* Hospital::getNurse(const char* name) const
 	return nullptr; // Return nullptr if no matching doctor is found
 }
 
-// Add Patient
-int Hospital::addPatient(const Person& person) {
-	if (numOfPatients >= maxNumOfPatients) {
+int Hospital::addPatient(const Person& person) 
+{
+	if (numOfPatients >= maxNumOfPatients) 
+	{
 		cout << "Patient limit reached!" << endl;
 		return -1; // Return -1 to indicate failure
 	}
@@ -195,9 +198,11 @@ int Hospital::addPatient(const Person& person) {
 	return patientID; // Return the ID of the newly added patient
 }
 
-
-bool Hospital::addVisit(int patientID, const char* purpose, const char* departmentName, const char* staffName, time_t visitDate) {
-	if (numOfVisits >= maxNumOfVisits) {
+bool Hospital::addVisit(int patientID, const char* purpose, const char* departmentName, 
+	const char* staffName, time_t visitDate) 
+{
+	if (numOfVisits >= maxNumOfVisits) 
+	{
 		cout << "Visit limit reached!" << endl;
 		return false;
 	}
@@ -232,47 +237,50 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 	return true;
 }
 
-
-
-Visit* Hospital::getVisitByPatientId(int patientID) const {
+Visit* Hospital::getVisitByPatientId(int patientID) const 
+{
 	// Loop through all visits
-	for (int i = 0; i < numOfVisits; ++i) {
+	for (int i = 0; i < numOfVisits; ++i) 
+	{
 		// Check if the patient ID matches
-		if (visits[i] && visits[i]->getPatient()->getId() == patientID) {
+		if (visits[i] && visits[i]->getPatient()->getId() == patientID) 
+		{
 			return visits[i]; // Return the visit if found
 		}
 	}
 	return nullptr; // Return nullptr if no visit found
 }
 
-
-// Find Patient by ID
 Patient* Hospital::findPatientById(int id)
 {
-	for (int i = 0; i < numOfPatients; i++) {
-		if (patients[i]->getId() == id) {
+	for (int i = 0; i < numOfPatients; i++) 
+	{
+		if (patients[i]->getId() == id) 
+		{
 			return patients[i];
 		}
 	}
 	return nullptr;
 }
 
-// Get Department by name
-Department* Hospital::getDepartmentForpatient(const char* name) const
+Department* Hospital::getDepartmentForPatient(const char* name) const
 {
-	for (int i = 0; i < numOfDepartments; i++) {
-		if (strcmp(departments[i]->getName(), name) == 0) {
+	for (int i = 0; i < numOfDepartments; i++) 
+	{
+		if (strcmp(departments[i]->getName(), name) == 0) 
+		{
 			return departments[i];
 		}
 	}
 	return nullptr;
 }
 
-// Get Staff by name
 Employee* Hospital::getStaff(const char* name) const
 {
-	for (int i = 0; i < numOfDoctors; i++) {
-		if (strcmp(doctors[i]->getName(), name) == 0) {
+	for (int i = 0; i < numOfDoctors; i++) 
+	{
+		if (strcmp(doctors[i]->getName(), name) == 0) 
+		{
 			return doctors[i];
 		}
 	}
@@ -288,25 +296,12 @@ Employee* Hospital::getStaff(const char* name) const
 
 Patient* Hospital::getPatient(int index) const
 {
-	if (index < 0 || index >= numOfPatients) {
+	if (index < 0 || index >= numOfPatients) 
+	{
 		return nullptr; // Return nullptr if the index is out of bounds
 	}
 	return patients[index];
 }
-
-
-
-
-
-
-
-int Hospital::getNumOfPatients() const
-{
-	return numOfPatients;
-}
-
-
-
 
 ostream& operator<<(ostream& os, const Hospital& h)
 {
@@ -422,39 +417,35 @@ void Hospital::showNurses() const
 	cout << "}" << endl;
 }
 
-#include "Hospital.h"
-#include "Visit.h"
-#include <iostream>
-#include <cstring>
-using namespace std;
-
-void Hospital::showPatientsInDepartment(const char* departmentName) const
+bool Hospital::showPatientsInDepartment(const char* departmentName) const
 {
-	if (!departmentName) {
-		cout << "Invalid department name!" << endl;
-		return;
-	}
+	if (!departmentName)
+		return false;
 
 	// Find the department by name
 	Department* department = getDepartment(departmentName);
-	if (!department) {
-		cout << "Department not found!" << endl;
-		return;
-	}
+	if (!department)
+		return false;
 
 	cout << "Patients in department: " << departmentName << endl;
 
 	// Loop through visits to find patients associated with the department
-	for (int i = 0; i < numOfVisits; ++i) {
-		Visit* visit = visits[i];
-		if (visit && visit->getDepartmentForPatient(visit->getPatient()) == department) {
-			Patient* patient = visit->getPatient(); // Retrieve the patient from the visit
-			if (patient) {
-				cout << "- " << patient->getName() << " (ID: " << patient->getId() << ")" << endl;
+	for (int i = 0; i < numOfVisits; i++)
+	{
+		if (visits[i] && visits[i]->getDepartmentForPatient(visits[i]->getPatient()) == department)
+		{
+			Patient* patient = visits[i]->getPatient(); // Retrieve the patient from the visit
+
+			if (patient)
+			{
+				cout << "- " << patient->getName() << " (ID: " << patient->getId() <<
+					", purpose: " << visits[i]->getPurpose() << ", date of visit: " << visits[i]->getVisitDate()
+					<< ", staff member allocated: " << visits[i]->getStaff()->getName() << ")" << endl;
 			}
 		}
 	}
 }
+
 
 
 

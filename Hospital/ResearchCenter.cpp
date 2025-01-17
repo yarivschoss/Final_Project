@@ -57,6 +57,24 @@ bool ResearchCenter::addResearcher(const Researcher& researcher)
 	return true;
 }
 
+Researcher* ResearchCenter::getResearcher(const char* name) const
+{
+	if (!name || numOfResearchers == 0)
+	{
+		return nullptr; // Return nullptr if name is invalid or no doctors exist
+	}
+
+	for (int i = 0; i < numOfResearchers; ++i)
+	{
+		if (strcmp(researchers[i]->getName(), name) == 0)
+		{
+			return researchers[i]; // Return pointer to the doctor if names match
+		}
+	}
+
+	return nullptr; // Return nullptr if no matching doctor is found
+}
+
 ostream& operator<<(ostream& os, const ResearchCenter& r)
 {
 	os << "name: " << r.getName() << ", Number of researchers: " << r.numOfResearchers;
