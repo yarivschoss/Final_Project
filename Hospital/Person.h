@@ -14,10 +14,11 @@ protected:
     char gender;
     static int counter;
 
-    Person(const Person& other) :name(nullptr) { *this = other; }
+    Person(const Person& other) : name(nullptr) { *this = other; }
     const Person& operator=(const Person& other);
 
 private:
+
     bool setBirthYear(int birthYear);
     bool setGender(char gender);
 

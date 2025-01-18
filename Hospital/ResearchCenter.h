@@ -26,15 +26,25 @@ public:
 	bool addResearcher(const Researcher& researcher);
 	void showResearchers() const
 	{
+		cout << "{";
 		for (int i = 0; i < numOfResearchers; i++)
 		{
-			cout << "{" << researchers[i] << "}";
+			cout << researchers[i]->getName();
 
 			if (i < numOfResearchers - 1) cout << ", ";
 		}
+		cout << "}";
 	}
 
+	const ResearchCenter& operator+=(Researcher& other)
+	{
+		this->addResearcher(other);
+		return *this;
+	}
 	friend ostream& operator<<(ostream& os, const ResearchCenter& r);
+	friend istream& operator>>(istream& in, ResearchCenter& r);
+
+	bool operator()(const char* name);
 
 
 	bool setName(const char* name);

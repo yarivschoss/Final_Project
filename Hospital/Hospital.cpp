@@ -6,6 +6,7 @@ using namespace std;
 #include "Hospital.h"
 #include "Visit.h"
 
+int const MAX_STRING_SIZE = 100;
 
 Hospital::Hospital(const char* name, ResearchCenter r) :
 maxNumOfDepartments(DEFAULT_NUM_OF_DEPARTMENTS), maxNumOfDoctors(DEFAULT_STAFF_SIZE), maxNumOfNurses(DEFAULT_STAFF_SIZE), 
@@ -63,7 +64,6 @@ bool Hospital::setName(const char* name)
 
 bool Hospital::addDoctor(Doctor& D)
 {
-
 	if(maxNumOfDoctors == numOfDoctors)
 	{
 		maxNumOfDoctors *= 2;
@@ -129,6 +129,23 @@ bool Hospital::addDepartmant(const char* name)
 	return true;
 }
 
+// need to change
+int Hospital::addPatient(const Person& person)
+{
+	if (numOfPatients >= maxNumOfPatients)
+	{
+		cout << "Patient limit reached!" << endl;
+		return -1; // Return -1 to indicate failure
+	}
+
+	// Create a new Patient object
+	patients[numOfPatients] = new Patient(person);
+	int patientID = patients[numOfPatients]->getId(); // Retrieve the new patient's ID
+	numOfPatients++;
+
+	return patientID; // Return the ID of the newly added patient
+} 
+
 Department* Hospital::getDepartment(const char* name) const
 {
 	if (!name || numOfDepartments == 0) 
@@ -180,22 +197,6 @@ Nurse* Hospital::getNurse(const char* name) const
 	}
 
 	return nullptr; // Return nullptr if no matching doctor is found
-}
-
-int Hospital::addPatient(const Person& person) 
-{
-	if (numOfPatients >= maxNumOfPatients) 
-	{
-		cout << "Patient limit reached!" << endl;
-		return -1; // Return -1 to indicate failure
-	}
-
-	// Create a new Patient object
-	patients[numOfPatients] = new Patient(person);
-	int patientID = patients[numOfPatients]->getId(); // Retrieve the new patient's ID
-	numOfPatients++;
-
-	return patientID; // Return the ID of the newly added patient
 }
 
 bool Hospital::addVisit(int patientID, const char* purpose, const char* departmentName, 
@@ -312,6 +313,8 @@ ostream& operator<<(ostream& os, const Hospital& h)
 	os << "doctors capacity: " << h.maxNumOfDoctors << ", ";
 	os << "nurses capacity: " << h.maxNumOfNurses << ", ";
 	os << "departments capacity: " << h.maxNumOfDepartments << "}" << endl;
+	os << "Research Center: " << endl;
+	os << "{" << h.researchCenter << "}" << endl;
 
 	os << "\ndepartments: " << "\n" << endl; //showing departments in hospital
 	for (int i = 0; i < h.numOfDoctors; i++)
@@ -323,6 +326,19 @@ ostream& operator<<(ostream& os, const Hospital& h)
 
 	return os;
 } 
+
+istream& operator>>(istream& in, Hospital& h)
+{
+	char name[MAX_STRING_SIZE];
+
+	cout << "Enter Hospital name: ";
+	in.getline(name, MAX_STRING_SIZE);
+	h.setName(name);
+
+	in >> h.researchCenter;
+
+	return in;
+}
 
 bool Hospital::operator()(const char* name)
 {

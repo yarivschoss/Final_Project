@@ -31,6 +31,7 @@ public:
 	~Nurse() { cout << "fire Nurse" << endl; }
 
 	friend ostream& operator<<(ostream& os, const Nurse& n);
+	friend istream& operator>>(istream& in, Nurse& n);
 
 	inline bool setExperience(const int& experience);
 	bool setDepartment(Department * department);

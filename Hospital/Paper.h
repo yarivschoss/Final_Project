@@ -36,7 +36,8 @@ public:
 	const time_t getPublishDate() const { return publishDate; } // Gets the paper's published date
 
 	friend ostream& operator<<(ostream& os, const Paper& p); // Overloaded stream insertion operator to print Person data
-	
+	friend istream& operator>>(istream& in, Paper& p);
+
 };
 
 

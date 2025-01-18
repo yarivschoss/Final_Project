@@ -4,6 +4,8 @@ using namespace std;
 
 #include "Researcher.h"
 
+int const MAX_STRING_SIZE = 100;
+
 Researcher::~Researcher()
 {
 	for (int i = 0; i < numOfPapers; i++) // fire doctors
@@ -51,17 +53,33 @@ bool Researcher::setPapers(Paper*const* papers)
 
 ostream& operator<<(ostream& os, const Researcher& r)
 {
-	os << "{" << (const Employee&)r << ", "; // using the employee's operator<< by casting 'e' to 'const Person&';
-	os << "Number of papers published: " << r.getNumOfPapers() << "}";
+	os <<  (const Employee&)r << ", "; // using the employee's operator<< by casting 'e' to 'const Person&';
+	os << "Number of papers published: " << r.getNumOfPapers();
 
 	return os;
+}
+
+istream& operator>>(istream& in, Researcher& r)
+{
+	char name[MAX_STRING_SIZE];
+
+	cout << "Enter Researcher name: ";
+	in.getline(name, MAX_STRING_SIZE);
+	r.setName(name);
+
+	cout << "Enter Researcher gender(m/f): ";
+	in >> r.gender;
+
+	cout << "Enter Researcher birth year: ";
+	in >> r.birthYear;
+
+	return in;
 }
 
 const Researcher& Researcher::operator=(const Researcher& other)
 {
 	if (this != &other)
 	{
-		Employee::operator=(other); // using the operator= of employee 
 		numOfPapers = other.numOfPapers;
 		maxNumOfPapers = other.maxNumOfPapers;
 		setPapers(other.papers); // not allowing the other and this objects to point to the same address

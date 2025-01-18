@@ -5,7 +5,9 @@ using namespace std;
 #include <string.h>
 #include "ResearchCenter.h"
 
-ResearchCenter::ResearchCenter(const char* name) : numOfResearchers(0), 
+int const MAX_STRING_SIZE = 100;
+
+ResearchCenter::ResearchCenter(const char* name) : numOfResearchers(0), name(nullptr),
 maxNumOfResearchers(DEFAULT_NUM_OF_RESEARCHERS)
 {
 	setName(name);
@@ -79,4 +81,35 @@ ostream& operator<<(ostream& os, const ResearchCenter& r)
 {
 	os << "name: " << r.getName() << ", Number of researchers: " << r.numOfResearchers;
 	return os;
+}
+
+istream& operator>>(istream& in, ResearchCenter& r)
+{
+	char name[MAX_STRING_SIZE];
+
+	cout << "Enter Research Center name: ";
+	in.getline(name, MAX_STRING_SIZE);
+	r.setName(name);
+
+	return in;
+}
+
+bool ResearchCenter::operator()(const char* name)
+{
+	if (!name)
+		return false;
+
+	if (strcmp(name, "name") == 0)
+	{
+		cout << this->getName();
+		return true;
+	}
+
+	if (strcmp(name, "researchers") == 0)
+	{
+		this->showResearchers();
+		return true;
+	}
+
+	return false;
 }

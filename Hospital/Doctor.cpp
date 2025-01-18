@@ -7,12 +7,12 @@ using namespace std;
 #pragma warning(disable: 4996)
 
 const char* Occupation[] = { "Pathology", "Dentist", "Psychiatrist", "Neurologist" };
+int const MAX_STRING_SIZE = 100;
 
 const Doctor& Doctor::operator=(const Doctor& other)
 {
 	if (this != &other)
 	{
-		Employee::operator=(other); // using the operator= of employee 
 		 occupation = other.occupation;
 		 setDepartment(other.department); // sending the department of the R-Value
 		 return *this;
@@ -26,6 +26,28 @@ ostream& operator<<(ostream& os, const Doctor& d)
 		"department: " << d.department->getName() << "}";
 
 	return os;
+}
+
+istream& operator>>(istream& in, Doctor& d)
+{
+	int occupation;
+	char name[MAX_STRING_SIZE];
+
+	cout << "Enter doctor's name: ";
+	in.getline(name, MAX_STRING_SIZE);
+	d.setName(name);
+
+	cout << "Enter doctor's birth year: ";
+	in >> d.birthYear;
+
+	cout << "Enter doctor's gender(m/f): ";
+	cin >> d.gender;
+
+	cout << "Select occupation (0 - Pathology, 1 - Dentist, 2 - Psychiatrist, 3 - Neurologist): ";
+	in >> occupation;
+	d.occupation = (Doctor::eOccupation)occupation;
+
+	return in;
 }
 
 bool Doctor::setDepartment(Department* newDepartment)

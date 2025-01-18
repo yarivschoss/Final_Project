@@ -4,7 +4,7 @@
 
 int Person::counter = 0;
 
-Person::Person(const char* name, int birthYear, char gender) 
+Person::Person(const char* name, int birthYear, char gender) : name(nullptr)
 {
     setName(name);  // Initialize the name using the setName method
     setBirthYear(birthYear);

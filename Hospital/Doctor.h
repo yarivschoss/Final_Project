@@ -40,6 +40,7 @@ public:
 
 
 	friend ostream& operator<<(ostream& os, const Doctor& d);
+	friend istream& operator>>(istream& in, Doctor& d);
 	
 	operator eOccupation() const { return getOccupation(); } // returns occupation
 	

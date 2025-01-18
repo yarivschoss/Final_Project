@@ -9,7 +9,7 @@ private:
     int id;         
 
 public:
-    Patient(const Person& p);
+    Patient(const Person& p) : Person(p) { id = 100000000 + counter++; }
     ~Patient() { cout << "end patient" << endl; } // consule out for debugging
 
     

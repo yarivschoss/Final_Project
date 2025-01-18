@@ -4,7 +4,10 @@ using namespace std;
 
 #include "Paper.h"
 
-Paper::Paper(const char* name, const char* magazineName, time_t publishDate) : publishDate(publishDate)
+int const MAX_STRING_SIZE = 100;
+
+Paper::Paper(const char* name, const char* magazineName, time_t publishDate) : name(nullptr), magazineName(nullptr), 
+publishDate(publishDate)
 {
     setName(name);
     setMagazineName(magazineName);
@@ -41,6 +44,32 @@ ostream& operator<<(ostream& os, const Paper& p)
 {
     os << "name: " << p.name << ", magazine name: " << p.magazineName << ", publish date: " << p.publishDate;  
     return os;
+}
+
+istream& operator>>(istream& in, Paper& p)
+{
+    char name[MAX_STRING_SIZE];
+
+    cout << "Enter paper name: ";
+    in.getline(name, MAX_STRING_SIZE);
+    p.setName(name);
+
+    cout << "Enter published magazine name: ";
+    in.getline(name, MAX_STRING_SIZE);
+    p.setMagazineName(name);
+
+    cout << "Enter publish date (YYYY-MM-DD): ";
+    int year, month, day;
+    char separator;
+    in >> year >> separator >> month >> separator >> day;
+
+    struct tm timeStruct = { 0 };
+    timeStruct.tm_year = year - 1900;
+    timeStruct.tm_mon = month - 1;
+    timeStruct.tm_mday = day;
+    p.publishDate = mktime(&timeStruct);
+
+    return in;
 }
 
 const Paper& Paper::operator=(const Paper& other)

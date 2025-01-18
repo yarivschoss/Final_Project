@@ -8,39 +8,36 @@ using namespace std;
 #include <cstring>
 #include "Hospital.h"
 
+int const MAX_STRING_SIZE = 100, DEFAULT_BIRTH_YEAR = 2000, DEFAULT_GENDER = 109, DEFAULT_EXPERIENCE = 5;
+const char DEFAULT_NAME[] = "Default Name";
+const time_t DEFAULT_TIME = 0;
+Doctor::eOccupation DEFAULT_OCCUPATION = Doctor::eOccupation::Pathology;
+
 
 enum eChoice { AddDepartment = 1, AddDoctorHospital , AddNurseHospital,
     AddResearcher, AddDoctorDepartment, AddNurseDepartment, AddPaper, AddPatient,AddVisit,
     ShowPatientsByDepartment,FindPatientById, ShowResearchers, ShowDepartments, ShowDoctorsByNameOnly,
-    ShowNursesByNameOnly, ShowHospitalcrewdata , ClearConsole, Exit };
+    ShowNursesByNameOnly, ShowHospitalcrewdata , CompareResearchers, ClearConsole, Exit };
 
 
 int main() 
 {
-    
-    char Hname[100];
-    cout << "Enter Hospital name: ";
-    cin.ignore();
-    cin.getline(Hname, 100);
+    char name[MAX_STRING_SIZE], Hname[MAX_STRING_SIZE], Rname[MAX_STRING_SIZE], gender;
+    int choice, birthYear;
 
-    char Rname[100];
-    cout << "Enter Research Center name: ";
-    cin.ignore();
-    cin.getline(Rname, 100);
+    Hospital hospital(DEFAULT_NAME, DEFAULT_NAME);
 
-    Hospital hospital(Hname, Rname);
+    cin >> hospital;
 
-    int choice;
     bool running = true;
 
     while (running) 
     {
-       
         cout << "\nMenu:" << endl;
         cout << "1. Add Department to Hospital" << endl;
         cout << "2. Add Doctor to Hospital" << endl;
         cout << "3. Add Nurse to Hospital" << endl;
-        cout << "4. Add Researcher to Research Center" << endl; //* need to check
+        cout << "4. Add Researcher to Research Center" << endl; 
         cout << "5. Add Doctor to Department" << endl;
         cout << "6. Add Nurse to Department" << endl;
         cout << "7. Add Paper to Researcher" << endl; 
@@ -50,14 +47,16 @@ int main()
         cout << "11. Find Patient by ID" << endl;
         cout << "12. Show Researchers in Research Center" << endl; 
         cout << "13. Show Departments in Hospital" << endl;
-        cout << "14. Show Doctors in Hospital by name only" << endl;
-        cout << "15. Show Nurses in Hospital by name only" << endl;
+        cout << "14. Show Doctors in Hospital" << endl;
+        cout << "15. Show Nurses in Hospital" << endl;
         cout << "16. Show Hospital crew data" << endl;
-        cout << "17. Clear console" << endl;
-        cout << "18. Exit" << endl;
+        cout << "17. Compare Researchers by number of papers" << endl;
+        cout << "18. Clear console" << endl;
+        cout << "19. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
-
+        cin.ignore();
+       
         cout << endl;
 
         switch (choice) 
@@ -65,34 +64,21 @@ int main()
 
         case(AddResearcher):
         {
-            char name[100], gender;
-            int birthYear;
+            Researcher newResearcher(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)));
 
-            cout << "Enter Researcher name: ";
-            cin.ignore();
-            cin.getline(name, 100);
+            cin >> newResearcher;
 
-            cout << "Enter Researcher gender: ";
-            cin >> gender;
-
-            cout << "Enter Researcher birth year: ";
-            cin >> birthYear;
-
-            Researcher r(Employee(Person(name, birthYear, gender)));
-
-            hospital.getResearchCenter().addResearcher(r);
+            hospital.getResearchCenter() += newResearcher;
              
             break;
         }
 
         case(AddPaper):
         {
-            char name[100];
-            
             hospital.getResearchCenter().showResearchers();
+            cout << endl;
             cout << "Choose researcher: ";
-            cin.ignore();
-            cin.getline(name, 100);
+            cin.getline(name, MAX_STRING_SIZE);
 
             Researcher* r = hospital.getResearchCenter().getResearcher(name);
 
@@ -103,104 +89,104 @@ int main()
                 break;
             }
 
-            cout << "Enter paper name: ";
-            cin.ignore();
-            cin.getline(name, 100);
+            Paper newPaper(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_TIME);
 
-            cout << "Enter publish date (YYYY-MM-DD): ";
-            int year, month, day;
-            char separator;
-            cin >> year >> separator >> month >> separator >> day;
+            cin >> newPaper;
 
-            struct tm timeStruct = { 0 };
-            timeStruct.tm_year = year - 1900;
-            timeStruct.tm_mon = month - 1;
-            timeStruct.tm_mday = day;
-            time_t publishDate = mktime(&timeStruct);
-
-            char magazineName[100];
-            cout << "Enter magazine name: ";
-            cin.ignore();
-            cin.getline(magazineName, 100);
-
-            r->addPaper(Paper(name, magazineName, publishDate));
+            r->addPaper(newPaper);
 
             break;
         }
 
         case(ShowResearchers):
         {
+            hospital.getResearchCenter()("researchers");
+            cout << endl;
+            break;
+        }
+
+        case(CompareResearchers):
+        {
             hospital.getResearchCenter().showResearchers();
+            cout << endl;
+
+            cout << "Choose Researchers" << endl;
+            cout << "Researcher 1: ";
+            cin.getline(name, MAX_STRING_SIZE);
+
+            Researcher* r1 = hospital.getResearchCenter().getResearcher(name);
+
+            if (!r1)
+            {
+                cout << "no existing researcher found" << endl;
+                choice = CompareResearchers;
+                break;
+            }
+
+            cout << "Researcher 2: ";
+            cin.getline(name, MAX_STRING_SIZE);
+
+            Researcher* r2 = hospital.getResearchCenter().getResearcher(name);
+
+            if (!r2)
+            {
+                cout << "no existing researcher found" << endl;
+                choice = CompareResearchers;
+                break;
+            }
+
+            if(*r1 > *r2) 
+            {
+                cout << r1->getName() << " has more papers" << endl;
+                break;
+            }
+
+            if (*r1 < *r2)
+            {
+                cout << r2->getName() << " has more papers" << endl;
+                break;
+            }
+
+            cout << r1->getName() << " and " << r2->getName() << " has the same amount of papers" << endl;
             break;
         }
             
         case AddDoctorHospital:
         {
-            char name[100], gender;
-            int birthYear, occupation;
+            Doctor newDoctor(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_OCCUPATION);
 
-            cout << "Enter doctor's name: ";
-            cin.ignore();
-            cin.getline(name, 100);
-            cout << "Enter doctor's birth year: ";
-            cin >> birthYear;
-            cout << "Enter doctor's gender(m/f): ";
-            cin >> gender;
-            cout << "Select occupation (0 - Pathology, 1 - Dentist, 2 - Psychiatrist, 3 - Neurologist): ";
-            cin >> occupation;
-            Doctor::eOccupation doctorOccupation = (Doctor::eOccupation)occupation;
+            cin >> newDoctor;
 
-            Person p(name, birthYear, gender);
-            Employee e(p);
-
-            Doctor newDoctor(e, doctorOccupation); // goes to employee c'tor 2 times (need to check how to fix) 
-            hospital.addDoctor(newDoctor);
+            hospital += newDoctor;
            
             break;
         }
 
         case AddNurseHospital:
         {
-            char name[100], gender;
-            int birthYear, experience;
+            Nurse newNurse(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_EXPERIENCE);
 
-            cout << "Enter nurse's name: ";
-            cin.ignore();
-            cin.getline(name, 100);
-            cout << "Enter nurse's birth year: ";
-            cin >> birthYear;
-            cout << "Enter nurse's gender(m/f): ";
-            cin >> gender;
-            cout << "Enter years of experience: ";
-            cin >> experience;
+            cin >> newNurse;
 
-            Person p(name, birthYear, gender);
-            Employee e(p); 
+            hospital += newNurse;
 
-            Nurse newNurse(e, experience); // goes to employee c'tor 2 times (need to check how to fix) 
-            hospital.addNurse(newNurse);
             break;
         }
 
         case AddDepartment: 
         {
-            char departmentName[100];
             cout << "Enter department name: ";
-            cin.ignore();
-            cin.getline(departmentName, 100);
+            cin.getline(name, MAX_STRING_SIZE);
 
-            hospital.addDepartmant(departmentName);
+            hospital.addDepartmant(name);
             break;
         }
 
         case AddDoctorDepartment:
         {
-            char name[100];
-
             hospital.showDoctors();
             cout << "choose doctor: ";
-            cin.ignore();
-            cin.getline(name, 100);
+            cin.getline(name, MAX_STRING_SIZE);
 
             Doctor* D = hospital.getDoctor(name); //by pointer so we will not create another doctor with the same parameters
 
@@ -213,7 +199,7 @@ int main()
 
             hospital.showDepartments();
             cout << "\nchoose department: ";
-            cin.getline(name, 100);
+            cin.getline(name, MAX_STRING_SIZE);
             
             if (!hospital.getDepartment(name)->addDoctor(*D))
             {
@@ -222,18 +208,15 @@ int main()
                 break;
             }
            
-           
             break;
         }
 
         case AddNurseDepartment:
         {
-            char name[100];
-
             hospital.showNurses();
             cout << "choose nurse: ";
-            cin.ignore();
-            cin.getline(name, 100);
+            cin.getline(name, MAX_STRING_SIZE);
+
             Nurse* N = hospital.getNurse(name); //by pointer so we will not create another nurse with the same parameters
 
             if (!N)
@@ -245,7 +228,7 @@ int main()
 
             hospital.showDepartments();
             cout << "\nchoose department: ";
-            cin.getline(name, 100);
+            cin.getline(name, MAX_STRING_SIZE);
 
             if (!hospital.getDepartment(name)->addNurse(*N))
             {
@@ -253,18 +236,15 @@ int main()
                 choice = AddNurseDepartment;
                 break;
             }
+
             break;
         }
 
         case AddPatient:
         {
-            char name[100], gender;
-            int birthYear;
-
             // Get patient details from the user
             cout << "Enter patient's name: ";
-            cin.ignore();
-            cin.getline(name, 100);
+            cin.getline(name, MAX_STRING_SIZE);
 
             cout << "Enter patient's birth year: ";
             cin >> birthYear;
@@ -291,7 +271,7 @@ int main()
         case AddVisit:
         {
             int patientID;
-            char purpose[100], departmentName[100], staffName[100];
+            char purpose[MAX_STRING_SIZE], departmentName[MAX_STRING_SIZE], staffName[MAX_STRING_SIZE];
 
             // Check if the patient exists
             cout << "Is the patient already in the system? (y/n): ";
@@ -300,12 +280,10 @@ int main()
 
             if (isExisting == 'n' || isExisting == 'N') {
                 // Add a new patient
-                char name[100], gender;
-                int birthYear;
 
                 cout << "Enter patient's name: ";
                 cin.ignore();
-                cin.getline(name, 100);
+                cin.getline(name, MAX_STRING_SIZE);
 
                 cout << "Enter patient's birth year: ";
                 cin >> birthYear;
@@ -342,7 +320,7 @@ int main()
             // Get visit purpose
             cout << "Enter visit purpose: ";
             cin.ignore();
-            cin.getline(purpose, 100);
+            cin.getline(purpose, MAX_STRING_SIZE);
 
             // Show available departments
             cout << "\nAvailable departments:" << endl;
@@ -350,7 +328,7 @@ int main()
 
             // Get department name
             cout << "Enter department name: ";
-            cin.getline(departmentName, 100);
+            cin.getline(departmentName, MAX_STRING_SIZE);
 
             // Show available staff
             cout << "\nAvailable staff (doctors and nurses):" << endl;
@@ -359,7 +337,7 @@ int main()
 
             // Get staff name
             cout << "Enter staff name: ";
-            cin.getline(staffName, 100);
+            cin.getline(staffName, MAX_STRING_SIZE);
 
             // Get visit date
             cout << "Enter visit date (YYYY-MM-DD): ";
@@ -388,12 +366,10 @@ int main()
             // Show patients by department
             hospital.showDepartments();
 
-            char departmentName[100];
             cout << "Enter department name from the list: ";
-            cin.ignore();
-            cin.getline(departmentName, 100);
+            cin.getline(name, MAX_STRING_SIZE);
 
-            hospital.showPatientsInDepartment(departmentName);
+            hospital.showPatientsInDepartment(name);
             break;
         }
 
@@ -405,7 +381,6 @@ int main()
             {
                 cout << "- " << hospital.getPatient(i)->getId() << endl;
             }
-
 
             int patientID;
             cout << "Enter patient ID from the list: ";

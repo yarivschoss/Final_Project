@@ -31,7 +31,7 @@ public:
 
 	int getNumOfPapers() const { return numOfPapers; }
 	const Paper* getPaper(int index) const { return papers[index]; }
-
+	
 	
 
 	bool addPaper(const Paper& paper);
@@ -39,19 +39,20 @@ public:
 	{ 
 		for (int i = 0; i < numOfPapers; i++)
 		{
-			cout << "{" << papers[i] << "}";
+			cout << "{" << *papers[i] << "}";
 				
 			if (i < numOfPapers - 1) cout << ", ";
 		}
 	}
 
 	friend ostream& operator<<(ostream& os, const Researcher& r); // Overloaded stream insertion operator to print Person data
-	
+	friend istream& operator>>(istream& in, Researcher& r);
 	
 	bool operator>(const Researcher& other) const { return this->numOfPapers > other.numOfPapers; }
 	bool operator< (const Researcher& other) const { return this->numOfPapers < other.numOfPapers; }
 	bool operator>= (const Researcher& other) const { return this->numOfPapers >= other.numOfPapers; }
 	bool operator<= (const Researcher& other) const { return this->numOfPapers <= other.numOfPapers; }
+	bool operator== (const Researcher& other) const { return this->numOfPapers == other.numOfPapers; }
 };
 
 #endif //__RESEARCHER_H

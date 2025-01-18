@@ -9,11 +9,11 @@ protected:
 
     int employeeNumber; 
     Employee(const Employee& other) = default;
-    //const Employee& operator=(const Employee& other) =default;
+    //const Employee& operator=(const Employee& other) = default;
 
 public:
 
-    Employee(const Person& e);
+    Employee(const Person& e) : Person(e) { employeeNumber = 100000000 + counter++; }
    
     ~Employee() { cout << "fire employee" << endl; } // console out for debugging
 

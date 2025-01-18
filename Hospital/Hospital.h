@@ -44,12 +44,24 @@ public:
 	~Hospital();
 	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
+	friend istream& operator>>(istream& in, Hospital& h);
 
 	bool operator()(const char* name); // prints data according to name
 	//Department* operator[](const char* name) { return getDepartment(name); } // replaces getDepartment - NOT WORKING NEED TO FIND FIX
 
 	operator int const() const { return DEFAULT_STAFF_SIZE; } // returns size of hospital staff
 	operator const char* () const { return getName(); } // returns name of hospital
+
+	const Hospital& operator+=(Doctor& other)
+	{
+		this->addDoctor(other);
+		return *this;
+	}
+	const Hospital& operator+=(Nurse& other)
+	{
+		this->addNurse(other);
+		return *this;
+	}
 
 	bool setName(const char* name);
 
