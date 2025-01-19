@@ -19,14 +19,14 @@ public:
 
 	int const DEFAULT_NUM_OF_DEPARTMENTS = 7; // Default number of departments
 	int const DEFAULT_STAFF_SIZE = DEFAULT_NUM_OF_DEPARTMENTS * 20; // Default size of hospital 
-	int numOfPatients, numOfVisits;
+	
 
 private:
 
 	char* name;
 	int numOfDoctors, numOfNurses, numOfDepartments;
 	int maxNumOfDoctors, maxNumOfNurses, maxNumOfDepartments, maxNumOfPatients, maxNumOfVisits;
-
+	int numOfPatients, numOfVisits;
 	ResearchCenter researchCenter; // need to update initillization values
 
 	Doctor** doctors = nullptr;
@@ -83,12 +83,14 @@ public:
 	
 	// Functions to add patients and visits
 	bool addVisit(int patientID, const char* purpose, const char* departmentName, const char* staffName, time_t visitDate);
-	int addPatient(const Person& person); // Add Patient
+	bool addPatient(const Person& person); // Add Patient
+	Patient* getLastAddedPatient() const;
 
 	Patient* findPatientById(int id); // Find Patient by ID
 
 
 	bool showPatientsInDepartment(const char* departmentName) const;
+
 
 	void showAll() const;
 	void showDepartments() const;

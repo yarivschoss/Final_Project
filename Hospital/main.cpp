@@ -240,10 +240,15 @@ int main()
             break;
         }
 
-        case AddPatient:
-        {
+
+        case AddPatient: {
             // Get patient details from the user
+            char name[MAX_STRING_SIZE];
+            int birthYear;
+            char gender;
+
             cout << "Enter patient's name: ";
+            cin.ignore(); // Clear the input buffer
             cin.getline(name, MAX_STRING_SIZE);
 
             cout << "Enter patient's birth year: ";
@@ -255,32 +260,37 @@ int main()
             // Create a Person object
             Person p(name, birthYear, gender);
 
-            // Add the patient to the hospital and get the new ID
-            int patientID = hospital.addPatient(p);
-            if (patientID != -1) 
-            {
-                cout << "Patient added successfully! ID: " << patientID << endl;
-            }
-            else 
-            {
+            // Add the patient to the hospital
+            if (!hospital.addPatient(p)) {
                 cout << "Failed to add patient. Hospital might be full." << endl;
             }
+            else {
+                // Retrieve the newly added patient and display their ID
+                Patient* newPatient = hospital.getLastAddedPatient();
+                if (newPatient) {
+                    int patientID = newPatient->getId();
+                    cout << "Patient added successfully! ID: " << patientID << endl;
+                }
+                else {
+                    cout << "Failed to retrieve the newly added patient. Please check the system." << endl;
+                }
+            }
+
             break;
         }
 
-        case AddVisit:
-        {
+
+
+        case AddVisit: {
             int patientID;
             char purpose[MAX_STRING_SIZE], departmentName[MAX_STRING_SIZE], staffName[MAX_STRING_SIZE];
 
-            // Check if the patient exists
             cout << "Is the patient already in the system? (y/n): ";
             char isExisting;
             cin >> isExisting;
 
             if (isExisting == 'n' || isExisting == 'N') {
                 // Add a new patient
-
                 cout << "Enter patient's name: ";
                 cin.ignore();
                 cin.getline(name, MAX_STRING_SIZE);
@@ -291,24 +301,25 @@ int main()
                 cout << "Enter patient's gender (m/f): ";
                 cin >> gender;
 
-                // Create a new patient and add them to the hospital
                 Person p(name, birthYear, gender);
-                patientID = hospital.addPatient(p);
-                if (patientID == -1) {
+                if (!hospital.addPatient(p)) {
                     cout << "Failed to add patient. Hospital might be full." << endl;
                     break;
                 }
 
-                cout << "Patient added successfully! ID: " << patientID << endl;
+                Patient* newPatient = hospital.getLastAddedPatient();
+                if (newPatient) {
+                    patientID = newPatient->getId();
+                    cout << "Patient added successfully! ID: " << patientID << endl;
+                }
             }
             else if (isExisting == 'y' || isExisting == 'Y') {
-                // Display all patient IDs
+                // Display existing patient IDs
                 cout << "Existing patient IDs:" << endl;
                 for (int i = 0; i < hospital.getNumOfPatients(); ++i) {
                     cout << "- " << hospital.getPatient(i)->getId() << endl;
                 }
 
-                // Select a patient by ID
                 cout << "Enter patient ID from the list above: ";
                 cin >> patientID;
             }
@@ -326,40 +337,63 @@ int main()
             cout << "\nAvailable departments:" << endl;
             hospital.showDepartments();
 
-            // Get department name
             cout << "Enter department name: ";
             cin.getline(departmentName, MAX_STRING_SIZE);
+
+            Department* department = hospital.getDepartment(departmentName);
+            if (!department) {
+                cout << "Invalid department name. Visit creation failed." << endl;
+                break;
+            }
 
             // Show available staff
             cout << "\nAvailable staff (doctors and nurses):" << endl;
             hospital.showDoctors();
             hospital.showNurses();
 
-            // Get staff name
             cout << "Enter staff name: ";
             cin.getline(staffName, MAX_STRING_SIZE);
 
-            // Get visit date
+            Employee* staff = hospital.getDoctor(staffName);
+            if (!staff) {
+                staff = hospital.getNurse(staffName);
+            }
+            if (!staff) {
+                cout << "Invalid staff name. Visit creation failed." << endl;
+                break;
+            }
+
             cout << "Enter visit date (YYYY-MM-DD): ";
             int year, month, day;
-            char separator;
-            cin >> year >> separator >> month >> separator >> day;
+            char separator1, separator2;
 
-            struct tm timeStruct = { 0 };
-            timeStruct.tm_year = year - 1900;
-            timeStruct.tm_mon = month - 1;
-            timeStruct.tm_mday = day;
+            // קליטת הערכים
+            cin >> year >> separator1 >> month >> separator2 >> day;
+
+            // יצירת מבנה tm
+            struct tm timeStruct = {};
+            timeStruct.tm_year = year - 1900; // tm_year מתחיל מ-1900
+            timeStruct.tm_mon = month - 1;    // tm_mon מבוסס על 0 (ינואר = 0)
+            timeStruct.tm_mday = day;         // יום בחודש
+
+            // המרת מבנה tm ל-time_t
             time_t visitDate = mktime(&timeStruct);
 
-            // Add the visit
+
+           
+
+
+
             if (hospital.addVisit(patientID, purpose, departmentName, staffName, visitDate)) {
                 cout << "Visit added successfully!" << endl;
             }
             else {
                 cout << "Failed to add visit!" << endl;
             }
+
             break;
         }
+
 
         case ShowPatientsByDepartment:
         {

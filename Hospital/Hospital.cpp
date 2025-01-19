@@ -129,22 +129,30 @@ bool Hospital::addDepartmant(const char* name)
 	return true;
 }
 
-// need to change
-int Hospital::addPatient(const Person& person)
+
+
+bool Hospital::addPatient(const Person& person)
 {
-	if (numOfPatients >= maxNumOfPatients)
-	{
-		cout << "Patient limit reached!" << endl;
-		return -1; // Return -1 to indicate failure
+	if (numOfPatients >= maxNumOfPatients) {
+		return false; // Hospital is full
 	}
 
-	// Create a new Patient object
-	patients[numOfPatients] = new Patient(person);
-	int patientID = patients[numOfPatients]->getId(); // Retrieve the new patient's ID
+	patients[numOfPatients] = new Patient(person); // Create a new Patient object
 	numOfPatients++;
+	return true; // Indicate success
+}
 
-	return patientID; // Return the ID of the newly added patient
-} 
+
+Patient* Hospital::getLastAddedPatient() const {
+	if (numOfPatients > 0) {
+		return patients[numOfPatients - 1];
+	}
+	return nullptr; // No patients added
+}
+
+
+
+
 
 Department* Hospital::getDepartment(const char* name) const
 {
@@ -454,9 +462,15 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 
 			if (patient)
 			{
-				cout << "- " << patient->getName() << " (ID: " << patient->getId() <<
-					", purpose: " << visits[i]->getPurpose() << ", date of visit: " << visits[i]->getVisitDate()
-					<< ", staff member allocated: " << visits[i]->getStaff()->getName() << ")" << endl;
+				time_t visitDate = visits[i]->getVisitDate(); // 
+
+				cout << "- " << patient->getName()
+					<< " (ID: " << patient->getId()
+					<< ", purpose: " << visits[i]->getPurpose()
+					<< ", date of visit: " << ctime(&visitDate) // 
+					<< ", staff member allocated: " << visits[i]->getStaff()->getName()
+					<< ")" << endl;
+
 			}
 		}
 	}

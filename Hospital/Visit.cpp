@@ -84,6 +84,10 @@ void Visit::show() const
 
     cout << "Date: " << ctime(&visitDate);
 
+
+
+
+
     cout << "Purpose: " << purpose << endl;
 
     cout << "Department: ";
@@ -105,6 +109,12 @@ void Visit::show() const
     cout << endl;
 }
 
+
+
+
+
+
+
 // Overloaded operator for output
 ostream& operator<<(ostream& os, const Visit& v)
 {
@@ -121,7 +131,15 @@ ostream& operator<<(ostream& os, const Visit& v)
      
     os << ", Purpose: " << v.purpose;
 
-    os << ", Date: " << ctime(&v.visitDate);
+
+    os << ", Date: ";
+    if (v.visitDate != -1) {
+        os << ctime(&v.visitDate); // פלט קריא
+    }
+    else {
+        os << "Invalid date"; // במקרה שהתאריך לא חוקי
+    }
+
 
     os << ", Department: ";
     if (v.department) {
@@ -141,3 +159,6 @@ ostream& operator<<(ostream& os, const Visit& v)
 
     return os;
 }
+
+
+

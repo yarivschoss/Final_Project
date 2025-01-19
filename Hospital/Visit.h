@@ -42,6 +42,7 @@ public:
     // Display function
     void show() const;
 
+
     // Overloaded operator for output
     friend ostream& operator<<(ostream& os, const Visit& v);
 };
