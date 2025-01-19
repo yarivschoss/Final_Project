@@ -9,6 +9,7 @@
 
 class Visit
 {
+
 private:
     Patient* patient;        // Pointer to the patient
     time_t visitDate;        // Visit date
@@ -24,17 +25,25 @@ public:
     ~Visit();
 
     // Setters
-    void setVisitDate(time_t date);
-    void setPurpose(const char* purpose);
-    void setDepartment(Department* department);
-    void setStaff(Employee* staff);
+    bool setVisitDate(time_t date);
+    bool setPurpose(const char* purpose);
+    bool setDepartment(Department* department);
+    bool setStaff(Employee* staff);
 
     // Getters
-    time_t getVisitDate() const;
-    const char* getPurpose() const;
-    Department* getDepartmentForPatient(const Patient* patient) const;
-    Employee* getStaff() const;
-    Patient* getPatient() const;
+    time_t getVisitDate() const { return visitDate; }
+    const char* getPurpose() const { return purpose; }
+    Department* getDepartmentForPatient(const Patient* patient) const 
+    {
+            if (this->patient == patient)
+            {
+                return department; // Return the department if the patient matches
+            }
+            return nullptr; // Return nullptr if no match
+        
+    }
+    Employee* getStaff() const { return staff;  }
+    Patient* getPatient() const { return patient;  }
 
     // Specific getter for department assigned to a patient
     

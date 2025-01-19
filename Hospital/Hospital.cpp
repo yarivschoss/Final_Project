@@ -129,8 +129,6 @@ bool Hospital::addDepartmant(const char* name)
 	return true;
 }
 
-
-
 bool Hospital::addPatient(const Person& person)
 {
 	if (numOfPatients >= maxNumOfPatients) {
@@ -142,17 +140,14 @@ bool Hospital::addPatient(const Person& person)
 	return true; // Indicate success
 }
 
-
-Patient* Hospital::getLastAddedPatient() const {
-	if (numOfPatients > 0) {
+Patient* Hospital::getLastAddedPatient() const 
+{
+	if (numOfPatients > 0) 
+	{
 		return patients[numOfPatients - 1];
 	}
 	return nullptr; // No patients added
 }
-
-
-
-
 
 Department* Hospital::getDepartment(const char* name) const
 {
@@ -210,36 +205,34 @@ Nurse* Hospital::getNurse(const char* name) const
 bool Hospital::addVisit(int patientID, const char* purpose, const char* departmentName, 
 	const char* staffName, time_t visitDate) 
 {
-	if (numOfVisits >= maxNumOfVisits) 
+	if (maxNumOfVisits == numOfVisits)
 	{
-		cout << "Visit limit reached!" << endl;
-		return false;
-	}
+		maxNumOfVisits *= 2;
+		Visit** temp = new Visit * [maxNumOfVisits];
 
+		for (int i = 0; i < numOfVisits; i++)
+		{
+			temp[i] = visits[i];
+		}
+
+		delete[] visits;
+		visits = temp;
+	}
+	
 	// Find the patient
 	Patient* patient = findPatientById(patientID);
-	if (!patient) {
-		cout << "Patient not found!" << endl;
-		return false;
-	}
+	if (!patient) return false;
 
 	// Find the department
 	Department* department = getDepartment(departmentName);
-	if (!department) {
-		cout << "Department not found!" << endl;
-		return false;
-	}
+	if (!department) return false;
 
 	// Find the staff (doctor or nurse)
 	Employee* staff = getDoctor(staffName);
-	if (!staff) {
-		staff = getNurse(staffName);
-	}
-	if (!staff) {
-		cout << "Staff member not found!" << endl;
-		return false;
-	}
 
+	if (!staff) staff = getNurse(staffName);
+	if (!staff) return false;
+	
 	// Add the visit with the visit date
 	visits[numOfVisits] = new Visit(patient, purpose, department, staff, visitDate);
 	numOfVisits++;

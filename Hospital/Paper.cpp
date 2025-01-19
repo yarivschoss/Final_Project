@@ -42,7 +42,7 @@ bool Paper::setMagazineName(const char* name)
 
 ostream& operator<<(ostream& os, const Paper& p)
 {
-    os << "name: " << p.name << ", magazine name: " << p.magazineName << ", publish date: " << p.publishDate;  
+    os << "name: " << p.name << ", magazine name: " << p.magazineName << ", publish date: " << ctime(&p.publishDate);  
     return os;
 }
 

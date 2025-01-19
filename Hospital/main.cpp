@@ -240,7 +240,6 @@ int main()
             break;
         }
 
-
         case AddPatient: {
             // Get patient details from the user
             char name[MAX_STRING_SIZE];
@@ -279,9 +278,8 @@ int main()
             break;
         }
 
-
-
-        case AddVisit: {
+        case AddVisit: 
+        {
             int patientID;
             char purpose[MAX_STRING_SIZE], departmentName[MAX_STRING_SIZE], staffName[MAX_STRING_SIZE];
 
@@ -289,10 +287,10 @@ int main()
             char isExisting;
             cin >> isExisting;
 
-            if (isExisting == 'n' || isExisting == 'N') {
+            if (isExisting == 'n' || isExisting == 'N') 
+            {
                 // Add a new patient
                 cout << "Enter patient's name: ";
-                cin.ignore();
                 cin.getline(name, MAX_STRING_SIZE);
 
                 cout << "Enter patient's birth year: ";
@@ -301,36 +299,41 @@ int main()
                 cout << "Enter patient's gender (m/f): ";
                 cin >> gender;
 
-                Person p(name, birthYear, gender);
-                if (!hospital.addPatient(p)) {
+                Patient p(Person (name, birthYear, gender));
+
+                if (!hospital.addPatient(p)) 
+                {
                     cout << "Failed to add patient. Hospital might be full." << endl;
                     break;
                 }
 
                 Patient* newPatient = hospital.getLastAddedPatient();
-                if (newPatient) {
+                if (newPatient) 
+                {
                     patientID = newPatient->getId();
                     cout << "Patient added successfully! ID: " << patientID << endl;
                 }
             }
-            else if (isExisting == 'y' || isExisting == 'Y') {
+            else if (isExisting == 'y' || isExisting == 'Y') 
+            {
                 // Display existing patient IDs
                 cout << "Existing patient IDs:" << endl;
-                for (int i = 0; i < hospital.getNumOfPatients(); ++i) {
+                for (int i = 0; i < hospital.getNumOfPatients(); ++i) 
+                {
                     cout << "- " << hospital.getPatient(i)->getId() << endl;
                 }
 
                 cout << "Enter patient ID from the list above: ";
                 cin >> patientID;
             }
-            else {
+            else 
+            {
                 cout << "Invalid input. Returning to the main menu." << endl;
                 break;
             }
 
             // Get visit purpose
             cout << "Enter visit purpose: ";
-            cin.ignore();
             cin.getline(purpose, MAX_STRING_SIZE);
 
             // Show available departments
@@ -341,7 +344,8 @@ int main()
             cin.getline(departmentName, MAX_STRING_SIZE);
 
             Department* department = hospital.getDepartment(departmentName);
-            if (!department) {
+            if (!department) 
+            {
                 cout << "Invalid department name. Visit creation failed." << endl;
                 break;
             }
@@ -355,10 +359,12 @@ int main()
             cin.getline(staffName, MAX_STRING_SIZE);
 
             Employee* staff = hospital.getDoctor(staffName);
-            if (!staff) {
+            if (!staff) 
+            {
                 staff = hospital.getNurse(staffName);
             }
-            if (!staff) {
+            if (!staff) 
+            {
                 cout << "Invalid staff name. Visit creation failed." << endl;
                 break;
             }
@@ -380,20 +386,17 @@ int main()
             time_t visitDate = mktime(&timeStruct);
 
 
-           
-
-
-
-            if (hospital.addVisit(patientID, purpose, departmentName, staffName, visitDate)) {
+            if (hospital.addVisit(patientID, purpose, departmentName, staffName, visitDate)) 
+            {
                 cout << "Visit added successfully!" << endl;
             }
-            else {
+            else 
+            {
                 cout << "Failed to add visit!" << endl;
             }
 
             break;
         }
-
 
         case ShowPatientsByDepartment:
         {
@@ -453,7 +456,7 @@ int main()
             break;
         }
 
-        case  ShowDoctorsByNameOnly:
+        case ShowDoctorsByNameOnly:
         {
             hospital("doctors");
             break;

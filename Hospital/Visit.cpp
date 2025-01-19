@@ -5,9 +5,9 @@ using namespace std;
 
 // Constructor
 Visit::Visit(Patient* patient, const char* purpose, Department* department, Employee* staff, time_t visitDate)
-    : patient(patient), department(department), staff(staff), visitDate(visitDate) {
-    this->purpose = new char[strlen(purpose) + 1];
-    strcpy(this->purpose, purpose);
+    : patient(patient), department(department), staff(staff), visitDate(visitDate), purpose(nullptr)
+{
+    setPurpose(purpose);
 }
 
 // Destructor
@@ -17,57 +17,39 @@ Visit::~Visit()
 }
 
 // Setters
-void Visit::setVisitDate(time_t date)
+ bool Visit::setVisitDate(time_t date)
 {
+     if (!date) return false;
+
     visitDate = date;
+    return true;
 }
 
-void Visit::setPurpose(const char* purpose)
+bool Visit::setPurpose(const char* purpose)
 {
-    delete[] this->purpose;
-    this->purpose = new char[strlen(purpose) + 1];
-    strcpy(this->purpose, purpose);
+    if (!purpose) return false;  // Check if the provided name is valid
+
+    delete[] this->purpose;  // Free previously allocated memory
+    this->purpose = new char[strlen(purpose) + 1];  // Allocate new memory for the name
+    strcpy(this->purpose, purpose);  // Copy the name
+    return true;
 }
 
-void Visit::setDepartment(Department* department)
+bool Visit::setDepartment(Department* department)
 {
+    if (!department) return false;
+
     this->department = department;
+    return true;
 }
 
-void Visit::setStaff(Employee* staff)
+bool Visit::setStaff(Employee* staff)
 {
+    if (!staff) return false;
+
     this->staff = staff;
+    return true;
 }
-
-// Getters
-time_t Visit::getVisitDate() const
-{
-    return visitDate;
-}
-
-const char* Visit::getPurpose() const
-{
-    return purpose;
-}
-Department* Visit::getDepartmentForPatient(const Patient* patient) const 
-{
-    if (this->patient == patient) 
-    {
-        return department; // Return the department if the patient matches
-    }
-    return nullptr; // Return nullptr if no match
-}
-
-Employee* Visit::getStaff() const
-{
-    return staff;
-}
-
-Patient* Visit::getPatient() const
-{
-    return patient; // Return the patient pointer
-}
-
 
 // Display function
 void Visit::show() const
@@ -83,10 +65,6 @@ void Visit::show() const
     cout << endl;
 
     cout << "Date: " << ctime(&visitDate);
-
-
-
-
 
     cout << "Purpose: " << purpose << endl;
 
@@ -108,12 +86,6 @@ void Visit::show() const
     }
     cout << endl;
 }
-
-
-
-
-
-
 
 // Overloaded operator for output
 ostream& operator<<(ostream& os, const Visit& v)
