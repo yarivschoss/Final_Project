@@ -6,3 +6,15 @@ ostream& operator<<(ostream& os, const Patient& p)
     os << "id: " << p.getId();
     return os;
 }
+
+
+//const Patient& operator=(const Patient& other)
+//{
+//
+//	if (this != &other)
+//	{
+//		occupation = other.occupation;
+//		setDepartment(other.department); // sending the department of the R-Value
+//		return *this;
+//	}
+//}

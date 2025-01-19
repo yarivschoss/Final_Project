@@ -83,7 +83,7 @@ public:
 	
 	// Functions to add patients and visits
 	bool addVisit(int patientID, const char* purpose, const char* departmentName, const char* staffName, time_t visitDate);
-	bool addPatient(const Person& person); // Add Patient
+	bool addPatient(const Patient& pateint); // Add Patient
 	Patient* getLastAddedPatient() const;
 
 	Patient* findPatientById(int id); // Find Patient by ID

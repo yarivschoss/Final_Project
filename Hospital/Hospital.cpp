@@ -129,15 +129,28 @@ bool Hospital::addDepartmant(const char* name)
 	return true;
 }
 
-bool Hospital::addPatient(const Person& person)
+bool Hospital::addPatient(const Patient& patient)
 {
-	if (numOfPatients >= maxNumOfPatients) {
-		return false; // Hospital is full
+	if (maxNumOfPatients == numOfPatients)
+	{
+		maxNumOfPatients *= 2;
+		Patient** temp = new Patient * [maxNumOfPatients];
+
+		for (int i = 0; i < numOfPatients; i++)
+		{
+			temp[i] = patients[i];
+		}
+
+		delete[] patients;
+		patients = temp;
 	}
 
-	patients[numOfPatients] = new Patient(person); // Create a new Patient object
+	patients[numOfPatients] = new Patient(patient);
 	numOfPatients++;
-	return true; // Indicate success
+	return true;
+
+
+
 }
 
 Patient* Hospital::getLastAddedPatient() const 

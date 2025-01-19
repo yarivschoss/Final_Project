@@ -290,6 +290,7 @@ int main()
             if (isExisting == 'n' || isExisting == 'N') 
             {
                 // Add a new patient
+                cin.ignore();
                 cout << "Enter patient's name: ";
                 cin.getline(name, MAX_STRING_SIZE);
 
@@ -373,16 +374,16 @@ int main()
             int year, month, day;
             char separator1, separator2;
 
-            // קליטת הערכים
+            
             cin >> year >> separator1 >> month >> separator2 >> day;
 
-            // יצירת מבנה tm
+           
             struct tm timeStruct = {};
-            timeStruct.tm_year = year - 1900; // tm_year מתחיל מ-1900
-            timeStruct.tm_mon = month - 1;    // tm_mon מבוסס על 0 (ינואר = 0)
-            timeStruct.tm_mday = day;         // יום בחודש
+            timeStruct.tm_year = year - 1900; // 
+            timeStruct.tm_mon = month - 1;    //  
+            timeStruct.tm_mday = day;         // 
 
-            // המרת מבנה tm ל-time_t
+            
             time_t visitDate = mktime(&timeStruct);
 
 
