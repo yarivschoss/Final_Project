@@ -148,9 +148,6 @@ bool Hospital::addPatient(const Patient& patient)
 	patients[numOfPatients] = new Patient(patient);
 	numOfPatients++;
 	return true;
-
-
-
 }
 
 Patient* Hospital::getLastAddedPatient() const 

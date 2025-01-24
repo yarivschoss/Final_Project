@@ -13,12 +13,11 @@ private:
     int id;         
 
     Patient(const Patient& other) : Person(other)  { *this = other; } 
-    //const Patient& operator=(const Patient& other);
-
+    
 
 public:
     Patient(const Person& p) : Person(p) { id = 100000000 + counter++; }
-    ~Patient() { cout << "end patient" << endl; } // consule out for debugging
+    virtual ~Patient() { cout << "end patient" << endl; } // consule out for debugging
 
     
     int getId() const { return id; }

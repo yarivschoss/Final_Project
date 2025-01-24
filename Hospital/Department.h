@@ -13,8 +13,8 @@ class Department
 public:
 
 	int const MAX_DEPARTMENT_SIZE = 20; // Max size of department
-	friend class Doctor;
-	friend class Nurse;
+	/*friend class Doctor;
+	friend class Nurse;*/
 	
 private:
 
@@ -34,10 +34,6 @@ public:
 	Department(const char* name);
 	~Department();
 
-	friend ostream& operator<<(ostream& os, const Department& d); // prints department's data
-
-	bool operator()(const char* name); // prints data according to name
-	
 	operator int const() const { return maxNumOfDoctors + maxNumOfNurses; } // returns size of department staff
 	operator const char* () const { return getName(); } // returns name of department
 	
@@ -51,6 +47,20 @@ public:
 	void showDoctors() const;
 	void showNurses() const;
 
+	friend ostream& operator<<(ostream& os, const Department& d); // prints department's data
+
+
+	const Department& operator+=(Doctor& other)
+	{
+		this->addDoctor(other);
+		return *this;
+	}
+	const Department& operator+=(Nurse& other)
+	{
+		this->addNurse(other);
+		return *this;
+	}
+	bool operator()(const char* name); // prints data according to name
 };
 
 #endif //__DEPARTMENT_H

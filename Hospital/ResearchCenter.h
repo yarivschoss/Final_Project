@@ -1,7 +1,7 @@
 #ifndef __RESEARCH_CENTER_H
 #define __RESEARCH_CENTER_H
 
-#include "Researcher.h"
+#include "ResearcherDoctor.h"
 
 class ResearchCenter
 {
@@ -24,6 +24,7 @@ public:
 	
 
 	bool addResearcher(const Researcher& researcher);
+	bool addResearcherDoctor(const ResearcherDoctor& researcherDoctor);
 	void showResearchers() const
 	{
 		cout << "{";
@@ -41,6 +42,11 @@ public:
 		this->addResearcher(other);
 		return *this;
 	}
+	const ResearchCenter& operator+=(ResearcherDoctor& other)
+	{
+		this->addResearcherDoctor(other);
+		return *this;
+	}
 	friend ostream& operator<<(ostream& os, const ResearchCenter& r);
 	friend istream& operator>>(istream& in, ResearchCenter& r);
 
@@ -50,7 +56,7 @@ public:
 	bool setName(const char* name);
 
 	const char* getName() const { return name; }
-	Researcher* getResearcher(const char* name) const;  //searches through the array of researchers and returns a pointer to the researcher with the specified name
+	Researcher* getResearcher(const char* name) const;  //searches through the array of researchers and returns a pointer to the employee with the specified name
 };
 
 

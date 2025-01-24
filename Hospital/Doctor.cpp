@@ -21,9 +21,9 @@ const Doctor& Doctor::operator=(const Doctor& other)
 
 ostream& operator<<(ostream& os, const Doctor& d)
 {
-	os << "{" <<(const Employee&)d << ", "; // using the employee's operator<< by casting 'e' to 'const Person&';
-	os << "occupation: " << Occupation[(int)d.occupation] << ", " << 
-		"department: " << d.department->getName() << "}";
+	os << (const Employee&)d << ", "; // using the employee's operator<< by casting 'e' to 'const Person&';
+	os << "occupation: " << Occupation[(int)d.occupation] << ", " <<
+		"department: " << d.department->getName();
 
 	return os;
 }

@@ -48,6 +48,9 @@
     <ClInclude Include="Paper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ResearcherDoctor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Doctor.cpp">
@@ -84,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Paper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResearcherDoctor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

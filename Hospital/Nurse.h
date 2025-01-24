@@ -7,13 +7,12 @@ using namespace std;
 
 class Department; // forward declaration that nurse will be able to point to department
 
-class Nurse : public Employee
+class Nurse : virtual public Employee
 {
 
 public:
 
 	friend class Hospital;
-	//friend class Department;
 
 private:
 
@@ -28,15 +27,19 @@ public:
 	Nurse(const Employee& n, const int& experience) : Employee((const Person&)n), department(nullptr), 
 		experience(experience) { ; }
 
-	~Nurse() { cout << "fire Nurse" << endl; }
+	virtual ~Nurse() { cout << "fire Nurse" << endl; }
+
+	inline bool setExperience(const int& experience);
+	bool setDepartment(Department* department);
+
+	int getExperience() const { return experience; }
+
+	virtual Employee* clone() const override { return new Nurse(*this); }
 
 	friend ostream& operator<<(ostream& os, const Nurse& n);
 	friend istream& operator>>(istream& in, Nurse& n);
 
-	inline bool setExperience(const int& experience);
-	bool setDepartment(Department * department);
-
-	int getExperience() const { return experience; }
+	
 };
 
 inline bool Nurse::setExperience(const int& experience)

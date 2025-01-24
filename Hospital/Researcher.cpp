@@ -55,6 +55,7 @@ ostream& operator<<(ostream& os, const Researcher& r)
 {
 	os <<  (const Employee&)r << ", "; // using the employee's operator<< by casting 'e' to 'const Person&';
 	os << "Number of papers published: " << r.getNumOfPapers();
+	r.toOs(os); // if printing a researcher doctor, more will be printed
 
 	return os;
 }

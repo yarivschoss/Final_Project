@@ -47,7 +47,7 @@ bool ResearchCenter::addResearcher(const Researcher& researcher)
 
 		for (int i = 0; i < numOfResearchers; i++)
 		{
-			temp[i] = researchers[i];
+			temp[i] = researchers[i]->clone();
 		}
 
 		delete[] researchers;
@@ -55,6 +55,27 @@ bool ResearchCenter::addResearcher(const Researcher& researcher)
 	}
 
 	researchers[numOfResearchers] = new Researcher(researcher);
+	numOfResearchers++;
+	return true;
+}
+
+bool ResearchCenter::addResearcherDoctor(const ResearcherDoctor& researcherDoctor)
+{
+	if (maxNumOfResearchers == numOfResearchers)
+	{
+		maxNumOfResearchers *= 2;
+		Researcher** temp = new Researcher * [maxNumOfResearchers];
+
+		for (int i = 0; i < numOfResearchers; i++)
+		{
+			temp[i] = researchers[i]->clone();
+		}
+
+		delete[] researchers;
+		researchers = temp;
+	}
+
+	researchers[numOfResearchers] = new ResearcherDoctor(researcherDoctor);
 	numOfResearchers++;
 	return true;
 }
@@ -70,7 +91,7 @@ Researcher* ResearchCenter::getResearcher(const char* name) const
 	{
 		if (strcmp(researchers[i]->getName(), name) == 0)
 		{
-			return researchers[i]; // Return pointer to the doctor if names match
+			return researchers[i]; // Return pointer to the Employee if names match
 		}
 	}
 
