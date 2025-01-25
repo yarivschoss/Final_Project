@@ -5,7 +5,6 @@
 #include "Employee.h"
 using namespace std;
 
-class Department; // forward declaration that nurse will be able to point to department
 
 class Nurse : virtual public Employee
 {
@@ -30,11 +29,13 @@ public:
 	virtual ~Nurse() { cout << "fire Nurse" << endl; }
 
 	inline bool setExperience(const int& experience);
-	bool setDepartment(Department* department);
+	virtual bool setDepartment(Department* department) override;
 
 	int getExperience() const { return experience; }
 
 	virtual Employee* clone() const override { return new Nurse(*this); }
+
+	virtual void toOs(ostream& os) const override;
 
 	friend ostream& operator<<(ostream& os, const Nurse& n);
 	friend istream& operator>>(istream& in, Nurse& n);

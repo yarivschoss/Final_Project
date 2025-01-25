@@ -19,12 +19,11 @@ public:
 private:
 
 	char* name;
-	int numOfDoctors, numOfNurses;
-	int maxNumOfDoctors, maxNumOfNurses;
+	int numOfEmployees;
+	int maxNumOfEmployees;
 	
 
-	Doctor** doctors;
-	Nurse** nurses;
+	Employee** employees = nullptr;
 
 	void operator=(const Department& other) = delete; // coping a department is not allowed
 	Department(const Department& other) = delete; // coping a department is not allowed 
@@ -32,9 +31,9 @@ private:
 public:
 
 	Department(const char* name);
-	~Department();
+	virtual ~Department();
 
-	operator int const() const { return maxNumOfDoctors + maxNumOfNurses; } // returns size of department staff
+	operator int const() const { return maxNumOfEmployees; } // returns size of department staff
 	operator const char* () const { return getName(); } // returns name of department
 	
 	bool setName(const char* name);
@@ -43,7 +42,6 @@ public:
 	bool addDoctor(Doctor& doctor); // adding a doctor to this department - returns false if department is full
 	bool addNurse(Nurse& nurse); // adding a nurse to this department - returns false if department is full
 
-	void showAll() const;
 	void showDoctors() const;
 	void showNurses() const;
 

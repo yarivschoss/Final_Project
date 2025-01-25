@@ -7,8 +7,6 @@
 
 using namespace std;
 
-class Department; // forward declaration that doctor will be able to point to department
-
 class Doctor : virtual public Employee
 {
 
@@ -17,7 +15,6 @@ public:
 	enum class eOccupation { Pathology, Dentist, Psychiatrist, Neurologist };
 	
 	friend class Hospital;
-	//friend class Department;
 
 protected: 
 
@@ -34,11 +31,13 @@ public:
 
 	virtual ~Doctor() { cout << "fire Doctor" << endl; }
 	
-	bool setDepartment(Department* department);
+	virtual bool setDepartment(Department* department) override;
 
 	eOccupation getOccupation() const { return occupation; }
 
 	virtual Employee* clone() const override { return new Doctor(*this); }
+
+	virtual void toOs(ostream& os) const override;
 
 	friend ostream& operator<<(ostream& os, const Doctor& d);
 	friend istream& operator>>(istream& in, Doctor& d);

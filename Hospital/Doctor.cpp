@@ -19,6 +19,13 @@ const Doctor& Doctor::operator=(const Doctor& other)
 	}
 }
 
+// Doctor's info when printing an array of employees
+void Doctor::toOs(ostream& os) const
+{
+	os << "occupation: " << Occupation[(int)this->occupation] << ", " <<
+		"department: " << this->department->getName();
+} 
+
 ostream& operator<<(ostream& os, const Doctor& d)
 {
 	os << (const Employee&)d << ", "; // using the employee's operator<< by casting 'e' to 'const Person&';

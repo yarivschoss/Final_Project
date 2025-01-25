@@ -15,7 +15,7 @@ Doctor::eOccupation DEFAULT_OCCUPATION = Doctor::eOccupation::Pathology;
 
 
 enum eChoice { AddDepartment = 1, AddDoctorHospital , AddNurseHospital,
-    AddResearcher, AddDoctorDepartment, AddNurseDepartment, AddPaper, AddPatient,AddVisit,
+    AddResearcher, AddResearcherDoctor, AddDoctorDepartment, AddNurseDepartment, AddPaper, AddPatient,AddVisit,
     ShowPatientsByDepartment,FindPatientById, ShowResearchers, ShowDepartments, ShowDoctorsByNameOnly,
     ShowNursesByNameOnly, ShowHospitalcrewdata , CompareResearchers, ClearConsole, Exit };
 
@@ -38,21 +38,22 @@ int main()
         cout << "2. Add Doctor to Hospital" << endl;
         cout << "3. Add Nurse to Hospital" << endl;
         cout << "4. Add Researcher to Research Center" << endl; 
-        cout << "5. Add Doctor to Department" << endl;
-        cout << "6. Add Nurse to Department" << endl;
-        cout << "7. Add Paper to Researcher" << endl; 
-        cout << "8. Add Patient" << endl;
-        cout << "9. Add Visit" << endl;
-        cout << "10. Show Patients by Department" << endl; 
-        cout << "11. Find Patient by ID" << endl;
-        cout << "12. Show Researchers in Research Center" << endl; 
-        cout << "13. Show Departments in Hospital" << endl;
-        cout << "14. Show Doctors in Hospital" << endl;
-        cout << "15. Show Nurses in Hospital" << endl;
-        cout << "16. Show Hospital crew data" << endl;
-        cout << "17. Compare Researchers by number of papers" << endl;
-        cout << "18. Clear console" << endl;
-        cout << "19. Exit" << endl;
+        cout << "5. Add Researcher Doctor to Research Center" << endl;
+        cout << "6. Add Doctor to Department" << endl;
+        cout << "7. Add Nurse to Department" << endl;
+        cout << "8. Add Paper to Researcher" << endl; 
+        cout << "9. Add Patient" << endl;
+        cout << "10. Add Visit" << endl;
+        cout << "11. Show Patients by Department" << endl; 
+        cout << "12. Find Patient by ID" << endl;
+        cout << "13. Show Researchers in Research Center" << endl; 
+        cout << "14. Show Departments in Hospital" << endl;
+        cout << "15. Show Doctors in Hospital" << endl;
+        cout << "16. Show Nurses in Hospital" << endl;
+        cout << "17. Show Hospital staff data" << endl;
+        cout << "18. Compare Researchers by number of papers" << endl;
+        cout << "19. Clear console" << endl;
+        cout << "20. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
         cin.ignore();
@@ -61,6 +62,11 @@ int main()
 
         switch (choice) 
         {
+
+        case(AddResearcherDoctor):
+        {
+
+        }
 
         case(AddResearcher):
         {

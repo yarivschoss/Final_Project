@@ -24,13 +24,12 @@ public:
 private:
 
 	char* name;
-	int numOfDoctors, numOfNurses, numOfDepartments;
-	int maxNumOfDoctors, maxNumOfNurses, maxNumOfDepartments, maxNumOfPatients, maxNumOfVisits;
+	int numOfEmployees, numOfDepartments;
+	int maxNumOfEmployees, maxNumOfDepartments, maxNumOfPatients, maxNumOfVisits;
 	int numOfPatients, numOfVisits;
 	ResearchCenter researchCenter; // need to update initillization values
 
-	Doctor** doctors = nullptr;
-	Nurse** nurses = nullptr;
+	Employee** employees = nullptr;
 	Department** departments = nullptr;
 	Patient** patients;
 	Visit** visits;
@@ -41,7 +40,7 @@ private:
 public:
 
 	Hospital(const char* name, ResearchCenter r);
-	~Hospital();
+	virtual ~Hospital();
 	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
 	friend istream& operator>>(istream& in, Hospital& h);
@@ -88,11 +87,8 @@ public:
 
 	Patient* findPatientById(int id); // Find Patient by ID
 
-
 	bool showPatientsInDepartment(const char* departmentName) const;
 
-
-	void showAll() const;
 	void showDepartments() const;
 	void showDoctors() const;
 	void showNurses() const;

@@ -7,23 +7,16 @@ using namespace std;
 
 
 Department::Department(const char* name) :  
-maxNumOfDoctors(MAX_DEPARTMENT_SIZE), maxNumOfNurses(MAX_DEPARTMENT_SIZE)
+maxNumOfEmployees(MAX_DEPARTMENT_SIZE)
 {
 	setName(name);
 
-	doctors = new Doctor * [maxNumOfDoctors];
-	nurses = new Nurse * [maxNumOfNurses];
+	employees = new Employee * [maxNumOfEmployees];
 }
 
 Department::~Department()
 {
-	//for (int i = 0; i < maxNumOfDoctors; i++) // fire doctors
-	//	delete doctors[i];
-	delete[] doctors;
-
-	//for (int i = 0; i < maxNumOfNurses; i++) // fire nurses
-	//	delete nurses[i];
-	delete[] nurses;
+	delete[] employees;
 
 	delete[] name;
 	cout << "Destroy Department" << endl;
@@ -32,31 +25,35 @@ Department::~Department()
 ostream& operator<<(ostream& os, const Department& d)
 {
 	os << "{name: " << d.getName() << ", ";
-	os << "number of doctors: " << d.numOfDoctors << ", ";
-	os << "number of nurses: " << d.numOfNurses << ", ";
-	os << "doctors capacity: " << d.maxNumOfDoctors << ", ";
-	os << "nurses capacity: " << d.maxNumOfNurses << "}" << endl;
+	os << "number of employees: " << d.numOfEmployees << ", ";
+	os << "employees capacity: " << d.maxNumOfEmployees << "}" << endl;
 
 	os << "\ndoctors: " << endl; //showing doctors in department
-	for (int i = 0; i < d.numOfDoctors; i++)
+	for (int i = 0; i < d.numOfEmployees; i++)
 	{
-		os << *d.doctors[i];
-		
-		if (i < d.numOfDoctors - 1) // Avoid trailing comma
+		if (typeid(*d.employees[i]) == typeid(Doctor))
 		{
-			os << ", ";
+			os << *d.employees[i];
+
+			if (i < d.numOfEmployees - 1) // Avoid trailing comma
+			{
+				os << ", ";
+			}
 		}
 	}
 	os << endl;
 
 	cout << "nurses: " << endl; //showing nurses in department
-	for (int i = 0; i < d.numOfNurses; i++)
+	for (int i = 0; i < d.numOfEmployees; i++)
 	{
-		os << *d.nurses[i];
-
-		if (i < d.numOfNurses - 1) // Avoid trailing comma
+		if (typeid(*d.employees[i]) == typeid(Nurse))
 		{
-			os << ", ";
+			os << *d.employees[i];
+
+			if (i < d.numOfEmployees - 1) // Avoid trailing comma
+			{
+				os << ", ";
+			}
 		}
 	}
 	os << endl;
@@ -108,11 +105,11 @@ bool Department::addDoctor(Doctor& doctor)
 {
 	if (!this) return false;
 
-	if (numOfDoctors < maxNumOfDoctors)
+	if (numOfEmployees < maxNumOfEmployees)
 	{
-		doctors[numOfDoctors] = &doctor; // allocates the doctor to the department's doctor array
-		doctors[numOfDoctors]->setDepartment(this); // allocates the department who called addDoctor (this) to the added doctor 
-		numOfDoctors++;
+		employees[numOfEmployees] = &doctor; // allocates the doctor to the department's doctor array
+		employees[numOfEmployees]->setDepartment(this); // allocates the department who called addDoctor (this) to the added doctor 
+		numOfEmployees++;
 		return true;
 	}
 
@@ -123,58 +120,30 @@ bool Department::addNurse(Nurse& nurse)
 {
 	if (!this) return false;
 
-	if (numOfNurses < maxNumOfNurses) 
+	if (numOfEmployees < maxNumOfEmployees)
 	{
-		nurses[numOfNurses] = &nurse; // allocates the nurse to the department's nurse array
-		nurses[numOfNurses]->setDepartment(this); // allocates the department who called addNurse (this) to the added nurse
-		numOfNurses++;  
+		employees[numOfEmployees] = &nurse; // allocates the nurse to the department's nurse array
+		employees[numOfEmployees]->setDepartment(this); // allocates the department who called addNurse (this) to the added nurse
+		numOfEmployees++;
 		return true;  
 	}
 
 	return false;  
 }
 
-void Department::showAll() const
-{
-	cout << "{name: " << name << ", ";
-	cout << "number of doctors: " << numOfDoctors << ", ";
-	cout << "number of nurses: " << numOfNurses << ", ";
-	cout << "doctors capacity: " << maxNumOfDoctors << ", ";
-	cout << "nurses capacity: " << maxNumOfNurses << "}" << endl;
-	
-	cout << "\ndoctors: " << endl; //showing doctors in department
-	for (int i = 0; i < numOfDoctors; i++)
-	{
-		cout << *doctors[i];
-
-		if (i < numOfDoctors - 1)
-			cout << ", ";
-	}
-	cout << endl;
-
-	cout << "nurses: " << endl; //showing nurses in department
-	for (int i = 0; i < numOfNurses; i++)
-	{
-		cout << *nurses[i];
-
-		if (i < numOfNurses - 1)
-			cout << ", ";
-		
-	}
-	cout << endl;
-
-}
-
 void Department::showDoctors() const
 {
 	cout << "doctors: " << "\n" << endl; //showing doctors in department
 	cout << "{";
-	for (int i = 0; i < numOfDoctors; i++)
+	for (int i = 0; i < numOfEmployees; i++)
 	{
-		cout << doctors[i]->getName();
+		if (typeid(*employees[i]) == typeid(Doctor))
+		{
+			cout << employees[i]->getName();
 
-		if (i < numOfDoctors - 1)
-			cout << ", ";
+			if (i < numOfEmployees - 1)
+				cout << ", ";
+		}
 	}
 	cout << "}" << endl;
 }
@@ -183,12 +152,15 @@ void Department::showNurses() const
 {
 	cout << "nurses: " << "\n" << endl; //showing nurses in hospital
 	cout << "{";
-	for (int i = 0; i < numOfNurses; i++)
+	for (int i = 0; i < numOfEmployees; i++)
 	{
-		cout << nurses[i]->getName();
+		if (typeid(*employees[i]) == typeid(Nurse))
+		{
+			cout << employees[i]->getName();
 
-		if (i < numOfNurses - 1)
-			cout << ", ";
+			if (i < numOfEmployees - 1)
+				cout << ", ";
+		}
 	}
 	cout << "}" << endl;
 }
