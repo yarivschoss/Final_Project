@@ -138,6 +138,7 @@
     <ClInclude Include="ResearchCenter.h" />
     <ClInclude Include="Researcher.h" />
     <ClInclude Include="ResearcherDoctor.h" />
+    <ClInclude Include="Surgeon.h" />
     <ClInclude Include="Visit.h" />
   </ItemGroup>
   <ItemGroup>

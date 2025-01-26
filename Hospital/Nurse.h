@@ -18,7 +18,9 @@ private:
 	int experience;
 	Department* department;
 
-	Nurse(const Nurse& other) : Employee(other), department(nullptr) { *this = other; } // only allowing department and hospital to use the copy c'tor for adding 
+	// only allowing department and hospital to use the copy c'tor for adding
+	Nurse(const Nurse& other) : Employee(other), department(nullptr) { *this = other; }  
+
 	const Nurse& operator=(const Nurse& other);
 
 public:
@@ -35,10 +37,22 @@ public:
 
 	virtual Employee* clone() const override { return new Nurse(*this); }
 
+	// Nurse's info when printing an array of employees
 	virtual void toOs(ostream& os) const override;
 
-	friend ostream& operator<<(ostream& os, const Nurse& n);
-	friend istream& operator>>(istream& in, Nurse& n);
+	friend ostream& operator<<(ostream& os, const Nurse& n)
+	{
+		os << (const Employee&)n; // using the employee's operator<< by casting 'e' to 'const Person&';
+		return os;
+	}
+	friend istream& operator>>(istream& in, Nurse& n)
+	{
+		in >> (Employee&)n;
+		cout << "Enter years of experience: ";
+		in >> n.experience;
+
+		return in;
+	}
 
 	
 };

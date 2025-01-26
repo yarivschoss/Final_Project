@@ -26,7 +26,7 @@ protected:
 
 public:
 
-	Doctor(const Employee& d, const eOccupation occupation) : Employee((const Person&)d), department(nullptr), 
+	Doctor(const Employee& d, const eOccupation occupation) : Employee(d), department(nullptr), 
 		occupation(occupation) { ; }
 
 	virtual ~Doctor() { cout << "fire Doctor" << endl; }
@@ -37,10 +37,24 @@ public:
 
 	virtual Employee* clone() const override { return new Doctor(*this); }
 
+	// Doctor's info when printing an array of employees
 	virtual void toOs(ostream& os) const override;
 
-	friend ostream& operator<<(ostream& os, const Doctor& d);
-	friend istream& operator>>(istream& in, Doctor& d);
+	friend ostream& operator<<(ostream& os, const Doctor& d)
+	{
+		os << (const Employee&)d; // using the employee's operator<< by casting 'e' to 'const Person&';
+		return os;
+	}
+	friend istream& operator>>(istream& in, Doctor& d)
+	{
+		int occupation;
+
+		in >> (Employee&)d;
+		cout << "Select occupation (0 - Pathology, 1 - Dentist, 2 - Psychiatrist, 3 - Neurologist): ";
+		in >> occupation;
+		d.occupation = (Doctor::eOccupation)occupation;
+		return in;
+	}
 	
 	operator eOccupation() const { return getOccupation(); } // returns occupation
 	

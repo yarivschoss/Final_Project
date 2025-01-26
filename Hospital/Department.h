@@ -1,6 +1,7 @@
 #ifndef __DEPARTMENT_H
 #define __DEPARTMENT_H
 
+#include "ResearcherDoctor.h"
 #include "Doctor.h"
 #include "Nurse.h"
 
@@ -37,7 +38,12 @@ public:
 	operator const char* () const { return getName(); } // returns name of department
 	
 	bool setName(const char* name);
-	const char* getName() const { return name; }
+	const char* getName() const 
+	{
+		if (!this) return "";
+
+		return name; 
+	}
 
 	bool addDoctor(Doctor& doctor); // adding a doctor to this department - returns false if department is full
 	bool addNurse(Nurse& nurse); // adding a nurse to this department - returns false if department is full

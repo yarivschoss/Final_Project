@@ -99,6 +99,27 @@ bool Hospital::addNurse(Nurse& N)
 	return true;
 }
 
+bool Hospital::addResearcherDoctor(ResearcherDoctor& researcherDoctor)
+{
+	if (maxNumOfEmployees == numOfEmployees)
+	{
+		maxNumOfEmployees *= 2;
+		Employee** temp = new Employee * [maxNumOfEmployees];
+
+		for (int i = 0; i < numOfEmployees; i++)
+		{
+			temp[i] = employees[i]->clone();
+		}
+
+		delete[] employees;
+		employees = temp;
+	}
+
+	employees[numOfEmployees] = new ResearcherDoctor(researcherDoctor);
+	numOfEmployees++;
+	return true;
+}
+
 bool Hospital::addDepartmant(const char* name)
 {
 	if (!name)
@@ -179,7 +200,7 @@ Doctor* Hospital::getDoctor(const char* name) const
 
 	for (int i = 0; i < numOfEmployees; ++i)
 	{
-		if (strcmp(employees[i]->getName(), name) == 0 && typeid(*employees[i]) == typeid(Doctor))
+		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor)))
 		{
 			return dynamic_cast<Doctor*>(employees[i]); // Return pointer to the doctor if names match
 		}
@@ -389,7 +410,7 @@ void Hospital::showDoctors() const
 	cout << "{";
 	for (int i = 0; i < numOfEmployees; i++)
 	{
-		if(typeid(*employees[i]) == typeid(Doctor))
+		if(typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor))
 		{
 			cout << employees[i]->getName();
 

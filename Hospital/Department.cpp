@@ -31,7 +31,7 @@ ostream& operator<<(ostream& os, const Department& d)
 	os << "\ndoctors: " << endl; //showing doctors in department
 	for (int i = 0; i < d.numOfEmployees; i++)
 	{
-		if (typeid(*d.employees[i]) == typeid(Doctor))
+		if (typeid(*d.employees[i]) == typeid(Doctor) || typeid(*d.employees[i]) == typeid(ResearcherDoctor))
 		{
 			os << *d.employees[i];
 

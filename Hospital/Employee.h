@@ -7,10 +7,17 @@ class Department; // forward declaration that employee will be able to point to 
 
 class Employee : public Person
 {
+
 protected:
 
     int employeeNumber; 
-    Employee(const Employee& other) = default;
+    Employee(const Employee& other) : Person(other) { *this = other; }
+
+    friend istream& operator>>(istream& in, Employee& e) 
+    { 
+        in >> (Person&)e;
+        return in;
+    }
 
 public:
 

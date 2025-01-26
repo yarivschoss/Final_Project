@@ -65,7 +65,15 @@ int main()
 
         case(AddResearcherDoctor):
         {
+            ResearcherDoctor newResearcherDoctor(Doctor(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_OCCUPATION), Researcher(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER))));
 
+            cin >> newResearcherDoctor;
+
+            hospital.getResearchCenter() += newResearcherDoctor;
+
+            hospital += newResearcherDoctor;
+
+            break;
         }
 
         case(AddResearcher):
@@ -164,7 +172,7 @@ int main()
             cin >> newDoctor;
 
             hospital += newDoctor;
-           
+
             break;
         }
 
@@ -190,7 +198,7 @@ int main()
 
         case AddDoctorDepartment:
         {
-            hospital.showDoctors();
+            hospital("doctors");
             cout << "choose doctor: ";
             cin.getline(name, MAX_STRING_SIZE);
 
@@ -199,18 +207,16 @@ int main()
             if (!D)
             {
                 cout << "no existing doctor found" << endl;
-                choice = AddDoctorDepartment;
                 break;
             }
 
-            hospital.showDepartments();
+            hospital("departments");
             cout << "\nchoose department: ";
             cin.getline(name, MAX_STRING_SIZE);
             
             if (!hospital.getDepartment(name)->addDoctor(*D))
             {
                 cout << "no existing department found" << endl;
-                choice = AddDoctorDepartment;
                 break;
             }
            

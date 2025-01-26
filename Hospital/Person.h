@@ -15,7 +15,23 @@ protected:
     static int counter;
 
     Person(const Person& other) : name(nullptr) { *this = other; }
+
     const Person& operator=(const Person& other);
+    friend istream& operator>>(istream& in, Person& p)
+    {
+        char name[100];
+
+        cout << "Enter name: ";
+        in.getline(name, 100);
+        p.setName(name);
+
+        cout << "Enter gender(m/f): ";
+        in >> p.gender;
+
+        cout << "Enter birth year: ";
+        in >> p.birthYear;
+        return in;
+    }
 
 private:
 

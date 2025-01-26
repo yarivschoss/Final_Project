@@ -45,10 +45,18 @@ public:
 
 	virtual Researcher* clone() const override { return new Researcher(*this); }
 
-	virtual void toOs(ostream& os) const { ; }
+	virtual void toOs(ostream& os) const { os << "Number of papers published: " << this->getNumOfPapers(); }
 
-	friend ostream& operator<<(ostream& os, const Researcher& r); // Overloaded stream insertion operator to print Person data
-	friend istream& operator>>(istream& in, Researcher& r);
+	friend ostream& operator<<(ostream& os, const Researcher& r) // Overloaded stream insertion operator to print Person data
+	{
+		os << (const Employee&)r; // using the employee's operator<< by casting 'e' to 'const Person&';
+		return os;
+	}
+	friend istream& operator>>(istream& in, Researcher& r)
+	{
+		in >> (Employee&)r;
+		return in;
+	}
 	
 	bool operator>(const Researcher& other) const { return this->numOfPapers > other.numOfPapers; }
 	bool operator< (const Researcher& other) const { return this->numOfPapers < other.numOfPapers; }

@@ -4,8 +4,6 @@ using namespace std;
 
 #include "Researcher.h"
 
-int const MAX_STRING_SIZE = 100;
-
 Researcher::~Researcher()
 {
 	for (int i = 0; i < numOfPapers; i++) // fire doctors
@@ -49,32 +47,6 @@ bool Researcher::setPapers(Paper*const* papers)
 	}
 
 	return true;
-}
-
-ostream& operator<<(ostream& os, const Researcher& r)
-{
-	os <<  (const Employee&)r << ", "; // using the employee's operator<< by casting 'e' to 'const Person&';
-	os << "Number of papers published: " << r.getNumOfPapers();
-	r.toOs(os); // if printing a researcher doctor, more will be printed
-
-	return os;
-}
-
-istream& operator>>(istream& in, Researcher& r)
-{
-	char name[MAX_STRING_SIZE];
-
-	cout << "Enter Researcher name: ";
-	in.getline(name, MAX_STRING_SIZE);
-	r.setName(name);
-
-	cout << "Enter Researcher gender(m/f): ";
-	in >> r.gender;
-
-	cout << "Enter Researcher birth year: ";
-	in >> r.birthYear;
-
-	return in;
 }
 
 const Researcher& Researcher::operator=(const Researcher& other)

@@ -6,6 +6,7 @@
 
 #include "ResearchCenter.h"
 #include "Department.h"
+#include "Surgeon.h"
 #include "Doctor.h"
 #include "Nurse.h"
 #include "Patient.h"
@@ -61,6 +62,11 @@ public:
 		this->addNurse(other);
 		return *this;
 	}
+	const Hospital& operator+=(ResearcherDoctor& other)
+	{
+		this->addResearcherDoctor(other);
+		return *this;
+	}
 
 	bool setName(const char* name);
 
@@ -76,7 +82,8 @@ public:
 	Employee* getStaff(const char* name) const; // Get Staff by name
 
 
-	bool addDoctor(Doctor& doctor);
+	bool addDoctor(Doctor& doctor); 
+	bool addResearcherDoctor(ResearcherDoctor& researcherDoctor);
 	bool addNurse(Nurse& nurse);
 	bool addDepartmant(const char* name);
 	
