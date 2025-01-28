@@ -57,6 +57,27 @@ bool Hospital::setName(const char* name)
 
 }
 
+bool Hospital::addSurgeon(Surgeon& S)
+{
+	if (maxNumOfEmployees == numOfEmployees)
+	{
+		maxNumOfEmployees *= 2;
+		Employee** temp = new Employee * [maxNumOfEmployees];
+
+		for (int i = 0; i < numOfEmployees; i++)
+		{
+			temp[i] = employees[i]->clone();
+		}
+
+		delete[] employees;
+		employees = temp;
+	}
+
+	employees[numOfEmployees] = new Surgeon(S);
+	numOfEmployees++;
+	return true;
+}
+
 bool Hospital::addDoctor(Doctor& D)
 {
 	if(maxNumOfEmployees == numOfEmployees)
@@ -99,7 +120,7 @@ bool Hospital::addNurse(Nurse& N)
 	return true;
 }
 
-bool Hospital::addResearcherDoctor(ResearcherDoctor& researcherDoctor)
+bool Hospital::addResearcherDoctor(ResearcherDoctor& RD)
 {
 	if (maxNumOfEmployees == numOfEmployees)
 	{
@@ -115,7 +136,7 @@ bool Hospital::addResearcherDoctor(ResearcherDoctor& researcherDoctor)
 		employees = temp;
 	}
 
-	employees[numOfEmployees] = new ResearcherDoctor(researcherDoctor);
+	employees[numOfEmployees] = new ResearcherDoctor(RD);
 	numOfEmployees++;
 	return true;
 }
@@ -191,6 +212,24 @@ Department* Hospital::getDepartment(const char* name) const
 	return nullptr; // Return nullptr if no matching department is found
 }
 
+Surgeon* Hospital::getSurgeon(const char* name) const
+{
+	if (!name || numOfEmployees == 0) 
+	{
+		return nullptr; // Return nullptr if name is invalid or no employees exist
+	}
+
+	for (int i = 0; i < numOfEmployees; ++i)
+	{
+		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Surgeon)))
+		{
+			return dynamic_cast<Surgeon*>(employees[i]); // Return pointer to the doctor if names match
+		}
+	}
+
+	return nullptr; // Return nullptr if no matching doctor is found
+}
+
 Doctor* Hospital::getDoctor(const char* name) const
 {
 	if (!name || numOfEmployees == 0) 
@@ -200,7 +239,7 @@ Doctor* Hospital::getDoctor(const char* name) const
 
 	for (int i = 0; i < numOfEmployees; ++i)
 	{
-		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor)))
+		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor) || typeid(*employees[i]) == typeid(Surgeon)))
 		{
 			return dynamic_cast<Doctor*>(employees[i]); // Return pointer to the doctor if names match
 		}
@@ -374,6 +413,12 @@ bool Hospital::operator()(const char* name)
 		this->showDoctors();
 		return true;
 	}
+
+	if (strcmp(name, "surgeons") == 0)
+	{
+		this->showSurgeons();
+		return true;
+	}
 		
 	if (strcmp(name, "departments") == 0)
 	{
@@ -404,13 +449,30 @@ void Hospital::showDepartments() const
 	cout << "}" << endl;
 }
 
+void Hospital::showSurgeons() const
+{
+	cout << "surgeons: " << "\n" << endl; //showing surgeons in hospital
+	cout << "{";
+	for (int i = 0; i < numOfEmployees; i++)
+	{
+		if (typeid(*employees[i]) == typeid(Surgeon))
+		{
+			cout << employees[i]->getName();
+
+			if (i < numOfEmployees - 1)
+				cout << ", ";
+		}
+	}
+	cout << "}" << endl;
+}
+
 void Hospital::showDoctors() const
 {
 	cout << "doctors: " << "\n" << endl; //showing doctors in hospital
 	cout << "{";
 	for (int i = 0; i < numOfEmployees; i++)
 	{
-		if(typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor))
+		if(typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor) || typeid(*employees[i]) == typeid(Surgeon))
 		{
 			cout << employees[i]->getName();
 

@@ -14,10 +14,8 @@ const time_t DEFAULT_TIME = 0;
 Doctor::eOccupation DEFAULT_OCCUPATION = Doctor::eOccupation::Pathology;
 
 
-enum eChoice { AddDepartment = 1, AddDoctorHospital , AddNurseHospital,
-    AddResearcher, AddResearcherDoctor, AddDoctorDepartment, AddNurseDepartment, AddPaper, AddPatient,AddVisit,
-    ShowPatientsByDepartment,FindPatientById, ShowResearchers, ShowDepartments, ShowDoctorsByNameOnly,
-    ShowNursesByNameOnly, ShowHospitalcrewdata , CompareResearchers, ClearConsole, Exit };
+enum eChoice { AddDepartment = 1, AddEmployeeHospital, AddToResearchCenter, AddEmployeeDepartment, AddPaper, AddPatient,AddVisit,
+    ShowPatientsByDepartment,FindPatientById, ShowInfo , CompareResearchers, ClearConsole, Exit };
 
 
 int main() 
@@ -35,25 +33,18 @@ int main()
     {
         cout << "\nMenu:" << endl;
         cout << "1. Add Department to Hospital" << endl;
-        cout << "2. Add Doctor to Hospital" << endl;
-        cout << "3. Add Nurse to Hospital" << endl;
-        cout << "4. Add Researcher to Research Center" << endl; 
-        cout << "5. Add Researcher Doctor to Research Center" << endl;
-        cout << "6. Add Doctor to Department" << endl;
-        cout << "7. Add Nurse to Department" << endl;
-        cout << "8. Add Paper to Researcher" << endl; 
-        cout << "9. Add Patient" << endl;
-        cout << "10. Add Visit" << endl;
-        cout << "11. Show Patients by Department" << endl; 
-        cout << "12. Find Patient by ID" << endl;
-        cout << "13. Show Researchers in Research Center" << endl; 
-        cout << "14. Show Departments in Hospital" << endl;
-        cout << "15. Show Doctors in Hospital" << endl;
-        cout << "16. Show Nurses in Hospital" << endl;
-        cout << "17. Show Hospital staff data" << endl;
-        cout << "18. Compare Researchers by number of papers" << endl;
-        cout << "19. Clear console" << endl;
-        cout << "20. Exit" << endl;
+        cout << "2. Add Employee to Hospital" << endl;
+        cout << "3. Add Researcher to Research Center" << endl; 
+        cout << "4. Add Employee to Department" << endl;
+        cout << "5. Add Paper to Researcher" << endl; 
+        cout << "6. Add Patient" << endl;
+        cout << "7. Add Visit" << endl;
+        cout << "8. Show Patients by Department" << endl; 
+        cout << "9. Find Patient by ID" << endl;
+        cout << "10. Show system's info" << endl;
+        cout << "11. Compare Researchers by number of papers" << endl;
+        cout << "12. Clear console" << endl;
+        cout << "13. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
         cin.ignore();
@@ -63,28 +54,72 @@ int main()
         switch (choice) 
         {
 
-        case(AddResearcherDoctor):
+        case(AddToResearchCenter):
         {
-            ResearcherDoctor newResearcherDoctor(Doctor(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_OCCUPATION), Researcher(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER))));
 
-            cin >> newResearcherDoctor;
+            enum eChoiceAddResearcher { AddResearcher = 1, AddResearcherDoctor, ClearConsole, eReturn };
+            bool Return = false;
 
-            hospital.getResearchCenter() += newResearcherDoctor;
+            while (!Return)
 
-            hospital += newResearcherDoctor;
+            {
+                cout << endl;
+                cout << "1. Add Researcher" << endl;
+                cout << "2. Add Researcher Doctor" << endl;
+                cout << "3. Clear console" << endl;
+                cout << "4. Return" << endl;
+                cout << "Enter your choice: ";
+                cin >> choice;
+                cin.ignore();
+
+                switch (choice)
+                {
+
+                case(AddResearcher):
+                {
+
+                    Researcher newResearcher(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)));
+
+                    cin >> newResearcher;
+
+                    hospital.getResearchCenter() += newResearcher;
+
+                    break;
+
+                }
+
+                case (AddResearcherDoctor):
+                {
+                    ResearcherDoctor newResearcherDoctor(Doctor(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_OCCUPATION), Researcher(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER))));
+
+                    cin >> newResearcherDoctor;
+
+                    hospital.getResearchCenter() += newResearcherDoctor;
+
+                    hospital += newResearcherDoctor;
+
+                    break;
+                }
+
+                case (ClearConsole):
+                {
+                    std::cout << "\033[2J\033[H"; // ANSI escape code to clear screen and move cursor to home position
+                    break;
+                }
+
+                case(eReturn):
+                {
+                    Return = true;
+                    break;
+                }
+
+                default:
+                    cout << "Invalid choice" << endl;
+                }
+            }
 
             break;
-        }
 
-        case(AddResearcher):
-        {
-            Researcher newResearcher(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)));
-
-            cin >> newResearcher;
-
-            hospital.getResearchCenter() += newResearcher;
-             
-            break;
         }
 
         case(AddPaper):
@@ -109,13 +144,6 @@ int main()
 
             r->addPaper(newPaper);
 
-            break;
-        }
-
-        case(ShowResearchers):
-        {
-            hospital.getResearchCenter()("researchers");
-            cout << endl;
             break;
         }
 
@@ -165,29 +193,83 @@ int main()
             break;
         }
             
-        case AddDoctorHospital:
+        case(AddEmployeeHospital):
         {
-            Doctor newDoctor(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_OCCUPATION);
+            enum eChoiceAddEmployeeHospital {AddDoctorHospital = 1, AddNurseHospital, AddSurgeonHospital, ClearConsole, eReturn };
+            bool Return = false;
 
-            cin >> newDoctor;
+            while(!Return)
 
-            hospital += newDoctor;
+            {
+                cout << endl;
+                cout << "1. Add Doctor to Hospital" << endl;
+                cout << "2. Add Nurse to Hospital" << endl;
+                cout << "3. Add Surgeon to Hospital" << endl;
+                cout << "4. Clear console" << endl;
+                cout << "5. Return" << endl;
+                cout << "Enter your choice: ";
+                cin >> choice;
+                cin.ignore();
+
+                switch (choice)
+                {
+
+                case(AddDoctorHospital):
+                {
+
+                    Doctor newDoctor(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_OCCUPATION);
+
+                    cin >> newDoctor;
+
+                    hospital += newDoctor;
+
+                    break;
+                }
+
+                case (AddNurseHospital):
+                {
+                    Nurse newNurse(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_EXPERIENCE);
+
+                    cin >> newNurse;
+
+                    hospital += newNurse;
+
+                    break;
+                }
+
+                case(AddSurgeonHospital):
+                {
+
+                    Surgeon newSurgeon(Doctor(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_OCCUPATION), 0);
+
+                    cin >> newSurgeon;
+
+                    hospital += newSurgeon;
+
+                    break;
+                }
+
+                case (ClearConsole):
+                {
+                    std::cout << "\033[2J\033[H"; // ANSI escape code to clear screen and move cursor to home position
+                    break;
+                }
+
+                case(eReturn):
+                {
+                    Return = true;
+                    break;
+                }
+
+                default:
+                    cout << "Invalid choice" << endl;
+                }
+            }
 
             break;
         }
 
-        case AddNurseHospital:
-        {
-            Nurse newNurse(Employee(Person(DEFAULT_NAME, DEFAULT_BIRTH_YEAR, DEFAULT_GENDER)), DEFAULT_EXPERIENCE);
-
-            cin >> newNurse;
-
-            hospital += newNurse;
-
-            break;
-        }
-
-        case AddDepartment: 
+        case(AddDepartment):
         {
             cout << "Enter department name: ";
             cin.getline(name, MAX_STRING_SIZE);
@@ -196,57 +278,126 @@ int main()
             break;
         }
 
-        case AddDoctorDepartment:
+        case(AddEmployeeDepartment):
         {
-            hospital("doctors");
-            cout << "choose doctor: ";
-            cin.getline(name, MAX_STRING_SIZE);
+            enum eChoiceAddEmployeeDepartment { AddDoctorDepartment = 1, AddNurseDepartment, AddSurgeonDepartment, ClearConsole, eReturn };
+            bool Return = false;
 
-            Doctor* D = hospital.getDoctor(name); //by pointer so we will not create another doctor with the same parameters
+            while (!Return)
 
-            if (!D)
             {
-                cout << "no existing doctor found" << endl;
-                break;
-            }
+                cout << endl;
+                cout << "1. Add Doctor to Department" << endl;
+                cout << "2. Add Nurse to Department" << endl;
+                cout << "3. Add Surgeon to Department" << endl;
+                cout << "4. Clear console" << endl;
+                cout << "5. Return" << endl;
+                cout << "Enter your choice: ";
+                cin >> choice;
+                cin.ignore();
 
-            hospital("departments");
-            cout << "\nchoose department: ";
-            cin.getline(name, MAX_STRING_SIZE);
-            
-            if (!hospital.getDepartment(name)->addDoctor(*D))
-            {
-                cout << "no existing department found" << endl;
-                break;
-            }
-           
-            break;
-        }
+                switch (choice)
+                {
 
-        case AddNurseDepartment:
-        {
-            hospital.showNurses();
-            cout << "choose nurse: ";
-            cin.getline(name, MAX_STRING_SIZE);
+                case(AddDoctorDepartment):
+                {
 
-            Nurse* N = hospital.getNurse(name); //by pointer so we will not create another nurse with the same parameters
+                    hospital("doctors");
+                    cout << "choose doctor: ";
+                    cin.getline(name, MAX_STRING_SIZE);
 
-            if (!N)
-            {
-                cout << "no existing nurse found" << endl;
-                choice = AddNurseDepartment;
-                break;
-            }
+                    Doctor* D = hospital.getDoctor(name); //by pointer so we will not create another doctor with the same parameters
 
-            hospital.showDepartments();
-            cout << "\nchoose department: ";
-            cin.getline(name, MAX_STRING_SIZE);
+                    if (!D)
+                    {
+                        cout << "no existing doctor found" << endl;
+                        break;
+                    }
 
-            if (!hospital.getDepartment(name)->addNurse(*N))
-            {
-                cout << "no existing department found" << endl;
-                choice = AddNurseDepartment;
-                break;
+                    hospital("departments");
+                    cout << "\nchoose department: ";
+                    cin.getline(name, MAX_STRING_SIZE);
+
+                    if (!hospital.getDepartment(name)->addDoctor(*D))
+                    {
+                        cout << "no existing department found" << endl;
+                        break;
+                    }
+
+                    break;
+                }
+
+                case (AddNurseDepartment):
+                {
+                    hospital.showNurses();
+                    cout << "choose nurse: ";
+                    cin.getline(name, MAX_STRING_SIZE);
+
+                    Nurse* N = hospital.getNurse(name); //by pointer so we will not create another nurse with the same parameters
+
+                    if (!N)
+                    {
+                        cout << "no existing nurse found" << endl;
+                        choice = AddNurseDepartment;
+                        break;
+                    }
+
+                    hospital.showDepartments();
+                    cout << "\nchoose department: ";
+                    cin.getline(name, MAX_STRING_SIZE);
+
+                    if (!hospital.getDepartment(name)->addNurse(*N))
+                    {
+                        cout << "no existing department found" << endl;
+                        choice = AddNurseDepartment;
+                        break;
+                    }
+
+                    break;
+                }
+
+                case(AddSurgeonDepartment):
+                {
+                    hospital("surgeons");
+                    cout << "choose surgeon: ";
+                    cin.getline(name, MAX_STRING_SIZE);
+
+                    Surgeon* S = hospital.getSurgeon(name); //by pointer so we will not create another doctor with the same parameters
+
+                    if (!S)
+                    {
+                        cout << "no existing surgeon found" << endl;
+                        break;
+                    }
+
+                    hospital("departments");
+                    cout << "\nchoose department: ";
+                    cin.getline(name, MAX_STRING_SIZE);
+
+                    if (!hospital.getDepartment(name)->addSurgeon(*S))
+                    {
+                        cout << "no existing department found" << endl;
+                        break;
+                    }
+
+                    break;
+                }
+
+                case (ClearConsole):
+                {
+                    std::cout << "\033[2J\033[H"; // ANSI escape code to clear screen and move cursor to home position
+                    break;
+                }
+
+                case(eReturn):
+                {
+                    Return = true;
+                    break;
+                }
+
+                default:
+                    cout << "Invalid choice" << endl;
+                }
             }
 
             break;
@@ -463,28 +614,77 @@ int main()
             break;
         }
 
-        case ShowDepartments:
+        case ShowInfo:
         {
-            hospital("departments");
-            break;
-        }
+            enum eChoiceShow { ShowDepartments = 1, ShowAllDoctors, ShowAllNurses, ShowHospitalStaff, ShowResearchers, ClearConsole, eReturn };
+            bool Return = false;
 
-        case ShowDoctorsByNameOnly:
-        {
-            hospital("doctors");
-            break;
-        }
+            while (!Return)
 
-        case ShowNursesByNameOnly:
-        {
-            hospital("nurses");
-            break;
-        }
+            {
+                cout << endl;
+                cout << "1. Show Departments in Hospital" << endl;
+                cout << "2. Show Doctors in Hospital" << endl;
+                cout << "3. Show Nurses in Hospital" << endl;
+                cout << "4. Show Hospital's staff" << endl;
+                cout << "5. Show Researchers in Research Center" << endl;
+                cout << "6. Clear console" << endl;
+                cout << "7. Return" << endl;
+                cout << "Enter your choice: ";
+                cin >> choice;
+                cin.ignore();
 
-        case ShowHospitalcrewdata:
-        {
-            cout << endl << hospital;
-            break;
+                switch (choice)
+                {
+
+                case(ShowDepartments): 
+                {
+                    hospital("departments");
+                    break;
+                }
+
+                case (ShowAllDoctors): 
+                {
+                    hospital("doctors");
+                    break;
+                }
+
+                case(ShowAllNurses): 
+                {
+                    hospital("nurses");
+                    break;
+                }
+
+                case(ShowHospitalStaff): 
+                {
+                    cout << endl << hospital;
+                    break;
+                }
+
+                case(ShowResearchers): 
+                {
+                    hospital.getResearchCenter()("researchers");
+                    cout << endl;
+                    break;
+                }
+
+                case (ClearConsole):
+                {
+                    std::cout << "\033[2J\033[H"; // ANSI escape code to clear screen and move cursor to home position
+                    break;
+                }
+
+                case(eReturn):
+                {
+                    Return = true;
+                    break;
+                }
+
+                default:
+                    cout << "Invalid choice" << endl;
+                }
+            }
+
         }
 
         case ClearConsole:

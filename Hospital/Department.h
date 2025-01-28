@@ -1,9 +1,10 @@
 #ifndef __DEPARTMENT_H
 #define __DEPARTMENT_H
 
-#include "ResearcherDoctor.h"
+#include "Surgeon.h"
 #include "Doctor.h"
 #include "Nurse.h"
+#include "ResearcherDoctor.h"
 
 //class Nurse;
 //class Doctor;
@@ -14,8 +15,6 @@ class Department
 public:
 
 	int const MAX_DEPARTMENT_SIZE = 20; // Max size of department
-	/*friend class Doctor;
-	friend class Nurse;*/
 	
 private:
 
@@ -45,15 +44,22 @@ public:
 		return name; 
 	}
 
+	bool addSurgeon(Surgeon& surgeon);
 	bool addDoctor(Doctor& doctor); // adding a doctor to this department - returns false if department is full
 	bool addNurse(Nurse& nurse); // adding a nurse to this department - returns false if department is full
 
+	void showSurgeons() const;
 	void showDoctors() const;
 	void showNurses() const;
 
 	friend ostream& operator<<(ostream& os, const Department& d); // prints department's data
 
 
+	const Department& operator+=(Surgeon& other)
+	{
+		this->addSurgeon(other);
+		return *this;
+	}
 	const Department& operator+=(Doctor& other)
 	{
 		this->addDoctor(other);
@@ -64,6 +70,7 @@ public:
 		this->addNurse(other);
 		return *this;
 	}
+
 	bool operator()(const char* name); // prints data according to name
 };
 

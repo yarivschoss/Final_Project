@@ -25,7 +25,7 @@ private:
 
 public:
 
-	Nurse(const Employee& n, const int& experience) : Employee((const Person&)n), department(nullptr), 
+	Nurse(const Employee& n, const int& experience) : Employee(n), department(nullptr), 
 		experience(experience) { ; }
 
 	virtual ~Nurse() { cout << "fire Nurse" << endl; }

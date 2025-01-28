@@ -101,6 +101,21 @@ bool Department::setName(const char* name)
 
 }
 
+bool Department::addSurgeon(Surgeon& surgeon)
+{
+	if (!this) return false;
+
+	if (numOfEmployees < maxNumOfEmployees)
+	{
+		employees[numOfEmployees] = &surgeon; // allocates the doctor to the department's doctor array
+		employees[numOfEmployees]->setDepartment(this); // allocates the department who called addDoctor (this) to the added doctor 
+		numOfEmployees++;
+		return true;
+	}
+
+	return false;
+}
+
 bool Department::addDoctor(Doctor& doctor)
 {
 	if (!this) return false;
@@ -131,13 +146,30 @@ bool Department::addNurse(Nurse& nurse)
 	return false;  
 }
 
+void Department::showSurgeons() const
+{
+	cout << "surgeons: " << "\n" << endl; //showing surgeons in hospital
+	cout << "{";
+	for (int i = 0; i < numOfEmployees; i++)
+	{
+		if (typeid(*employees[i]) == typeid(Surgeon))
+		{
+			cout << employees[i]->getName();
+
+			if (i < numOfEmployees - 1)
+				cout << ", ";
+		}
+	}
+	cout << "}" << endl;
+}
+
 void Department::showDoctors() const
 {
 	cout << "doctors: " << "\n" << endl; //showing doctors in department
 	cout << "{";
 	for (int i = 0; i < numOfEmployees; i++)
 	{
-		if (typeid(*employees[i]) == typeid(Doctor))
+		if (typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor) || typeid(*employees[i]) == typeid(Surgeon))
 		{
 			cout << employees[i]->getName();
 

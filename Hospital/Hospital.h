@@ -52,6 +52,11 @@ public:
 	operator int const() const { return DEFAULT_STAFF_SIZE; } // returns size of hospital staff
 	operator const char* () const { return getName(); } // returns name of hospital
 
+	const Hospital& operator+=(Surgeon& other)
+	{
+		this->addSurgeon(other);
+		return *this;
+	}
 	const Hospital& operator+=(Doctor& other)
 	{
 		this->addDoctor(other);
@@ -73,6 +78,7 @@ public:
 	const char* getName() const { return name; }
 	Department* getDepartment(const char* name) const; //searches through the array of departments and returns a pointer to the department with the specified name
 	ResearchCenter& getResearchCenter() { return researchCenter; }
+	Surgeon* getSurgeon(const char* name) const; //searches through the array of doctors and returns a pointer to the doctor with the specified name
 	Doctor* getDoctor(const char* name) const; //searches through the array of doctors and returns a pointer to the doctor with the specified name
 	Nurse* getNurse(const char* name) const; //searches through the array of nurses and returns a pointer to the nurse with the specified name
 	Visit* getVisitByPatientId(int patientID) const;
@@ -82,10 +88,12 @@ public:
 	Employee* getStaff(const char* name) const; // Get Staff by name
 
 
-	bool addDoctor(Doctor& doctor); 
-	bool addResearcherDoctor(ResearcherDoctor& researcherDoctor);
-	bool addNurse(Nurse& nurse);
+	bool addSurgeon(Surgeon& S);
+	bool addDoctor(Doctor& D); 
+	bool addResearcherDoctor(ResearcherDoctor& RD);
+	bool addNurse(Nurse& N);
 	bool addDepartmant(const char* name);
+	
 	
 	// Functions to add patients and visits
 	bool addVisit(int patientID, const char* purpose, const char* departmentName, const char* staffName, time_t visitDate);
@@ -97,6 +105,7 @@ public:
 	bool showPatientsInDepartment(const char* departmentName) const;
 
 	void showDepartments() const;
+	void showSurgeons() const;
 	void showDoctors() const;
 	void showNurses() const;
 };
