@@ -306,6 +306,18 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 			cout << "Error: Surgery visit must have a Surgeon as staff member." << endl;
 			return false;
 		}
+		/*
+		else
+		{
+
+			if (typeid(*staff) == typeid(Surgeon))                //cancel because we want the surgeon can make check
+			{
+				cout << "Error: Checkup visit cannot have a Surgeon as staff member." << endl;
+				return false;
+			}
+			*/
+
+
 		// Create Surgery Visit
 		visits[numOfVisits] = new SurgeryVisit(patient, purpose, department, staff, visitDate, room, fasting);
 	}
