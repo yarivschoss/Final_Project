@@ -563,18 +563,28 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 			{
 				time_t visitDate = visits[i]->getVisitDate(); // 
 
+				// Display patient details and visit purpose
 				cout << "- " << patient->getName()
 					<< " (ID: " << patient->getId()
-					<< ", purpose: " << visits[i]->getPurpose() ///////
-					<< ", date of visit: " << ctime(&visitDate)  // Display date of visit
+					<< ", purpose: " << visits[i]->getPurpose(); // Display purpose of the visit
+
+				// Determine if it's a checkup or surgery visit
+				if (typeid(*visits[i]) == typeid(SurgeryVisit)) {
+					cout << ", visit type: Surgery";  // Surgery visit
+				}
+				else if (typeid(*visits[i]) == typeid(CheckupVisit)) {
+					cout << ", visit type: Checkup";  // Checkup visit
+				}
+
+				cout << ", date of visit: " << ctime(&visitDate)  // Display date of visit
 					<< ", staff member allocated: " << visits[i]->getStaff()->getName()
 					<< ")" << endl;
 
-				
+				// If it's a surgery visit, display additional info
 				if (typeid(*visits[i]) == typeid(SurgeryVisit)) {
 					SurgeryVisit* surgeryVisit = dynamic_cast<SurgeryVisit*>(visits[i]);
-					cout << "Surgery Room: " << surgeryVisit->getSurgeryRoomNumber() << endl;  
-					cout << "Is the patient fasting? " << (surgeryVisit->getIsFasting() ? "Yes" : "No") << endl;  
+					cout << "Surgery Room: " << surgeryVisit->getSurgeryRoomNumber() << endl;
+					cout << "Is the patient fasting? " << (surgeryVisit->getIsFasting() ? "Yes" : "No") << endl;
 				}
 			}
 		}
@@ -583,6 +593,8 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 	return true;
 }
 
+
+	
 
 
 
