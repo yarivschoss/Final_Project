@@ -266,8 +266,8 @@ Nurse* Hospital::getNurse(const char* name) const
 	return nullptr; // Return nullptr if no matching doctor is found
 }
 
-bool Hospital::addVisit(int patientID, const char* purpose, const char* departmentName, 
-	const char* staffName, time_t visitDate) 
+bool Hospital::addVisit(int patientID, const char* purpose, const char* departmentName,
+	const char* staffName, time_t visitDate, bool isSurgery, int room, bool fasting)
 {
 	if (maxNumOfVisits == numOfVisits)
 	{
@@ -282,26 +282,42 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 		delete[] visits;
 		visits = temp;
 	}
-	
-	// Find the patient
+
 	Patient* patient = findPatientById(patientID);
 	if (!patient) return false;
 
-	// Find the department
 	Department* department = getDepartment(departmentName);
 	if (!department) return false;
 
-	// Find the staff (doctor or nurse)
 	Employee* staff = getDoctor(staffName);
-
 	if (!staff) staff = getNurse(staffName);
+	if (!staff) staff = getSurgeon(staffName);
 	if (!staff) return false;
-	
-	// Add the visit with the visit date
-	visits[numOfVisits] = new Visit(patient, purpose, department, staff, visitDate);
+
+	if (isSurgery)
+	{
+		if (typeid(*staff) != typeid(Surgeon))
+		{
+			cout << "Error: Surgery visit must have a Surgeon as staff member." << endl;
+			return false;
+		}
+		visits[numOfVisits] = new SurgeryVisit(patient, purpose, department, staff, visitDate, room, fasting);
+	}
+	else
+	{
+		
+		if (typeid(*staff) == typeid(Surgeon))
+		{
+			cout << "Error: Checkup visit cannot have a Surgeon as staff member." << endl;
+			return false;
+		}
+		visits[numOfVisits] = new CheckupVisit(patient, purpose, department, staff, visitDate);
+	}
+
 	numOfVisits++;
 	return true;
 }
+
 
 Visit* Hospital::getVisitByPatientId(int patientID) const 
 {
@@ -526,14 +542,23 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 				cout << "- " << patient->getName()
 					<< " (ID: " << patient->getId()
 					<< ", purpose: " << visits[i]->getPurpose()
-					<< ", date of visit: " << ctime(&visitDate) // 
+					<< ", date of visit: " << ctime(&visitDate)  // Display date of visit
 					<< ", staff member allocated: " << visits[i]->getStaff()->getName()
 					<< ")" << endl;
 
+				
+				if (typeid(*visits[i]) == typeid(SurgeryVisit)) {
+					SurgeryVisit* surgeryVisit = dynamic_cast<SurgeryVisit*>(visits[i]);
+					cout << "Surgery Room: " << surgeryVisit->getSurgeryRoomNumber() << endl;  
+					cout << "Is the patient fasting? " << (surgeryVisit->getIsFasting() ? "Yes" : "No") << endl;  
+				}
 			}
 		}
 	}
+
+	return true;
 }
+
 
 
 

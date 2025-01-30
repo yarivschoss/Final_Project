@@ -441,16 +441,20 @@ int main()
             break;
         }
 
-        case AddVisit: 
+
+        case AddVisit:
         {
             int patientID;
+            bool isSurgery = false;
+            int room = 0;
+            bool fasting = false;
             char purpose[MAX_STRING_SIZE], departmentName[MAX_STRING_SIZE], staffName[MAX_STRING_SIZE];
 
             cout << "Is the patient already in the system? (y/n): ";
             char isExisting;
             cin >> isExisting;
 
-            if (isExisting == 'n' || isExisting == 'N') 
+            if (isExisting == 'n' || isExisting == 'N')
             {
                 // Add a new patient
                 cin.ignore();
@@ -463,26 +467,26 @@ int main()
                 cout << "Enter patient's gender (m/f): ";
                 cin >> gender;
 
-                Patient p(Person (name, birthYear, gender));
+                Patient p(Person(name, birthYear, gender));
 
-                if (!hospital.addPatient(p)) 
+                if (!hospital.addPatient(p))
                 {
                     cout << "Failed to add patient. Hospital might be full." << endl;
                     break;
                 }
 
                 Patient* newPatient = hospital.getLastAddedPatient();
-                if (newPatient) 
+                if (newPatient)
                 {
                     patientID = newPatient->getId();
                     cout << "Patient added successfully! ID: " << patientID << endl;
                 }
             }
-            else if (isExisting == 'y' || isExisting == 'Y') 
+            else if (isExisting == 'y' || isExisting == 'Y')
             {
                 // Display existing patient IDs
                 cout << "Existing patient IDs:" << endl;
-                for (int i = 0; i < hospital.getNumOfPatients(); ++i) 
+                for (int i = 0; i < hospital.getNumOfPatients(); ++i)
                 {
                     cout << "- " << hospital.getPatient(i)->getId() << endl;
                 }
@@ -490,77 +494,123 @@ int main()
                 cout << "Enter patient ID from the list above: ";
                 cin >> patientID;
             }
-            else 
+            else
             {
                 cout << "Invalid input. Returning to the main menu." << endl;
                 break;
             }
 
-            // Get visit purpose
-            cout << "Enter visit purpose: ";
-            cin.getline(purpose, MAX_STRING_SIZE);
+            
+
+            // Ask if the visit is for a surgery or checkup
+            cout << "Is this a surgery visit? (y/n): ";
+            char surgeryChoice;
+            cin >> surgeryChoice;
+
+            if (surgeryChoice == 'y' || surgeryChoice == 'Y') {
+                // It's a surgery visit
+                isSurgery = true;
+
+                // Ask for surgery specific data
+                cout << "Enter surgery room number: ";
+                cin >> room;
+
+                cout << "Is the patient fasting? (y/n): ";
+                char fastingChoice;
+                cin >> fastingChoice;
+                fasting = (fastingChoice == 'y' || fastingChoice == 'Y');
+            }
 
             // Show available departments
             cout << "\nAvailable departments:" << endl;
             hospital.showDepartments();
 
             cout << "Enter department name: ";
+            cin.ignore();  // To clear any remaining newline characters
             cin.getline(departmentName, MAX_STRING_SIZE);
 
             Department* department = hospital.getDepartment(departmentName);
-            if (!department) 
+            if (!department)
             {
                 cout << "Invalid department name. Visit creation failed." << endl;
                 break;
             }
 
-            // Show available staff
-            cout << "\nAvailable staff (doctors and nurses):" << endl;
-            hospital.showDoctors();
-            hospital.showNurses();
+            // Show available staff (doctors and nurses) based on visit type
+            if (isSurgery) {
+                // If surgery, only show surgeons
+                cout << "\nAvailable surgeons:" << endl;
+                hospital.showSurgeons();
+            }
+            else {
+                // If checkup, show doctors and nurses
+                cout << "\nAvailable doctors and nurses:" << endl;
+                hospital.showDoctors();
+                hospital.showNurses();
+            }
 
             cout << "Enter staff name: ";
             cin.getline(staffName, MAX_STRING_SIZE);
 
             Employee* staff = hospital.getDoctor(staffName);
-            if (!staff) 
+            if (!staff)
             {
                 staff = hospital.getNurse(staffName);
             }
-            if (!staff) 
+            if (!staff)
+            {
+                staff = hospital.getSurgeon(staffName);
+            }
+            if (!staff)
             {
                 cout << "Invalid staff name. Visit creation failed." << endl;
                 break;
             }
 
+            // Ask for the purpose of the visit
+            cout << "Enter visit purpose: ";
+            cin.ignore();  // To clear the input buffer from previous cin
+            cin.getline(purpose, MAX_STRING_SIZE);
+
+
+            // Ask for visit date
             cout << "Enter visit date (YYYY-MM-DD): ";
             int year, month, day;
             char separator1, separator2;
 
-            
             cin >> year >> separator1 >> month >> separator2 >> day;
 
-           
             struct tm timeStruct = {};
-            timeStruct.tm_year = year - 1900; // 
-            timeStruct.tm_mon = month - 1;    //  
-            timeStruct.tm_mday = day;         // 
+            timeStruct.tm_year = year - 1900;
+            timeStruct.tm_mon = month - 1;
+            timeStruct.tm_mday = day;
 
-            
             time_t visitDate = mktime(&timeStruct);
 
-
-            if (hospital.addVisit(patientID, purpose, departmentName, staffName, visitDate)) 
+            // Add the visit to the hospital
+            if (hospital.addVisit(patientID, purpose, departmentName, staffName, visitDate, isSurgery, room, fasting))
             {
                 cout << "Visit added successfully!" << endl;
             }
-            else 
+            else
             {
                 cout << "Failed to add visit!" << endl;
             }
 
             break;
         }
+
+
+
+
+
+
+
+
+
+
+
+        
 
         case ShowPatientsByDepartment:
         {
@@ -574,6 +624,7 @@ int main()
             break;
         }
 
+        
         case FindPatientById:
         {
             // Display all patient IDs
@@ -603,6 +654,9 @@ int main()
                     else {
                         cout << "No department assigned yet." << endl;
                     }
+
+                    // Show the visit type (checkup or surgery)
+                    cout << "Visit Type: " << visit->getVisitType() << endl;
                 }
                 else {
                     cout << "No visit found for the patient." << endl;
@@ -613,6 +667,10 @@ int main()
             }
             break;
         }
+
+
+
+
 
         case ShowInfo:
         {

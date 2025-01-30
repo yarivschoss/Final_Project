@@ -10,7 +10,7 @@
 class Visit
 {
 
-private:
+protected:
     Patient* patient;        // Pointer to the patient
     time_t visitDate;        // Visit date
     char* purpose;           // Purpose of the visit
@@ -20,9 +20,12 @@ private:
 public:
     // Constructor
     Visit(Patient* patient, const char* purpose, Department* department, Employee* staff, time_t visitDate );
+    virtual const char* getVisitType() const = 0; // Identifies the visit type
+    virtual time_t getVisitDate() const = 0;  
+
 
     // Destructor
-    ~Visit();
+    virtual ~Visit();
 
     // Setters
     bool setVisitDate(time_t date);
@@ -31,7 +34,7 @@ public:
     bool setStaff(Employee* staff);
 
     // Getters
-    time_t getVisitDate() const { return visitDate; }
+     
     const char* getPurpose() const { return purpose; }
     Department* getDepartmentForPatient(const Patient* patient) const 
     {
@@ -49,7 +52,8 @@ public:
     
 
     // Display function
-    void show() const;
+    
+    virtual void show() const = 0;  // Abstract function to be implemented in derived classes
 
 
     // Overloaded operator for output

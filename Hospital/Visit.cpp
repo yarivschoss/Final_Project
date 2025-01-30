@@ -106,10 +106,10 @@ ostream& operator<<(ostream& os, const Visit& v)
 
     os << ", Date: ";
     if (v.visitDate != -1) {
-        os << ctime(&v.visitDate); // פלט קריא
+        os << ctime(&v.visitDate); 
     }
     else {
-        os << "Invalid date"; // במקרה שהתאריך לא חוקי
+        os << "Invalid date"; 
     }
 
 

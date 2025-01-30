@@ -11,6 +11,8 @@
 #include "Nurse.h"
 #include "Patient.h"
 #include "Visit.h"
+#include "CheckupVisit.h"
+#include "SurgeryVisit.h"
 
 
 class Hospital 
@@ -96,7 +98,8 @@ public:
 	
 	
 	// Functions to add patients and visits
-	bool addVisit(int patientID, const char* purpose, const char* departmentName, const char* staffName, time_t visitDate);
+	bool addVisit (int patientID, const char* purpose, const char* departmentName, const char* staffName,
+		time_t visitDate, bool isSurgery, int room = 0, bool fasting = false);
 	bool addPatient(const Patient& pateint); // Add Patient
 	Patient* getLastAddedPatient() const;
 
