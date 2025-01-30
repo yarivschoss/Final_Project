@@ -48,6 +48,19 @@ public:
     Employee* getStaff() const { return staff;  }
     Patient* getPatient() const { return patient;  }
 
+
+    int getVisitMonth() const {
+        struct tm* timeInfo = localtime(&visitDate);
+        return timeInfo->tm_mon + 1; 
+    }
+
+    
+    int getVisitDay() const {
+        struct tm* timeInfo = localtime(&visitDate);
+        return timeInfo->tm_mday;  
+    }
+
+
     // Specific getter for department assigned to a patient
     
 

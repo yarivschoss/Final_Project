@@ -17,10 +17,15 @@ SurgeryVisit::SurgeryVisit(Patient* patient, const char* purpose, Department* de
 
 void SurgeryVisit::show() const
 {
+
+    /*
     cout << "Surgery Visit for patient: " << patient->getName() << " (ID: " << patient->getId() << ")\n";
     cout << "Date: " << ctime(&visitDate);
     cout << "Purpose: " << purpose << "\n";
     cout << "Department: " << department->getName() << "\n";
+    */
+    Visit::show();
+    
     cout << "Surgeon: " << staff->getName() << "\n";
     cout << "Surgery Room: " << surgeryRoomNumber << "\n";
     cout << "Fasting: " << (isFasting ? "Yes" : "No") << "\n";

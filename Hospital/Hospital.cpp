@@ -540,6 +540,10 @@ void Hospital::showNurses() const
 
 
 
+#include <iostream>
+#include <ctime>
+using namespace std;
+
 bool Hospital::showPatientsInDepartment(const char* departmentName) const
 {
 	if (!departmentName)
@@ -561,7 +565,23 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 
 			if (patient)
 			{
-				time_t visitDate = visits[i]->getVisitDate(); // 
+				// Get visit date
+				int month = visits[i]->getVisitMonth(); 
+				int day = visits[i]->getVisitDay();
+
+				struct tm timeStruct = {};
+				timeStruct.tm_year = 2025 - 1900;  // Set the year to 2025
+				timeStruct.tm_mon = month - 1;     
+				timeStruct.tm_mday = day;          
+				
+
+				// Convert the date to time_t
+				time_t visitDate = mktime(&timeStruct);
+
+				if (visitDate == -1) {
+					cout << "Invalid date!" << endl;
+					continue;
+				}
 
 				// Display patient details and visit purpose
 				cout << "- " << patient->getName()
@@ -576,7 +596,12 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 					cout << ", visit type: Checkup";  // Checkup visit
 				}
 
-				cout << ", date of visit: " << ctime(&visitDate)  // Display date of visit
+				// Convert the visit date into a readable format using ctime
+				struct tm* timeInfo = localtime(&visitDate);
+				cout << ", date of visit: "
+					<< timeInfo->tm_mday << "/"  
+					<< (timeInfo->tm_mon + 1) << "/"  
+					<< (timeInfo->tm_year + 1900)  
 					<< ", staff member allocated: " << visits[i]->getStaff()->getName()
 					<< ")" << endl;
 
@@ -592,6 +617,7 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 
 	return true;
 }
+
 
 
 	

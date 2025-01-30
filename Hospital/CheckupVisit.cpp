@@ -26,6 +26,7 @@ void CheckupVisit::show() const
     cout << "Purpose: " << purpose << "\n";
     cout << "Department: " << department->getName() << "\n";
     */
+    
     cout << "Staff: " << staff->getName() << " (" << (typeid(*staff) == typeid(Nurse) ? "Nurse" : "Doctor") << ")\n";
 }
 

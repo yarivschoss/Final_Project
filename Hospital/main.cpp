@@ -567,25 +567,33 @@ int main()
                 break;
             }
 
-            // Ask for the purpose of the visit
-            cout << "Enter visit purpose: ";
-            cin.ignore();  // To clear the input buffer from previous cin
-            cin.getline(purpose, MAX_STRING_SIZE);
+            
 
 
             // Ask for visit date
-            cout << "Enter visit date (YYYY-MM-DD): ";
-            int year, month, day;
-            char separator1, separator2;
 
-            cin >> year >> separator1 >> month >> separator2 >> day;
 
-            struct tm timeStruct = {};
-            timeStruct.tm_year = year - 1900;
-            timeStruct.tm_mon = month - 1;
-            timeStruct.tm_mday = day;
+                int month, day;
+                char separator;
 
-            time_t visitDate = mktime(&timeStruct);
+                cout << "Enter visit date (MM-DD): ";
+                cin >> month >> separator >> day;
+
+
+                struct tm timeStruct = {};
+                timeStruct.tm_year = 2025 - 1900;  
+                timeStruct.tm_mon = month - 1;     
+                timeStruct.tm_mday = day;          
+                
+
+                time_t visitDate = mktime(&timeStruct);
+
+
+            // Ask for the purpose of the visit
+                cout << "Enter visit purpose: ";
+            cin.ignore();  // To clear the input buffer from previous cin
+            cin.getline(purpose, MAX_STRING_SIZE);
+
 
             // Add the visit to the hospital
             if (hospital.addVisit(patientID, purpose, departmentName, staffName, visitDate, isSurgery, room, fasting))
@@ -602,15 +610,6 @@ int main()
 
 
 
-
-
-
-
-
-
-
-
-        
 
         case ShowPatientsByDepartment:
         {
