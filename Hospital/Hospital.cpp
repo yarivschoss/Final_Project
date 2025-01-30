@@ -283,41 +283,49 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 		visits = temp;
 	}
 
+	// Find the patient by ID
 	Patient* patient = findPatientById(patientID);
 	if (!patient) return false;
 
+	// Find the department by name
 	Department* department = getDepartment(departmentName);
 	if (!department) return false;
 
+	// Find the staff member (Doctor, Nurse, or Surgeon)
 	Employee* staff = getDoctor(staffName);
 	if (!staff) staff = getNurse(staffName);
 	if (!staff) staff = getSurgeon(staffName);
 	if (!staff) return false;
 
+	// Handling Surgery Visit
 	if (isSurgery)
 	{
+		// Ensure the staff is a Surgeon
 		if (typeid(*staff) != typeid(Surgeon))
 		{
 			cout << "Error: Surgery visit must have a Surgeon as staff member." << endl;
 			return false;
 		}
+		// Create Surgery Visit
 		visits[numOfVisits] = new SurgeryVisit(patient, purpose, department, staff, visitDate, room, fasting);
 	}
 	else
 	{
-		
+		// Handling Checkup Visit
+		// Here we allow Doctor, Nurse, or Surgeon
 		if (typeid(*staff) == typeid(Surgeon))
 		{
-			cout << "Error: Checkup visit cannot have a Surgeon as staff member." << endl;
-			return false;
+			// Allow Surgeon for a Checkup visit
 		}
-		
+		// Create Checkup Visit
 		visits[numOfVisits] = new CheckupVisit(patient, purpose, department, staff, visitDate);
 	}
 
+	// Increase the number of visits
 	numOfVisits++;
 	return true;
 }
+
 
 
 Visit* Hospital::getVisitByPatientId(int patientID) const 
