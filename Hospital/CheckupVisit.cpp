@@ -16,12 +16,15 @@ CheckupVisit::CheckupVisit(Patient* patient, const char* purpose, Department* de
 }
 
 
-void CheckupVisit::show() const
+void CheckupVisit::show() const 
 {
+    Visit::show();
+    /*
     cout << "Checkup Visit for patient: " << patient->getName() << " (ID: " << patient->getId() << ")\n";
     cout << "Date: " << ctime(&visitDate);
     cout << "Purpose: " << purpose << "\n";
     cout << "Department: " << department->getName() << "\n";
+    */
     cout << "Staff: " << staff->getName() << " (" << (typeid(*staff) == typeid(Nurse) ? "Nurse" : "Doctor") << ")\n";
 }
 

@@ -311,6 +311,7 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 			cout << "Error: Checkup visit cannot have a Surgeon as staff member." << endl;
 			return false;
 		}
+		
 		visits[numOfVisits] = new CheckupVisit(patient, purpose, department, staff, visitDate);
 	}
 
@@ -516,6 +517,9 @@ void Hospital::showNurses() const
 	cout << "}" << endl;
 }
 
+
+
+
 bool Hospital::showPatientsInDepartment(const char* departmentName) const
 {
 	if (!departmentName)
@@ -541,7 +545,7 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 
 				cout << "- " << patient->getName()
 					<< " (ID: " << patient->getId()
-					<< ", purpose: " << visits[i]->getPurpose()
+					<< ", purpose: " << visits[i]->getPurpose() ///////
 					<< ", date of visit: " << ctime(&visitDate)  // Display date of visit
 					<< ", staff member allocated: " << visits[i]->getStaff()->getName()
 					<< ")" << endl;
