@@ -44,9 +44,7 @@ public:
 		return name; 
 	}
 
-	bool addSurgeon(Surgeon& surgeon);
-	bool addDoctor(Doctor& doctor); // adding a doctor to this department - returns false if department is full
-	bool addNurse(Nurse& nurse); // adding a nurse to this department - returns false if department is full
+	bool addEmployee(Employee& e);
 
 	void showSurgeons() const;
 	void showDoctors() const;
@@ -55,21 +53,12 @@ public:
 	friend ostream& operator<<(ostream& os, const Department& d); // prints department's data
 
 
-	const Department& operator+=(Surgeon& other)
+	const Department& operator+=(Employee& other)
 	{
-		this->addSurgeon(other);
+		this->addEmployee(other);
 		return *this;
 	}
-	const Department& operator+=(Doctor& other)
-	{
-		this->addDoctor(other);
-		return *this;
-	}
-	const Department& operator+=(Nurse& other)
-	{
-		this->addNurse(other);
-		return *this;
-	}
+
 
 	bool operator()(const char* name); // prints data according to name
 };

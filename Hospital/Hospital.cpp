@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <ctime>
 #pragma warning(disable: 4996)
 using namespace std;
 
@@ -8,9 +9,9 @@ using namespace std;
 
 int const MAX_STRING_SIZE = 100;
 
-Hospital::Hospital(const char* name, ResearchCenter r) :
+Hospital::Hospital(const char* name, const char* rcName) :
 maxNumOfDepartments(DEFAULT_NUM_OF_DEPARTMENTS), maxNumOfEmployees(DEFAULT_STAFF_SIZE),
-maxNumOfPatients(100), maxNumOfVisits(200), numOfPatients(0), numOfVisits(0), researchCenter(r.getName())
+maxNumOfPatients(100), maxNumOfVisits(200), numOfPatients(0), numOfVisits(0), researchCenter(rcName)
 {
 	setName(name);
 
@@ -57,28 +58,7 @@ bool Hospital::setName(const char* name)
 
 }
 
-bool Hospital::addSurgeon(Surgeon& S)
-{
-	if (maxNumOfEmployees == numOfEmployees)
-	{
-		maxNumOfEmployees *= 2;
-		Employee** temp = new Employee * [maxNumOfEmployees];
-
-		for (int i = 0; i < numOfEmployees; i++)
-		{
-			temp[i] = employees[i]->clone();
-		}
-
-		delete[] employees;
-		employees = temp;
-	}
-
-	employees[numOfEmployees] = new Surgeon(S);
-	numOfEmployees++;
-	return true;
-}
-
-bool Hospital::addDoctor(Doctor& D)
+bool Hospital::addEmployee(const Employee& e)
 {
 	if(maxNumOfEmployees == numOfEmployees)
 	{
@@ -87,40 +67,19 @@ bool Hospital::addDoctor(Doctor& D)
 
 		for (int i = 0; i < numOfEmployees; i++)
 		{
-			temp[i] = employees[i]->clone();
+			temp[i] = employees[i];
 		}
 
 		delete[] employees;
 		employees = temp;
 	}
 
-	employees[numOfEmployees] = new Doctor(D);
+	employees[numOfEmployees] = e.clone();
 	numOfEmployees++;
 	return true;
 }
 
-bool Hospital::addNurse(Nurse& N)
-{
-	if (maxNumOfEmployees == numOfEmployees)
-	{
-		maxNumOfEmployees *= 2;
-		Employee** temp = new Employee * [maxNumOfEmployees];
-
-		for (int i = 0; i < numOfEmployees; i++)
-		{
-			temp[i] = employees[i]->clone();
-		}
-
-		delete[] employees;
-		employees = temp;
-	}
-
-	employees[numOfEmployees] = new Nurse(N);
-	numOfEmployees++;
-	return true;
-}
-
-bool Hospital::addResearcherDoctor(ResearcherDoctor& RD)
+bool Hospital::addResearcherDoctor(const ResearcherDoctor& RD)
 {
 	if (maxNumOfEmployees == numOfEmployees)
 	{
@@ -165,7 +124,7 @@ bool Hospital::addDepartmant(const char* name)
 	return true;
 }
 
-bool Hospital::addPatient(const Patient& patient)
+const Patient* Hospital::addPatient(const Patient& patient)
 {
 	if (maxNumOfPatients == numOfPatients)
 	{
@@ -183,19 +142,10 @@ bool Hospital::addPatient(const Patient& patient)
 
 	patients[numOfPatients] = new Patient(patient);
 	numOfPatients++;
-	return true;
+	return patients[numOfPatients-1];
 }
 
-Patient* Hospital::getLastAddedPatient() const 
-{
-	if (numOfPatients > 0) 
-	{
-		return patients[numOfPatients - 1];
-	}
-	return nullptr; // No patients added
-}
-
-Department* Hospital::getDepartment(const char* name) const
+const Department* Hospital::getDepartment(const char* name) const
 {
 	if (!name || numOfDepartments == 0) 
 	{
@@ -212,7 +162,24 @@ Department* Hospital::getDepartment(const char* name) const
 	return nullptr; // Return nullptr if no matching department is found
 }
 
-Surgeon* Hospital::getSurgeon(const char* name) const
+Department* Hospital::getDepartment(const char* name) 
+{
+	if (!name || numOfDepartments == 0)
+	{
+		return nullptr; // Return nullptr if name is invalid or no departments exist
+	}
+
+	for (int i = 0; i < numOfDepartments; ++i)
+	{
+		if (strcmp(departments[i]->getName(), name) == 0) {
+			return departments[i]; // Return pointer to the department if names match
+		}
+	}
+
+	return nullptr; // Return nullptr if no matching department is found
+}
+
+const Surgeon* Hospital::getSurgeon(const char* name) const
 {
 	if (!name || numOfEmployees == 0) 
 	{
@@ -230,7 +197,25 @@ Surgeon* Hospital::getSurgeon(const char* name) const
 	return nullptr; // Return nullptr if no matching doctor is found
 }
 
-Doctor* Hospital::getDoctor(const char* name) const
+Surgeon* Hospital::getSurgeon(const char* name) 
+{
+	if (!name || numOfEmployees == 0)
+	{
+		return nullptr; // Return nullptr if name is invalid or no employees exist
+	}
+
+	for (int i = 0; i < numOfEmployees; ++i)
+	{
+		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Surgeon)))
+		{
+			return dynamic_cast<Surgeon*>(employees[i]); // Return pointer to the doctor if names match
+		}
+	}
+
+	return nullptr; // Return nullptr if no matching doctor is found
+}
+
+const Doctor* Hospital::getDoctor(const char* name) const
 {
 	if (!name || numOfEmployees == 0) 
 	{
@@ -248,7 +233,43 @@ Doctor* Hospital::getDoctor(const char* name) const
 	return nullptr; // Return nullptr if no matching doctor is found
 }
 
-Nurse* Hospital::getNurse(const char* name) const
+Doctor* Hospital::getDoctor(const char* name) 
+{
+	if (!name || numOfEmployees == 0)
+	{
+		return nullptr; // Return nullptr if name is invalid or no employees exist
+	}
+
+	for (int i = 0; i < numOfEmployees; ++i)
+	{
+		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor) || typeid(*employees[i]) == typeid(Surgeon)))
+		{
+			return dynamic_cast<Doctor*>(employees[i]); // Return pointer to the doctor if names match
+		}
+	}
+
+	return nullptr; // Return nullptr if no matching doctor is found
+}
+
+const Nurse* Hospital::getNurse(const char* name) const
+{
+	if (!name || numOfEmployees == 0)
+	{
+		return nullptr; // Return nullptr if name is invalid or no employees exist
+	}
+
+	for (int i = 0; i < numOfEmployees; ++i)
+	{
+		if (strcmp(employees[i]->getName(), name) == 0 && typeid(*employees[i]) == typeid(Nurse))
+		{
+			return dynamic_cast<Nurse*>(employees[i]); // Return pointer to the nurse if names match
+		}
+	}
+
+	return nullptr; // Return nullptr if no matching doctor is found
+}
+
+Nurse* Hospital::getNurse(const char* name) 
 {
 	if (!name || numOfEmployees == 0)
 	{
@@ -269,6 +290,20 @@ Nurse* Hospital::getNurse(const char* name) const
 bool Hospital::addVisit(int patientID, const char* purpose, const char* departmentName,
 	const char* staffName, time_t visitDate, bool isSurgery, int room, bool fasting)
 {
+	// Find the patient by ID
+	Patient* patient = findPatientById(patientID);
+	if (!patient) return false;
+
+	// Find the department by name
+	Department* department = getDepartment(departmentName);
+	if (!department) return false;
+
+	// Find the staff member (Doctor, Nurse, or Surgeon)
+	Employee* staff = getDoctor(staffName);
+	if (!staff) staff = getNurse(staffName);
+	if (!staff) staff = getSurgeon(staffName);
+	if (!staff) return false;
+
 	if (maxNumOfVisits == numOfVisits)
 	{
 		maxNumOfVisits *= 2;
@@ -283,19 +318,7 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 		visits = temp;
 	}
 
-	// Find the patient by ID
-	Patient* patient = findPatientById(patientID);
-	if (!patient) return false;
-
-	// Find the department by name
-	Department* department = getDepartment(departmentName);
-	if (!department) return false;
-
-	// Find the staff member (Doctor, Nurse, or Surgeon)
-	Employee* staff = getDoctor(staffName);
-	if (!staff) staff = getNurse(staffName);
-	if (!staff) staff = getSurgeon(staffName);
-	if (!staff) return false;
+	
 
 	// Handling Surgery Visit
 	if (isSurgery)
@@ -337,8 +360,6 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 	numOfVisits++;
 	return true;
 }
-
-
 
 Visit* Hospital::getVisitByPatientId(int patientID) const 
 {
@@ -537,20 +558,13 @@ void Hospital::showNurses() const
 	cout << "}" << endl;
 }
 
-
-
-
-#include <iostream>
-#include <ctime>
-using namespace std;
-
 bool Hospital::showPatientsInDepartment(const char* departmentName) const
 {
 	if (!departmentName)
 		return false;
 
 	// Find the department by name
-	Department* department = getDepartment(departmentName);
+	const Department* department = getDepartment(departmentName);
 	if (!department)
 		return false;
 

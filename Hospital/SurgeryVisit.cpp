@@ -5,8 +5,10 @@
 using namespace std;
 
 
-SurgeryVisit::SurgeryVisit(Patient* patient, const char* purpose, Department* department, Employee* staff, time_t visitDate, int room, bool fasting)
-    : Visit(patient, purpose, department, staff, visitDate), surgeryRoomNumber(room), isFasting(fasting)
+SurgeryVisit::SurgeryVisit(Patient* patient, const char* purpose, Department* department,
+    Employee* staff, time_t visitDate, int room, bool fasting)
+    : Visit(patient, purpose, department, staff, visitDate), surgeryRoomNumber(room),
+    isFasting(fasting)
 {
     
     if (typeid(*staff) != typeid(Surgeon)) {

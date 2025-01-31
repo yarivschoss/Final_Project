@@ -27,13 +27,16 @@ public:
 private:
 
 	char* name;
-	int numOfEmployees, numOfDepartments;
-	int maxNumOfEmployees, maxNumOfDepartments, maxNumOfPatients, maxNumOfVisits;
 	int numOfPatients, numOfVisits;
+	int maxNumOfPatients, maxNumOfVisits;
 	ResearchCenter researchCenter; // need to update initillization values
 
 	Employee** employees = nullptr;
+	int numOfEmployees, maxNumOfEmployees;
+
 	Department** departments = nullptr;
+	int numOfDepartments, maxNumOfDepartments;
+
 	Patient** patients;
 	Visit** visits;
 
@@ -42,8 +45,8 @@ private:
 
 public:
 
-	Hospital(const char* name, ResearchCenter r);
-	virtual ~Hospital();
+	Hospital(const char* name, const char * rcName);
+	~Hospital();
 	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
 	friend istream& operator>>(istream& in, Hospital& h);
@@ -54,21 +57,12 @@ public:
 	operator int const() const { return DEFAULT_STAFF_SIZE; } // returns size of hospital staff
 	operator const char* () const { return getName(); } // returns name of hospital
 
-	const Hospital& operator+=(Surgeon& other)
+	const Hospital& operator+=(Employee& other)
 	{
-		this->addSurgeon(other);
+		this->addEmployee(other);
 		return *this;
 	}
-	const Hospital& operator+=(Doctor& other)
-	{
-		this->addDoctor(other);
-		return *this;
-	}
-	const Hospital& operator+=(Nurse& other)
-	{
-		this->addNurse(other);
-		return *this;
-	}
+
 	const Hospital& operator+=(ResearcherDoctor& other)
 	{
 		this->addResearcherDoctor(other);
@@ -78,11 +72,21 @@ public:
 	bool setName(const char* name);
 
 	const char* getName() const { return name; }
-	Department* getDepartment(const char* name) const; //searches through the array of departments and returns a pointer to the department with the specified name
+
+	const Department* getDepartment(const char* name) const; 
+	Department* getDepartment(const char* name);
+
 	ResearchCenter& getResearchCenter() { return researchCenter; }
-	Surgeon* getSurgeon(const char* name) const; //searches through the array of doctors and returns a pointer to the doctor with the specified name
-	Doctor* getDoctor(const char* name) const; //searches through the array of doctors and returns a pointer to the doctor with the specified name
-	Nurse* getNurse(const char* name) const; //searches through the array of nurses and returns a pointer to the nurse with the specified name
+
+	const Surgeon* getSurgeon(const char* name) const; 
+	Surgeon* getSurgeon(const char* name);
+
+	const Doctor* getDoctor(const char* name) const; 
+	Doctor* getDoctor(const char* name);
+
+	const Nurse* getNurse(const char* name) const; 
+	Nurse* getNurse(const char* name);
+
 	Visit* getVisitByPatientId(int patientID) const;
 	int getNumOfPatients() const { return numOfPatients; }
 	Patient* getPatient(int index) const;
@@ -90,18 +94,16 @@ public:
 	Employee* getStaff(const char* name) const; // Get Staff by name
 
 
-	bool addSurgeon(Surgeon& S);
-	bool addDoctor(Doctor& D); 
-	bool addResearcherDoctor(ResearcherDoctor& RD);
-	bool addNurse(Nurse& N);
+	bool addEmployee(const Employee& e);
+	bool addResearcherDoctor(const ResearcherDoctor& RD);
 	bool addDepartmant(const char* name);
 	
 	
 	// Functions to add patients and visits
 	bool addVisit (int patientID, const char* purpose, const char* departmentName, const char* staffName,
 		time_t visitDate, bool isSurgery, int room = 0, bool fasting = false);
-	bool addPatient(const Patient& pateint); // Add Patient
-	Patient* getLastAddedPatient() const;
+	const Patient* addPatient(const Patient& pateint); // Add Patient
+	//Patient* getLastAddedPatient() const;
 
 	Patient* findPatientById(int id); // Find Patient by ID
 

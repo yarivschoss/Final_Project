@@ -5,7 +5,8 @@
 using namespace std;
 
 
-CheckupVisit::CheckupVisit(Patient* patient, const char* purpose, Department* department, Employee* staff, time_t visitDate)
+CheckupVisit::CheckupVisit(Patient* patient, const char* purpose, 
+    Department* department, Employee* staff, time_t visitDate)
     : Visit(patient, purpose, department, staff, visitDate)
 {
     /*

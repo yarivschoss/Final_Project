@@ -4,7 +4,7 @@
 using namespace std;
 
 // Constructor
-Visit::Visit(Patient* patient, const char* purpose, Department* department, Employee* staff, time_t visitDate)
+Visit::Visit(Patient* patient, const char* purpose,const Department* department, Employee* staff, time_t visitDate)
     : patient(patient), department(department), staff(staff), visitDate(visitDate), purpose(nullptr)
 {
     setPurpose(purpose);

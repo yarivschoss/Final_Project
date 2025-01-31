@@ -31,7 +31,7 @@ ostream& operator<<(ostream& os, const Department& d)
 	os << "\ndoctors: " << endl; //showing doctors in department
 	for (int i = 0; i < d.numOfEmployees; i++)
 	{
-		if (typeid(*d.employees[i]) == typeid(Doctor) || typeid(*d.employees[i]) == typeid(ResearcherDoctor))
+		if (typeid(*d.employees[i]) == typeid(Doctor) || typeid(*d.employees[i]) == typeid(ResearcherDoctor) || typeid(*d.employees[i]) == typeid(Surgeon))
 		{
 			os << *d.employees[i];
 
@@ -101,49 +101,19 @@ bool Department::setName(const char* name)
 
 }
 
-bool Department::addSurgeon(Surgeon& surgeon)
+bool Department::addEmployee(Employee& e)
 {
 	if (!this) return false;
 
 	if (numOfEmployees < maxNumOfEmployees)
 	{
-		employees[numOfEmployees] = &surgeon; // allocates the doctor to the department's doctor array
+		employees[numOfEmployees] = &e; // allocates the doctor to the department's doctor array
 		employees[numOfEmployees]->setDepartment(this); // allocates the department who called addDoctor (this) to the added doctor 
 		numOfEmployees++;
 		return true;
 	}
 
 	return false;
-}
-
-bool Department::addDoctor(Doctor& doctor)
-{
-	if (!this) return false;
-
-	if (numOfEmployees < maxNumOfEmployees)
-	{
-		employees[numOfEmployees] = &doctor; // allocates the doctor to the department's doctor array
-		employees[numOfEmployees]->setDepartment(this); // allocates the department who called addDoctor (this) to the added doctor 
-		numOfEmployees++;
-		return true;
-	}
-
-	return false;
-}
-
-bool Department::addNurse(Nurse& nurse) 
-{
-	if (!this) return false;
-
-	if (numOfEmployees < maxNumOfEmployees)
-	{
-		employees[numOfEmployees] = &nurse; // allocates the nurse to the department's nurse array
-		employees[numOfEmployees]->setDepartment(this); // allocates the department who called addNurse (this) to the added nurse
-		numOfEmployees++;
-		return true;  
-	}
-
-	return false;  
 }
 
 void Department::showSurgeons() const

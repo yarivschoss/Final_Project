@@ -4,7 +4,8 @@
 #include "Visit.h"
 #include "Employee.h"  
 
-class CheckupVisit : public Visit {
+class CheckupVisit : public Visit 
+{
 public:
     CheckupVisit(Patient* patient, const char* purpose, Department* department, Employee* staff, time_t visitDate);
 

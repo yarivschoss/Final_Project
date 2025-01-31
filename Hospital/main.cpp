@@ -17,6 +17,8 @@ Doctor::eOccupation DEFAULT_OCCUPATION = Doctor::eOccupation::Pathology;
 enum eChoice { AddDepartment = 1, AddEmployeeHospital, AddToResearchCenter, AddEmployeeDepartment, AddPaper, AddPatient,AddVisit,
     ShowPatientsByDepartment,FindPatientById, ShowInfo , CompareResearchers, ClearConsole, Exit };
 
+//void compareResearchers();
+
 
 int main() 
 {
@@ -318,7 +320,7 @@ int main()
                     cout << "\nchoose department: ";
                     cin.getline(name, MAX_STRING_SIZE);
 
-                    if (!hospital.getDepartment(name)->addDoctor(*D))
+                    if (!hospital.getDepartment(name)->addEmployee(*D))
                     {
                         cout << "no existing department found" << endl;
                         break;
@@ -346,7 +348,7 @@ int main()
                     cout << "\nchoose department: ";
                     cin.getline(name, MAX_STRING_SIZE);
 
-                    if (!hospital.getDepartment(name)->addNurse(*N))
+                    if (!hospital.getDepartment(name)->addEmployee(*N))
                     {
                         cout << "no existing department found" << endl;
                         choice = AddNurseDepartment;
@@ -374,7 +376,7 @@ int main()
                     cout << "\nchoose department: ";
                     cin.getline(name, MAX_STRING_SIZE);
 
-                    if (!hospital.getDepartment(name)->addSurgeon(*S))
+                    if (!hospital.getDepartment(name)->addEmployee(*S))
                     {
                         cout << "no existing department found" << endl;
                         break;
@@ -422,13 +424,16 @@ int main()
             // Create a Person object
             Person p(name, birthYear, gender);
 
+           
+            const Patient* newPatient = hospital.addPatient(p);
+
             // Add the patient to the hospital
-            if (!hospital.addPatient(p)) {
+            if (!newPatient) 
+            {
                 cout << "Failed to add patient. Hospital might be full." << endl;
             }
             else {
                 // Retrieve the newly added patient and display their ID
-                Patient* newPatient = hospital.getLastAddedPatient();
                 if (newPatient) {
                     int patientID = newPatient->getId();
                     cout << "Patient added successfully! ID: " << patientID << endl;
@@ -440,7 +445,6 @@ int main()
 
             break;
         }
-
 
         case AddVisit:
         {
@@ -469,13 +473,14 @@ int main()
 
                 Patient p(Person(name, birthYear, gender));
 
-                if (!hospital.addPatient(p))
+                const Patient* newPatient = hospital.addPatient(p);
+
+                if (!newPatient)
                 {
                     cout << "Failed to add patient. Hospital might be full." << endl;
                     break;
                 }
 
-                Patient* newPatient = hospital.getLastAddedPatient();
                 if (newPatient)
                 {
                     patientID = newPatient->getId();
@@ -529,7 +534,7 @@ int main()
             cin.ignore();  // To clear any remaining newline characters
             cin.getline(departmentName, MAX_STRING_SIZE);
 
-            Department* department = hospital.getDepartment(departmentName);
+            const Department* department = hospital.getDepartment(departmentName);
             if (!department)
             {
                 cout << "Invalid department name. Visit creation failed." << endl;
@@ -552,7 +557,7 @@ int main()
             cout << "Enter staff name: ";
             cin.getline(staffName, MAX_STRING_SIZE);
 
-            Employee* staff = hospital.getDoctor(staffName);
+            const Employee* staff = hospital.getDoctor(staffName);
             if (!staff)
             {
                 staff = hospital.getNurse(staffName);
@@ -608,9 +613,6 @@ int main()
             break;
         }
 
-
-
-
         case ShowPatientsByDepartment:
         {
             // Show patients by department
@@ -623,7 +625,6 @@ int main()
             break;
         }
 
-        
         case FindPatientById:
         {
             // Display all patient IDs
@@ -646,7 +647,7 @@ int main()
                 Visit* visit = hospital.getVisitByPatientId(patientID);
                 if (visit) {
                     // Pass the patient to the function as a parameter
-                    Department* department = visit->getDepartmentForPatient(patient);
+                   const Department* department = visit->getDepartmentForPatient(patient);
                     if (department) {
                         cout << "Assigned Department: " << department->getName() << endl;
                     }
@@ -667,13 +668,9 @@ int main()
             break;
         }
 
-
-
-
-
         case ShowInfo:
         {
-            enum eChoiceShow { ShowDepartments = 1, ShowAllDoctors, ShowAllNurses, ShowHospitalStaff, ShowResearchers, ClearConsole, eReturn };
+            enum eChoiceShow { ShowDepartments = 1, ShowAllDoctors, ShowAllSurgeons, ShowAllNurses, ShowHospitalStaff, ShowResearchers, ClearConsole, eReturn };
             bool Return = false;
 
             while (!Return)
@@ -682,11 +679,12 @@ int main()
                 cout << endl;
                 cout << "1. Show Departments in Hospital" << endl;
                 cout << "2. Show Doctors in Hospital" << endl;
-                cout << "3. Show Nurses in Hospital" << endl;
-                cout << "4. Show Hospital's staff" << endl;
-                cout << "5. Show Researchers in Research Center" << endl;
-                cout << "6. Clear console" << endl;
-                cout << "7. Return" << endl;
+                cout << "3. Show Surgeons in Hospital" << endl;
+                cout << "4. Show Nurses in Hospital" << endl;
+                cout << "5. Show Hospital's staff" << endl;
+                cout << "6. Show Researchers in Research Center" << endl;
+                cout << "7. Clear console" << endl;
+                cout << "8. Return" << endl;
                 cout << "Enter your choice: ";
                 cin >> choice;
                 cin.ignore();
@@ -703,6 +701,12 @@ int main()
                 case (ShowAllDoctors): 
                 {
                     hospital("doctors");
+                    break;
+                }
+
+                case (ShowAllSurgeons):
+                {
+                    hospital("surgeons");
                     break;
                 }
 
