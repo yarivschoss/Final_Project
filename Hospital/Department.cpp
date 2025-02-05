@@ -4,38 +4,35 @@ using namespace std;
 #include "Department.h"
 #pragma warning(disable: 4996)
 
-
-
-Department::Department(const char* name) :  
-maxNumOfEmployees(MAX_DEPARTMENT_SIZE)
+Department::Department(const char* name) : name(nullptr)
 {
 	setName(name);
-
-	employees = new Employee * [maxNumOfEmployees];
 }
 
 Department::~Department()
 {
-	delete[] employees;
-
 	delete[] name;
 	cout << "Destroy Department" << endl;
 }
 
 ostream& operator<<(ostream& os, const Department& d)
 {
+	vector<Employee*>::const_iterator itr = d.employees.begin();
+	vector<Employee*>::const_iterator itrEnd = d.employees.end();
+	int size = d.employees.size();
+
 	os << "{name: " << d.getName() << ", ";
-	os << "number of employees: " << d.numOfEmployees << ", ";
-	os << "employees capacity: " << d.maxNumOfEmployees << "}" << endl;
+	os << "number of employees: " << d.employees.size() << ", ";
+	os << "employees capacity: " << d.employees.capacity() << "}" << endl;
 
 	os << "\ndoctors: " << endl; //showing doctors in department
-	for (int i = 0; i < d.numOfEmployees; i++)
+	for (int i = 1; itr != itrEnd; ++itr, i++)
 	{
-		if (typeid(*d.employees[i]) == typeid(Doctor) || typeid(*d.employees[i]) == typeid(ResearcherDoctor) || typeid(*d.employees[i]) == typeid(Surgeon))
+		if (typeid(*itr) == typeid(Doctor) || typeid(*itr) == typeid(ResearcherDoctor) || typeid(*itr) == typeid(Surgeon))
 		{
-			os << *d.employees[i];
+			os << *itr;
 
-			if (i < d.numOfEmployees - 1) // Avoid trailing comma
+			if (i < size) // Avoid trailing comma
 			{
 				os << ", ";
 			}
@@ -43,14 +40,16 @@ ostream& operator<<(ostream& os, const Department& d)
 	}
 	os << endl;
 
-	cout << "nurses: " << endl; //showing nurses in department
-	for (int i = 0; i < d.numOfEmployees; i++)
-	{
-		if (typeid(*d.employees[i]) == typeid(Nurse))
-		{
-			os << *d.employees[i];
+	itr = d.employees.begin(); // reseting the iterator
 
-			if (i < d.numOfEmployees - 1) // Avoid trailing comma
+	cout << "nurses: " << endl; //showing nurses in department
+	for (int i = 1; itr != itrEnd; ++itr, i++)
+	{
+		if (typeid(*itr) == typeid(Nurse))
+		{
+			os << *itr;
+
+			if (i < size) // Avoid trailing comma
 			{
 				os << ", ";
 			}
@@ -105,28 +104,26 @@ bool Department::addEmployee(Employee& e)
 {
 	if (!this) return false;
 
-	if (numOfEmployees < maxNumOfEmployees)
-	{
-		employees[numOfEmployees] = &e; // allocates the doctor to the department's doctor array
-		employees[numOfEmployees]->setDepartment(this); // allocates the department who called addDoctor (this) to the added doctor 
-		numOfEmployees++;
-		return true;
-	}
-
-	return false;
+	employees.push_back(&e); // allocates the employee to the department's employee array
+	(*(--employees.end()))->setDepartment(this); // setting 'this' department to the given employee (last in vector)
+	return true;
 }
 
 void Department::showSurgeons() const
 {
+	vector<Employee*>::const_iterator itr = employees.begin();
+	vector<Employee*>::const_iterator itrEnd = employees.end();
+	int size = employees.size();
+
 	cout << "surgeons: " << "\n" << endl; //showing surgeons in hospital
 	cout << "{";
-	for (int i = 0; i < numOfEmployees; i++)
+	for (int i = 1; itr != itrEnd; ++itr, i++)
 	{
-		if (typeid(*employees[i]) == typeid(Surgeon))
+		if (typeid(*itr) == typeid(Surgeon))
 		{
-			cout << employees[i]->getName();
+			cout << (*itr)->getName();
 
-			if (i < numOfEmployees - 1)
+			if (i < size)
 				cout << ", ";
 		}
 	}
@@ -135,15 +132,19 @@ void Department::showSurgeons() const
 
 void Department::showDoctors() const
 {
+	vector<Employee*>::const_iterator itr = employees.begin();
+	vector<Employee*>::const_iterator itrEnd = employees.end();
+	int size = employees.size();
+
 	cout << "doctors: " << "\n" << endl; //showing doctors in department
 	cout << "{";
-	for (int i = 0; i < numOfEmployees; i++)
+	for (int i = 1; itr != itrEnd; ++itr, i++)
 	{
-		if (typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor) || typeid(*employees[i]) == typeid(Surgeon))
+		if (typeid(*itr) == typeid(Doctor) || typeid(*itr) == typeid(ResearcherDoctor) || typeid(*itr) == typeid(Surgeon))
 		{
-			cout << employees[i]->getName();
+			cout << (*itr)->getName();
 
-			if (i < numOfEmployees - 1)
+			if (i < size)
 				cout << ", ";
 		}
 	}
@@ -152,15 +153,19 @@ void Department::showDoctors() const
 
 void Department::showNurses() const
 {
+	vector<Employee*>::const_iterator itr = employees.begin();
+	vector<Employee*>::const_iterator itrEnd = employees.end();
+	int size = employees.size();
+
 	cout << "nurses: " << "\n" << endl; //showing nurses in hospital
 	cout << "{";
-	for (int i = 0; i < numOfEmployees; i++)
+	for (int i = 1; itr != itrEnd; ++itr, i++)
 	{
-		if (typeid(*employees[i]) == typeid(Nurse))
+		if (typeid(*itr) == typeid(Nurse))
 		{
-			cout << employees[i]->getName();
+			cout << (*itr)->getName();
 
-			if (i < numOfEmployees - 1)
+			if (i < size)
 				cout << ", ";
 		}
 	}

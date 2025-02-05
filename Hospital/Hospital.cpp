@@ -9,37 +9,28 @@ using namespace std;
 
 int const MAX_STRING_SIZE = 100;
 
-Hospital::Hospital(const char* name, const char* rcName) :
-maxNumOfDepartments(DEFAULT_NUM_OF_DEPARTMENTS), maxNumOfEmployees(DEFAULT_STAFF_SIZE),
-maxNumOfPatients(100), maxNumOfVisits(200), numOfPatients(0), numOfVisits(0), researchCenter(rcName)
-{
-	setName(name);
-
-	employees = new Employee * [maxNumOfEmployees];
-	departments = new Department * [maxNumOfDepartments];
-	patients = new Patient * [maxNumOfPatients];
-	visits = new Visit * [maxNumOfVisits];
-}
-
 Hospital::~Hospital()
 {
-	for (int i = 0; i < numOfEmployees; i++) // fire employees
-		delete employees[i];
-	delete[]employees;
+	vector<Employee*>::iterator employeeitr = employees.begin();
+	vector<Employee*>::iterator employeeitrEnd = employees.end();
+	for (; employeeitr != employeeitrEnd; ++employeeitr) // fire employees
+		delete *employeeitr;
 
-	for (int i = 0; i < numOfDepartments; i++) // destroy departments
-		delete departments[i];
-	delete[]departments;
+	vector<Department*>::iterator departmentitr = departments.begin();
+	vector<Department*>::iterator departmentitrEnd = departments.end();
+	for (; departmentitr != departmentitrEnd; ++departmentitr) // destroy departments
+		delete* departmentitr;
 
-	for (int i = 0; i < numOfPatients; i++) // destroy patients
-		delete patients[i];
-	delete[]patients;
-
-	for (int i = 0; i < numOfVisits; i++) // destroy visits
-		delete visits[i];
-	delete[]visits;
-
-
+	vector<Patient*>::iterator patientsitr = patients.begin();
+	vector<Patient*>::iterator patientsitrEnd = patients.end();
+	for (; patientsitr != patientsitrEnd; ++patientsitr) // Release Patients
+		delete* patientsitr;
+	
+	vector<Visit*>::iterator visitsitr = visits.begin();
+	vector<Visit*>::iterator visitsitrEnd = visits.end();
+	for (; visitsitr != visitsitrEnd; ++visitsitr) // End Visits
+		delete* visitsitr;
+	
 	delete[]name;
 	cout << "Destroy Hospital" << endl;
 }
@@ -56,72 +47,6 @@ bool Hospital::setName(const char* name)
 		return true;
 	}
 
-}
-
-bool Hospital::addEmployee(const Employee& e)
-{
-	if(maxNumOfEmployees == numOfEmployees)
-	{
-		maxNumOfEmployees *= 2;
-		Employee** temp = new Employee * [maxNumOfEmployees];
-
-		for (int i = 0; i < numOfEmployees; i++)
-		{
-			temp[i] = employees[i];
-		}
-
-		delete[] employees;
-		employees = temp;
-	}
-
-	employees[numOfEmployees] = e.clone();
-	numOfEmployees++;
-	return true;
-}
-
-bool Hospital::addResearcherDoctor(const ResearcherDoctor& RD)
-{
-	if (maxNumOfEmployees == numOfEmployees)
-	{
-		maxNumOfEmployees *= 2;
-		Employee** temp = new Employee * [maxNumOfEmployees];
-
-		for (int i = 0; i < numOfEmployees; i++)
-		{
-			temp[i] = employees[i]->clone();
-		}
-
-		delete[] employees;
-		employees = temp;
-	}
-
-	employees[numOfEmployees] = new ResearcherDoctor(RD);
-	numOfEmployees++;
-	return true;
-}
-
-bool Hospital::addDepartmant(const char* name)
-{
-	if (!name)
-		return false;
-
-	if (maxNumOfDepartments == numOfDepartments)
-	{
-		maxNumOfDepartments *= 2;
-		Department** temp = new Department * [maxNumOfDepartments];
-
-		for (int i = 0; i < numOfDepartments; i++)
-		{
-			temp[i] = departments[i];
-		}
-
-		delete[] departments;
-		departments = temp;
-	}
-
-	departments[numOfDepartments] = new Department(name);
-	numOfDepartments++;
-	return true;
 }
 
 const Patient* Hospital::addPatient(const Patient& patient)
@@ -147,16 +72,18 @@ const Patient* Hospital::addPatient(const Patient& patient)
 
 const Department* Hospital::getDepartment(const char* name) const
 {
-	if (!name || numOfDepartments == 0) 
+	if (!name || departments.size() == 0)
 	{
 		return nullptr; // Return nullptr if name is invalid or no departments exist
 	}
 
-	for (int i = 0; i < numOfDepartments; ++i) 
+	vector<Department*>::const_iterator itr = departments.begin();
+	vector<Department*>::const_iterator itrEnd = departments.end();
+
+	for (; itr != itrEnd; ++itr) 
 	{
-		if (strcmp(departments[i]->getName(), name) == 0) {
-			return departments[i]; // Return pointer to the department if names match
-		}
+		if (strcmp((*itr)->getName(), name) == 0)
+			return *itr; // Return pointer to the department if names match
 	}
 
 	return nullptr; // Return nullptr if no matching department is found
@@ -164,123 +91,59 @@ const Department* Hospital::getDepartment(const char* name) const
 
 Department* Hospital::getDepartment(const char* name) 
 {
-	if (!name || numOfDepartments == 0)
+	if (!name || departments.size() == 0)
 	{
 		return nullptr; // Return nullptr if name is invalid or no departments exist
 	}
 
-	for (int i = 0; i < numOfDepartments; ++i)
+	vector<Department*>::iterator itr = departments.begin();
+	vector<Department*>::iterator itrEnd = departments.end();
+
+	for (; itr != itrEnd; ++itr)
 	{
-		if (strcmp(departments[i]->getName(), name) == 0) {
-			return departments[i]; // Return pointer to the department if names match
-		}
+		if (strcmp((*itr)->getName(), name) == 0)
+			return *itr; // Return pointer to the department if names match
 	}
 
 	return nullptr; // Return nullptr if no matching department is found
 }
 
-const Surgeon* Hospital::getSurgeon(const char* name) const
+const Employee* Hospital::getEmployee(const char* name) const
 {
-	if (!name || numOfEmployees == 0) 
+	if (!name || employees.size() == 0)
 	{
 		return nullptr; // Return nullptr if name is invalid or no employees exist
 	}
 
-	for (int i = 0; i < numOfEmployees; ++i)
+	vector<Employee*>::const_iterator itr = employees.begin();
+	vector<Employee*>::const_iterator itrEnd = employees.end();
+
+	for (; itr != itrEnd; ++itr)
 	{
-		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Surgeon)))
+		if (strcmp((*itr)->getName(), name) == 0)
 		{
-			return dynamic_cast<Surgeon*>(employees[i]); // Return pointer to the doctor if names match
+			return *itr; // Return pointer to the doctor if names match
 		}
 	}
 
 	return nullptr; // Return nullptr if no matching doctor is found
 }
 
-Surgeon* Hospital::getSurgeon(const char* name) 
+Employee* Hospital::getEmployee(const char* name)
 {
-	if (!name || numOfEmployees == 0)
+	if (!name || employees.size() == 0)
 	{
 		return nullptr; // Return nullptr if name is invalid or no employees exist
 	}
 
-	for (int i = 0; i < numOfEmployees; ++i)
+	vector<Employee*>::iterator itr = employees.begin();
+	vector<Employee*>::iterator itrEnd = employees.end();
+
+	for (; itr != itrEnd; ++itr)
 	{
-		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Surgeon)))
+		if (strcmp((*itr)->getName(), name) == 0)
 		{
-			return dynamic_cast<Surgeon*>(employees[i]); // Return pointer to the doctor if names match
-		}
-	}
-
-	return nullptr; // Return nullptr if no matching doctor is found
-}
-
-const Doctor* Hospital::getDoctor(const char* name) const
-{
-	if (!name || numOfEmployees == 0) 
-	{
-		return nullptr; // Return nullptr if name is invalid or no employees exist
-	}
-
-	for (int i = 0; i < numOfEmployees; ++i)
-	{
-		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor) || typeid(*employees[i]) == typeid(Surgeon)))
-		{
-			return dynamic_cast<Doctor*>(employees[i]); // Return pointer to the doctor if names match
-		}
-	}
-
-	return nullptr; // Return nullptr if no matching doctor is found
-}
-
-Doctor* Hospital::getDoctor(const char* name) 
-{
-	if (!name || numOfEmployees == 0)
-	{
-		return nullptr; // Return nullptr if name is invalid or no employees exist
-	}
-
-	for (int i = 0; i < numOfEmployees; ++i)
-	{
-		if (strcmp(employees[i]->getName(), name) == 0 && (typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor) || typeid(*employees[i]) == typeid(Surgeon)))
-		{
-			return dynamic_cast<Doctor*>(employees[i]); // Return pointer to the doctor if names match
-		}
-	}
-
-	return nullptr; // Return nullptr if no matching doctor is found
-}
-
-const Nurse* Hospital::getNurse(const char* name) const
-{
-	if (!name || numOfEmployees == 0)
-	{
-		return nullptr; // Return nullptr if name is invalid or no employees exist
-	}
-
-	for (int i = 0; i < numOfEmployees; ++i)
-	{
-		if (strcmp(employees[i]->getName(), name) == 0 && typeid(*employees[i]) == typeid(Nurse))
-		{
-			return dynamic_cast<Nurse*>(employees[i]); // Return pointer to the nurse if names match
-		}
-	}
-
-	return nullptr; // Return nullptr if no matching doctor is found
-}
-
-Nurse* Hospital::getNurse(const char* name) 
-{
-	if (!name || numOfEmployees == 0)
-	{
-		return nullptr; // Return nullptr if name is invalid or no employees exist
-	}
-
-	for (int i = 0; i < numOfEmployees; ++i)
-	{
-		if (strcmp(employees[i]->getName(), name) == 0 && typeid(*employees[i]) == typeid(Nurse))
-		{
-			return dynamic_cast<Nurse*>(employees[i]); // Return pointer to the nurse if names match
+			return *itr; // Return pointer to the doctor if names match
 		}
 	}
 
@@ -364,7 +227,7 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 Visit* Hospital::getVisitByPatientId(int patientID) const 
 {
 	// Loop through all visits
-	for (int i = 0; i < numOfVisits; ++i) 
+	for (int i = 0; i < visits.size(); ++i) 
 	{
 		// Check if the patient ID matches
 		if (visits[i] && visits[i]->getPatient()->getId() == patientID) 
@@ -424,18 +287,21 @@ Patient* Hospital::getPatient(int index) const
 ostream& operator<<(ostream& os, const Hospital& h)
 {
 	os << "{name: " << h.name << ", ";
-	os << "number of employees: " << h.numOfEmployees << ", ";
-	os << "number of departments: " << h.numOfDepartments << ", ";
-	os << "employees capacity: " << h.maxNumOfEmployees << ", ";
-	os << "departments capacity: " << h.maxNumOfDepartments << "}" << endl;
+	os << "number of employees: " << h.employees.size() << ", ";
+	os << "number of departments: " << h.departments.size() << ", ";
+	os << "employees capacity: " << h.employees.capacity() << ", ";
+	os << "departments capacity: " << h.departments.capacity() << "}" << endl;
 	os << "Research Center: " << endl;
 	os << "{" << h.researchCenter << "}" << endl;
 
+	vector<Department*>::const_iterator itr = h.departments.begin();
+	vector<Department*>::const_iterator itrEnd = h.departments.end();
+
 	os << "\ndepartments: " << "\n" << endl; //showing departments in hospital
-	for (int i = 0; i < h.numOfDepartments; i++)
+	for (int i = 1; itr != itrEnd; ++itr, i++)
 	{
-		os << "department " << i + 1 << ": ";
-		os << *h.departments[i];
+		os << "department " << i << ": ";
+		os << *itr;
 		os << "\n";
 	}
 
@@ -495,13 +361,17 @@ bool Hospital::operator()(const char* name)
 
 void Hospital::showDepartments() const
 {
+	vector<Department*>::const_iterator itr = departments.begin();
+	vector<Department*>::const_iterator itrEnd = departments.end();
+	int size = departments.size();
+
 	cout << "departments: " << "\n" << endl; //showing departments in hospital
 	cout << "{";
-	for (int i = 0; i < numOfDepartments; i++)
+	for (int i = 1; itr != itrEnd; ++itr, i++)
 	{
-		cout << departments[i]->getName();
+		cout << (*itr)->getName();
 		
-		if (i < numOfDepartments - 1)
+		if (i < size)
 			cout << ", ";
 	}
 	cout << "}" << endl;
@@ -509,15 +379,19 @@ void Hospital::showDepartments() const
 
 void Hospital::showSurgeons() const
 {
+	vector<Employee*>::const_iterator itr = employees.begin();
+	vector<Employee*>::const_iterator itrEnd = employees.end();
+	int size = employees.size();
+
 	cout << "surgeons: " << "\n" << endl; //showing surgeons in hospital
 	cout << "{";
-	for (int i = 0; i < numOfEmployees; i++)
+	for (int i = 1; itr != itrEnd; ++itr, i++)
 	{
-		if (typeid(*employees[i]) == typeid(Surgeon))
+		if (typeid(*itr) == typeid(Surgeon))
 		{
-			cout << employees[i]->getName();
+			cout << (*itr)->getName();
 
-			if (i < numOfEmployees - 1)
+			if (i < size)
 				cout << ", ";
 		}
 	}
@@ -526,15 +400,19 @@ void Hospital::showSurgeons() const
 
 void Hospital::showDoctors() const
 {
+	vector<Employee*>::const_iterator itr = employees.begin();
+	vector<Employee*>::const_iterator itrEnd = employees.end();
+	int size = employees.size();
+
 	cout << "doctors: " << "\n" << endl; //showing doctors in hospital
 	cout << "{";
-	for (int i = 0; i < numOfEmployees; i++)
+	for (int i = 1; itr != itrEnd; ++itr, i++)
 	{
-		if(typeid(*employees[i]) == typeid(Doctor) || typeid(*employees[i]) == typeid(ResearcherDoctor) || typeid(*employees[i]) == typeid(Surgeon))
+		if(typeid(*itr) == typeid(Doctor) || typeid(*itr) == typeid(ResearcherDoctor) || typeid(*itr) == typeid(Surgeon))
 		{
-			cout << employees[i]->getName();
+			cout << (*itr)->getName();
 
-			if (i < numOfEmployees - 1)
+			if (i < size)
 				cout << ", ";
 		}
 	}
@@ -543,15 +421,19 @@ void Hospital::showDoctors() const
 
 void Hospital::showNurses() const
 {
+	vector<Employee*>::const_iterator itr = employees.begin();
+	vector<Employee*>::const_iterator itrEnd = employees.end();
+	int size = employees.size();
+
 	cout << "nurses: " << "\n" << endl; //showing nurses in hospital
 	cout << "{";
-	for (int i = 0; i < numOfEmployees; i++)
+	for (int i = 1; itr != itrEnd; ++itr, i++)
 	{
-		if (typeid(*employees[i]) == typeid(Nurse))
+		if (typeid(*itr) == typeid(Nurse))
 		{
-			cout << employees[i]->getName();
+			cout << (*itr)->getName();
 
-			if (i < numOfEmployees - 1)
+			if (i < size)
 				cout << ", ";
 		}
 	}
@@ -571,7 +453,7 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 	cout << "Patients in department: " << departmentName << endl;
 
 	// Loop through visits to find patients associated with the department
-	for (int i = 0; i < numOfVisits; i++)
+	for (int i = 0; i < visits.size(); i++)
 	{
 		if (visits[i] && visits[i]->getDepartmentForPatient(visits[i]->getPatient()) == department)
 		{

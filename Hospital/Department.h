@@ -1,6 +1,8 @@
 #ifndef __DEPARTMENT_H
 #define __DEPARTMENT_H
 
+#include <vector>
+
 #include "Surgeon.h"
 #include "Doctor.h"
 #include "Nurse.h"
@@ -19,21 +21,23 @@ public:
 private:
 
 	char* name;
-	int numOfEmployees;
-	int maxNumOfEmployees;
 	
 
-	Employee** employees = nullptr;
+	vector<Employee*> employees;
 
 	void operator=(const Department& other) = delete; // coping a department is not allowed
 	Department(const Department& other) = delete; // coping a department is not allowed 
 
 public:
 
-	Department(const char* name);
+    Department(const char* name) : name(nullptr)
+	{
+		setName(name);
+
+	}
 	virtual ~Department();
 
-	operator int const() const { return maxNumOfEmployees; } // returns size of department staff
+	operator int const() const { return employees.capacity(); } // returns size of department staff
 	operator const char* () const { return getName(); } // returns name of department
 	
 	bool setName(const char* name);

@@ -3,6 +3,7 @@
 
 #pragma warning(disable: 4996)
 #include <iostream>
+#include <vector>
 
 #include "ResearchCenter.h"
 #include "Department.h"
@@ -27,25 +28,22 @@ public:
 private:
 
 	char* name;
-	int numOfPatients, numOfVisits;
-	int maxNumOfPatients, maxNumOfVisits;
 	ResearchCenter researchCenter; // need to update initillization values
 
-	Employee** employees = nullptr;
-	int numOfEmployees, maxNumOfEmployees;
-
-	Department** departments = nullptr;
-	int numOfDepartments, maxNumOfDepartments;
-
-	Patient** patients;
-	Visit** visits;
+	vector<Employee*> employees;
+	vector<Department*> departments;
+	vector<Patient*> patients;
+	vector<Visit*> visits;
 
 	Hospital(const Hospital& other) = delete; // coping a hospital is not allowed 
 	void operator=(const Hospital& other) = delete; // coping a hospital is not allowed
 
 public:
 
-	Hospital(const char* name, const char * rcName);
+	Hospital(const char* name, const char* rcName) : researchCenter(rcName)
+	{
+		setName(name);
+	}
 	~Hospital();
 	
 	friend ostream& operator<<(ostream& os, const Hospital& h);
@@ -63,11 +61,11 @@ public:
 		return *this;
 	}
 
-	const Hospital& operator+=(ResearcherDoctor& other)
+	/*const Hospital& operator+=(ResearcherDoctor& other)
 	{
-		this->addResearcherDoctor(other);
+		this->addEmployee(other);
 		return *this;
-	}
+	}*/
 
 	bool setName(const char* name);
 
@@ -78,26 +76,27 @@ public:
 
 	ResearchCenter& getResearchCenter() { return researchCenter; }
 
-	const Surgeon* getSurgeon(const char* name) const; 
-	Surgeon* getSurgeon(const char* name);
+	const Employee* getEmployee(const char* name) const;
+	Employee* getEmployee(const char* name);
 
-	const Doctor* getDoctor(const char* name) const; 
-	Doctor* getDoctor(const char* name);
-
-	const Nurse* getNurse(const char* name) const; 
-	Nurse* getNurse(const char* name);
 
 	Visit* getVisitByPatientId(int patientID) const;
-	int getNumOfPatients() const { return numOfPatients; }
+	int getNumOfPatients() const { return patients.size(); }
 	Patient* getPatient(int index) const;
 	Department* getDepartmentForPatient(const char* name) const; // Get Department by name
 	Employee* getStaff(const char* name) const; // Get Staff by name
 
 
-	bool addEmployee(const Employee& e);
-	bool addResearcherDoctor(const ResearcherDoctor& RD);
-	bool addDepartmant(const char* name);
-	
+	bool addEmployee(const Employee& e)
+	{
+			employees.push_back(e.clone());
+			return true;
+	}
+	bool addDepartmant(const char* name)
+	{
+		departments.push_back(&Department(name));
+		return true;
+	}
 	
 	// Functions to add patients and visits
 	bool addVisit (int patientID, const char* purpose, const char* departmentName, const char* staffName,

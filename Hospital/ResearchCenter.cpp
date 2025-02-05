@@ -7,13 +7,6 @@ using namespace std;
 
 int const MAX_STRING_SIZE = 100;
 
-ResearchCenter::ResearchCenter(const char* name) : numOfResearchers(0), name(nullptr),
-maxNumOfResearchers(DEFAULT_NUM_OF_RESEARCHERS)
-{
-	setName(name);
-	researchers = new Researcher * [maxNumOfResearchers];
-}
-
 bool ResearchCenter::setName(const char* name)
 {
 	if (!name) return false;
@@ -29,69 +22,32 @@ bool ResearchCenter::setName(const char* name)
 
 ResearchCenter::~ResearchCenter()
 {
-	for (int i = 0; i < numOfResearchers; i++) // fire researchers
-		delete researchers[i];
-	delete[] researchers;
+	vector<Researcher*>::iterator itr = researchers.begin(); //initillize itr with the first pointer to Researcher
+	vector<Researcher*>::iterator itrEnd = researchers.end(); //initillize itrEnd to be the end of the vector
+
+	for (; itr != itrEnd; ++itr) // fire researchers
+		delete *itr; // using iterator operator*
 
 	delete[] name;
 
 	cout << "destroy Research Center" << endl;
 }
 
-bool ResearchCenter::addResearcher(const Researcher& researcher)
-{
-	if (maxNumOfResearchers == numOfResearchers)
-	{
-		maxNumOfResearchers *= 2;
-		Researcher** temp = new Researcher * [maxNumOfResearchers];
-
-		for (int i = 0; i < numOfResearchers; i++)
-		{
-			temp[i] = researchers[i]->clone();
-		}
-
-		delete[] researchers;
-		researchers = temp;
-	}
-
-	researchers[numOfResearchers] = new Researcher(researcher);
-	numOfResearchers++;
-	return true;
-}
-
-bool ResearchCenter::addResearcherDoctor(const ResearcherDoctor& researcherDoctor)
-{
-	if (maxNumOfResearchers == numOfResearchers)
-	{
-		maxNumOfResearchers *= 2;
-		Researcher** temp = new Researcher * [maxNumOfResearchers];
-
-		for (int i = 0; i < numOfResearchers; i++)
-		{
-			temp[i] = researchers[i]->clone();
-		}
-
-		delete[] researchers;
-		researchers = temp;
-	}
-
-	researchers[numOfResearchers] = new ResearcherDoctor(researcherDoctor);
-	numOfResearchers++;
-	return true;
-}
-
 Researcher* ResearchCenter::getResearcher(const char* name) const
 {
-	if (!name || numOfResearchers == 0)
+	if (!name || researchers.size() == 0)
 	{
 		return nullptr; // Return nullptr if name is invalid or no doctors exist
 	}
 
-	for (int i = 0; i < numOfResearchers; ++i)
+	vector<Researcher*>::const_iterator itr = researchers.begin(); //initillize itr with the first pointer to Researcher
+	vector<Researcher*>::const_iterator itrEnd = researchers.end(); //initillize itrEnd to be the end of the vector
+
+	for (; itr != itrEnd; ++itr) // fire researchers
 	{
-		if (strcmp(researchers[i]->getName(), name) == 0)
+		if (strcmp((*itr)->getName(), name) == 0) 
 		{
-			return researchers[i]; // Return pointer to the Employee if names match
+			return *itr; // Return pointer to the Employee if names match
 		}
 	}
 
@@ -100,7 +56,7 @@ Researcher* ResearchCenter::getResearcher(const char* name) const
 
 ostream& operator<<(ostream& os, const ResearchCenter& r)
 {
-	os << "name: " << r.getName() << ", Number of researchers: " << r.numOfResearchers;
+	os << "name: " << r.getName() << ", Number of researchers: " << r.researchers.size();
 	return os;
 }
 

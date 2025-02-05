@@ -17,8 +17,6 @@ Doctor::eOccupation DEFAULT_OCCUPATION = Doctor::eOccupation::Pathology;
 enum eChoice { AddDepartment = 1, AddEmployeeHospital, AddToResearchCenter, AddEmployeeDepartment, AddPaper, AddPatient,AddVisit,
     ShowPatientsByDepartment,FindPatientById, ShowInfo , CompareResearchers, ClearConsole, Exit };
 
-//void compareResearchers();
-
 
 int main() 
 {
@@ -308,7 +306,7 @@ int main()
                     cout << "choose doctor: ";
                     cin.getline(name, MAX_STRING_SIZE);
 
-                    Doctor* D = hospital.getDoctor(name); //by pointer so we will not create another doctor with the same parameters
+                    Doctor* D = dynamic_cast<Doctor*>(hospital.getEmployee(name)); //by pointer so we will not create another doctor with the same parameters
 
                     if (!D)
                     {
@@ -335,7 +333,7 @@ int main()
                     cout << "choose nurse: ";
                     cin.getline(name, MAX_STRING_SIZE);
 
-                    Nurse* N = hospital.getNurse(name); //by pointer so we will not create another nurse with the same parameters
+                    Nurse* N = dynamic_cast<Nurse*>(hospital.getEmployee(name)); //by pointer so we will not create another nurse with the same parameters
 
                     if (!N)
                     {
@@ -364,7 +362,7 @@ int main()
                     cout << "choose surgeon: ";
                     cin.getline(name, MAX_STRING_SIZE);
 
-                    Surgeon* S = hospital.getSurgeon(name); //by pointer so we will not create another doctor with the same parameters
+                    Surgeon* S = dynamic_cast<Surgeon*>(hospital.getEmployee(name)); //by pointer so we will not create another doctor with the same parameters
 
                     if (!S)
                     {
@@ -405,7 +403,7 @@ int main()
             break;
         }
 
-        case AddPatient: {
+        case (AddPatient): {
             // Get patient details from the user
             char name[MAX_STRING_SIZE];
             int birthYear;
@@ -446,7 +444,7 @@ int main()
             break;
         }
 
-        case AddVisit:
+        case (AddVisit):
         {
             int patientID;
             bool isSurgery = false;
@@ -613,7 +611,7 @@ int main()
             break;
         }
 
-        case ShowPatientsByDepartment:
+        case (ShowPatientsByDepartment):
         {
             // Show patients by department
             hospital.showDepartments();
@@ -625,7 +623,7 @@ int main()
             break;
         }
 
-        case FindPatientById:
+        case (FindPatientById):
         {
             // Display all patient IDs
             cout << "Existing patient IDs:" << endl;
@@ -668,7 +666,7 @@ int main()
             break;
         }
 
-        case ShowInfo:
+        case (ShowInfo):
         {
             enum eChoiceShow { ShowDepartments = 1, ShowAllDoctors, ShowAllSurgeons, ShowAllNurses, ShowHospitalStaff, ShowResearchers, ClearConsole, eReturn };
             bool Return = false;
@@ -748,7 +746,7 @@ int main()
 
         }
 
-        case ClearConsole:
+        case (ClearConsole):
         {
             std::cout << "\033[2J\033[H"; // ANSI escape code to clear screen and move cursor to home position
             break;
