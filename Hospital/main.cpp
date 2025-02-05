@@ -555,24 +555,14 @@ int main()
             cout << "Enter staff name: ";
             cin.getline(staffName, MAX_STRING_SIZE);
 
-            const Employee* staff = hospital.getDoctor(staffName);
-            if (!staff)
-            {
-                staff = hospital.getNurse(staffName);
-            }
-            if (!staff)
-            {
-                staff = hospital.getSurgeon(staffName);
-            }
+            const Employee* staff = hospital.getEmployee(staffName);
             if (!staff)
             {
                 cout << "Invalid staff name. Visit creation failed." << endl;
                 break;
             }
 
-            
-
-
+       
             // Ask for visit date
 
 
