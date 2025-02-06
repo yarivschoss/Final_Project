@@ -2,6 +2,7 @@
 #define __RESEARCH_CENTER_H
 
 #include <vector>
+#include <string>
 #include "ResearcherDoctor.h"
 
 class ResearchCenter
@@ -11,7 +12,7 @@ public:
 
 private:
 
-	char* name;
+	string name;
 	vector<Researcher*> researchers;
 
 	ResearchCenter(const ResearchCenter& other) = delete; // coping a Research Center is not allowed
@@ -19,11 +20,20 @@ private:
 
 public:
 
-	ResearchCenter(const char* name) : name(nullptr)
+	ResearchCenter(const string& name)
 	{
 			setName(name);
 	}
-	~ResearchCenter();
+	~ResearchCenter()
+	{
+		vector<Researcher*>::iterator itr = researchers.begin(); //initillize itr with the first pointer to Researcher
+		vector<Researcher*>::iterator itrEnd = researchers.end(); //initillize itrEnd to be the end of the vector
+
+		for (; itr != itrEnd; ++itr) // fire researchers
+			delete* itr; // using iterator operator*
+
+		cout << "destroy Research Center" << endl;
+	}
 	
 
 	bool addResearcher(const Researcher& researcher)
@@ -63,16 +73,68 @@ public:
 		this->addResearcherDoctor(other);
 		return *this;
 	}
-	friend ostream& operator<<(ostream& os, const ResearchCenter& r);
-	friend istream& operator>>(istream& in, ResearchCenter& r);
 
-	bool operator()(const char* name);
+	friend ostream& operator<<(ostream& os, const ResearchCenter& r)
+	{
+		os << "name: " << r.getName() << ", Number of researchers: " << r.researchers.size();
+		return os;
+	}
+	friend istream& operator>>(istream& in, ResearchCenter& r)
+	{
+		string name;
+
+		cout << "Enter Research Center name: ";
+		in >> name;
+		r.setName(name);
+
+		return in;
+	}
 
 
-	bool setName(const char* name);
+	bool operator()(const string& name)
+	{
+		if (strcmp(name.c_str(), "name") == 0)
+		{
+			cout << this->getName();
+			return true;
+		}
 
-	const char* getName() const { return name; }
-	Researcher* getResearcher(const char* name) const;  //searches through the array of researchers and returns a pointer to the employee with the specified name
+		if (strcmp(name.c_str(), "researchers") == 0)
+		{
+			this->showResearchers();
+			return true;
+		}
+
+		return false;
+	}
+
+	bool setName(const string& name)
+	{
+		this->name = name;
+		return true;
+	}
+
+	const string& getName() const { return name; }
+	Researcher* getResearcher(const string& name) const
+	{
+		if (researchers.size() == 0)
+		{
+			return nullptr; // Return nullptr if name is invalid or no doctors exist
+		}
+
+		vector<Researcher*>::const_iterator itr = researchers.begin(); //initillize itr with the first pointer to Researcher
+		vector<Researcher*>::const_iterator itrEnd = researchers.end(); //initillize itrEnd to be the end of the vector
+
+		for (; itr != itrEnd; ++itr) // fire researchers
+		{
+			if (strcmp((*itr)->getName().c_str(), name.c_str()) == 0)
+			{
+				return *itr; // Return pointer to the Employee if names match
+			}
+		}
+
+		return nullptr; // Return nullptr if no matching doctor is found
+	}
 };
 
 

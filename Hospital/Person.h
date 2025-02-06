@@ -2,6 +2,7 @@
 #define __PERSON_H
 
 #include <iostream>
+#include <string>
 using namespace std;
 
 class Person
@@ -9,20 +10,17 @@ class Person
 
 protected:
 
-    char* name;  
+    string name;  
     int birthYear;
     char gender;
     static int counter;
 
-    Person(const Person& other) : name(nullptr) { *this = other; }
-
-    const Person& operator=(const Person& other);
     friend istream& operator>>(istream& in, Person& p)
     {
-        char name[100];
+        string name;
 
         cout << "Enter name: ";
-        in.getline(name, 100);
+        in >> name;
         p.setName(name);
 
         cout << "Enter gender(m/f): ";
@@ -35,18 +33,38 @@ protected:
 
 private:
 
-    bool setBirthYear(int birthYear);
-    bool setGender(char gender);
+    bool setBirthYear(int birthYear)
+    {
+        this->birthYear = birthYear;
+        return true;
+    }
+    bool setGender(char gender)
+    {
+        this->gender = gender;
+        return true;
+    }
 
 public:
 
-    Person(const char* name, int birthYear, char gender);  // Constructor to initialize the name
+    Person(const string& name, int birthYear, char gender)  // Constructor to initialize the name
+    {
+        setName(name);  // Initialize the name using the setName method
+        setBirthYear(birthYear);
+        setGender(gender);
+    }
    
-    virtual ~Person();  // Virtual destructor to ensure proper memory management if needed
+    virtual ~Person()  // Virtual destructor to ensure proper memory management if needed
+    {
+        cout << "end person" << endl;
+    }
 
-    bool setName(const char* name); // Sets the person's name
+    bool setName(const string& name) // Sets the person's name
+    {
+        this->name = name;
+        return true;
+    }
 
-    const char* getName() const { return name; } // Gets the person's name
+    const string& getName() const { return name; } // Gets the person's name
     int getBirthYear() const { return birthYear; }
     char getGender() const { return gender; }
 
@@ -54,7 +72,11 @@ public:
    // operator int() const { return getId(); } // replaces get employeeNumber
     //operator const char* () const { return getName(); } // returns name of Person
 
-    friend ostream& operator<<(ostream& os, const Person& p); // Overloaded stream insertion operator to print Person data
+    friend ostream& operator<<(ostream& os, const Person& p) // Overloaded stream insertion operator to print Person data
+    {
+      os << "name: " << p.name << ", birth Year: " << p.birthYear << ", gender: " << p.gender;  // Print the name of the person
+      return os;
+    }
 };
 
 #endif // __PERSON_H

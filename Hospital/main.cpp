@@ -5,11 +5,12 @@
 using namespace std;
 
 #include <iostream>
+#include <string>
 #include <cstring>
 #include "Hospital.h"
 
 int const MAX_STRING_SIZE = 100, DEFAULT_BIRTH_YEAR = 2000, DEFAULT_GENDER = 109, DEFAULT_EXPERIENCE = 5;
-const char DEFAULT_NAME[] = "Default Name";
+const string DEFAULT_NAME = "Default Name";
 const time_t DEFAULT_TIME = 0;
 Doctor::eOccupation DEFAULT_OCCUPATION = Doctor::eOccupation::Pathology;
 
@@ -20,7 +21,8 @@ enum eChoice { AddDepartment = 1, AddEmployeeHospital, AddToResearchCenter, AddE
 
 int main() 
 {
-    char name[MAX_STRING_SIZE], Hname[MAX_STRING_SIZE], Rname[MAX_STRING_SIZE], gender;
+    string name, Hname, Rname;
+    char gender;
     int choice, birthYear;
 
     Hospital hospital(DEFAULT_NAME, DEFAULT_NAME);
@@ -127,7 +129,7 @@ int main()
             hospital.getResearchCenter().showResearchers();
             cout << endl;
             cout << "Choose researcher: ";
-            cin.getline(name, MAX_STRING_SIZE);
+            cin >> name;
 
             Researcher* r = hospital.getResearchCenter().getResearcher(name);
 
@@ -154,7 +156,7 @@ int main()
 
             cout << "Choose Researchers" << endl;
             cout << "Researcher 1: ";
-            cin.getline(name, MAX_STRING_SIZE);
+            cin >> name;
 
             Researcher* r1 = hospital.getResearchCenter().getResearcher(name);
 
@@ -166,7 +168,7 @@ int main()
             }
 
             cout << "Researcher 2: ";
-            cin.getline(name, MAX_STRING_SIZE);
+            cin >> name;
 
             Researcher* r2 = hospital.getResearchCenter().getResearcher(name);
 
@@ -272,7 +274,7 @@ int main()
         case(AddDepartment):
         {
             cout << "Enter department name: ";
-            cin.getline(name, MAX_STRING_SIZE);
+            cin >> name;
 
             hospital.addDepartmant(name);
             break;
@@ -304,7 +306,7 @@ int main()
 
                     hospital("doctors");
                     cout << "choose doctor: ";
-                    cin.getline(name, MAX_STRING_SIZE);
+                    cin >> name;
 
                     Doctor* D = dynamic_cast<Doctor*>(hospital.getEmployee(name)); //by pointer so we will not create another doctor with the same parameters
 
@@ -316,7 +318,7 @@ int main()
 
                     hospital("departments");
                     cout << "\nchoose department: ";
-                    cin.getline(name, MAX_STRING_SIZE);
+                    cin >> name;
 
                     if (!hospital.getDepartment(name)->addEmployee(*D))
                     {
@@ -331,7 +333,7 @@ int main()
                 {
                     hospital.showNurses();
                     cout << "choose nurse: ";
-                    cin.getline(name, MAX_STRING_SIZE);
+                    cin >> name;
 
                     Nurse* N = dynamic_cast<Nurse*>(hospital.getEmployee(name)); //by pointer so we will not create another nurse with the same parameters
 
@@ -344,7 +346,7 @@ int main()
 
                     hospital.showDepartments();
                     cout << "\nchoose department: ";
-                    cin.getline(name, MAX_STRING_SIZE);
+                    cin >> name;
 
                     if (!hospital.getDepartment(name)->addEmployee(*N))
                     {
@@ -360,7 +362,7 @@ int main()
                 {
                     hospital("surgeons");
                     cout << "choose surgeon: ";
-                    cin.getline(name, MAX_STRING_SIZE);
+                    cin >> name;
 
                     Surgeon* S = dynamic_cast<Surgeon*>(hospital.getEmployee(name)); //by pointer so we will not create another doctor with the same parameters
 
@@ -372,7 +374,7 @@ int main()
 
                     hospital("departments");
                     cout << "\nchoose department: ";
-                    cin.getline(name, MAX_STRING_SIZE);
+                    cin >> name;
 
                     if (!hospital.getDepartment(name)->addEmployee(*S))
                     {
@@ -461,7 +463,7 @@ int main()
                 // Add a new patient
                 cin.ignore();
                 cout << "Enter patient's name: ";
-                cin.getline(name, MAX_STRING_SIZE);
+                cin >> name;
 
                 cout << "Enter patient's birth year: ";
                 cin >> birthYear;
@@ -607,9 +609,9 @@ int main()
             hospital.showDepartments();
 
             cout << "Enter department name from the list: ";
-            cin.getline(name, MAX_STRING_SIZE);
+            cin >> name;
 
-            hospital.showPatientsInDepartment(name);
+            hospital.showPatientsInDepartment(name.c_str());
             break;
         }
 

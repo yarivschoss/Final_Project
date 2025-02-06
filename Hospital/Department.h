@@ -2,6 +2,7 @@
 #define __DEPARTMENT_H
 
 #include <vector>
+#include <string>
 
 #include "Surgeon.h"
 #include "Doctor.h"
@@ -20,7 +21,7 @@ public:
 	
 private:
 
-	char* name;
+	string name;
 	
 
 	vector<Employee*> employees;
@@ -30,39 +31,150 @@ private:
 
 public:
 
-    Department(const char* name) : name(nullptr)
+    Department(const string& name)
 	{
 		setName(name);
-
 	}
-	virtual ~Department();
+	virtual ~Department()
+	{
+		cout << "Destroy Department" << endl;
+	}
 
 	operator int const() const { return employees.capacity(); } // returns size of department staff
-	operator const char* () const { return getName(); } // returns name of department
+	operator const string () const { return getName(); } // returns name of department
 	
-	bool setName(const char* name);
-	const char* getName() const 
+	bool setName(const string& name)
+	{
+		this->name = name;
+		return true;
+	}
+	const string& getName() const 
 	{
 		if (!this) return "";
 
 		return name; 
 	}
 
-	bool addEmployee(Employee& e);
+	bool addEmployee(Employee& e)
+	{
+		if (!this) return false;
 
-	void showSurgeons() const;
-	void showDoctors() const;
-	void showNurses() const;
+		employees.push_back(&e); // allocates the employee to the department's employee array
+		(*(--employees.end()))->setDepartment(this); // setting 'this' department to the given employee (last in vector)
+		return true;
+	}
 
-	friend ostream& operator<<(ostream& os, const Department& d); // prints department's data
+	void showSurgeons() const
+	{
+		vector<Employee*>::const_iterator itr = employees.begin();
+		vector<Employee*>::const_iterator itrEnd = employees.end();
+		int size = employees.size();
 
+		cout << "surgeons: " << "\n" << endl; //showing surgeons in hospital
+		cout << "{";
+		for (int i = 1; itr != itrEnd; ++itr, i++)
+		{
+			if (typeid(*itr) == typeid(Surgeon))
+			{
+				cout << (*itr)->getName();
+
+				if (i < size)
+					cout << ", ";
+			}
+		}
+		cout << "}" << endl;
+	}
+	void showDoctors() const
+	{
+		vector<Employee*>::const_iterator itr = employees.begin();
+		vector<Employee*>::const_iterator itrEnd = employees.end();
+		int size = employees.size();
+
+		cout << "doctors: " << "\n" << endl; //showing doctors in department
+		cout << "{";
+		for (int i = 1; itr != itrEnd; ++itr, i++)
+		{
+			if (typeid(*itr) == typeid(Doctor) || typeid(*itr) == typeid(ResearcherDoctor) || typeid(*itr) == typeid(Surgeon))
+			{
+				cout << (*itr)->getName();
+
+				if (i < size)
+					cout << ", ";
+			}
+		}
+		cout << "}" << endl;
+	}
+	void showNurses() const
+	{
+		vector<Employee*>::const_iterator itr = employees.begin();
+		vector<Employee*>::const_iterator itrEnd = employees.end();
+		int size = employees.size();
+
+		cout << "nurses: " << "\n" << endl; //showing nurses in hospital
+		cout << "{";
+		for (int i = 1; itr != itrEnd; ++itr, i++)
+		{
+			if (typeid(*itr) == typeid(Nurse))
+			{
+				cout << (*itr)->getName();
+
+				if (i < size)
+					cout << ", ";
+			}
+		}
+		cout << "}" << endl;
+	}
+
+	friend ostream& operator<<(ostream& os, const Department& d) // prints department's data
+	{
+		vector<Employee*>::const_iterator itr = d.employees.begin();
+		vector<Employee*>::const_iterator itrEnd = d.employees.end();
+		int size = d.employees.size();
+
+		os << "{name: " << d.getName() << ", ";
+		os << "number of employees: " << d.employees.size() << ", ";
+		os << "employees capacity: " << d.employees.capacity() << "}" << endl;
+
+		os << "\ndoctors: " << endl; //showing doctors in department
+		for (int i = 1; itr != itrEnd; ++itr, i++)
+		{
+			if (typeid(*itr) == typeid(Doctor) || typeid(*itr) == typeid(ResearcherDoctor) || typeid(*itr) == typeid(Surgeon))
+			{
+				os << *itr;
+
+				if (i < size) // Avoid trailing comma
+				{
+					os << ", ";
+				}
+			}
+		}
+		os << endl;
+
+		itr = d.employees.begin(); // reseting the iterator
+
+		cout << "nurses: " << endl; //showing nurses in department
+		for (int i = 1; itr != itrEnd; ++itr, i++)
+		{
+			if (typeid(*itr) == typeid(Nurse))
+			{
+				os << *itr;
+
+				if (i < size) // Avoid trailing comma
+				{
+					os << ", ";
+				}
+			}
+		}
+		os << endl;
+
+		return os;
+	}
 
 	const Department& operator+=(Employee& other)
 	{
 		this->addEmployee(other);
 		return *this;
 	}
-
 
 	bool operator()(const char* name); // prints data according to name
 };
