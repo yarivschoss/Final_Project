@@ -11,27 +11,13 @@ int const MAX_STRING_SIZE = 100;
 
 const Patient* Hospital::addPatient(const Patient& patient)
 {
-	if (maxNumOfPatients == numOfPatients)
-	{
-		maxNumOfPatients *= 2;
-		Patient** temp = new Patient * [maxNumOfPatients];
+	patients.push_back(patient);
+	return &(*(--patients.end()));
 
-		for (int i = 0; i < numOfPatients; i++)
-		{
-			temp[i] = patients[i];
-		}
-
-		delete[] patients;
-		patients = temp;
-	}
-
-	patients[numOfPatients] = new Patient(patient);
-	numOfPatients++;
-	return patients[numOfPatients-1];
 }
 
-bool Hospital::addVisit(int patientID, const char* purpose, const char* departmentName,
-	const char* staffName, time_t visitDate, bool isSurgery, int room, bool fasting)
+bool Hospital::addVisit(int patientID, const string& purpose, const string& departmentName,
+	const string& staffName, time_t visitDate, bool isSurgery, int room, bool fasting)
 {
 	// Find the patient by ID
 	Patient* patient = findPatientById(patientID);
@@ -45,22 +31,6 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 	Employee* staff = getEmployee(staffName);
 	if (!staff) return false;
 
-	if (maxNumOfVisits == numOfVisits)
-	{
-		maxNumOfVisits *= 2;
-		Visit** temp = new Visit * [maxNumOfVisits];
-
-		for (int i = 0; i < numOfVisits; i++)
-		{
-			temp[i] = visits[i];
-		}
-
-		delete[] visits;
-		visits = temp;
-	}
-
-	
-
 	// Handling Surgery Visit
 	if (isSurgery)
 	{
@@ -70,20 +40,10 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 			cout << "Error: Surgery visit must have a Surgeon as staff member." << endl;
 			return false;
 		}
-		/*
-		else
-		{
-
-			if (typeid(*staff) == typeid(Surgeon))                //cancel because we want the surgeon can make check
-			{
-				cout << "Error: Checkup visit cannot have a Surgeon as staff member." << endl;
-				return false;
-			}
-			*/
-
-
+	
 		// Create Surgery Visit
-		visits[numOfVisits] = new SurgeryVisit(patient, purpose, department, staff, visitDate, room, fasting);
+		Visit *sv = new SurgeryVisit(patient, purpose, department, staff, visitDate, room, fasting);
+		visits.push_back(sv);
 	}
 	else
 	{
@@ -94,11 +54,10 @@ bool Hospital::addVisit(int patientID, const char* purpose, const char* departme
 			// Allow Surgeon for a Checkup visit
 		}
 		// Create Checkup Visit
-		visits[numOfVisits] = new CheckupVisit(patient, purpose, department, staff, visitDate);
+		Visit* cv = new CheckupVisit(patient, purpose, department, staff, visitDate);
+		visits.push_back(cv);
 	}
 
-	// Increase the number of visits
-	numOfVisits++;
 	return true;
 }
 
@@ -118,54 +77,23 @@ Visit* Hospital::getVisitByPatientId(int patientID) const
 
 Patient* Hospital::findPatientById(int id)
 {
-	for (int i = 0; i < numOfPatients; i++) 
+	vector<Patient>::iterator itr = patients.begin();
+	vector<Patient>::iterator itrEnd = patients.end();
+
+	for (; itr != itrEnd; ++itr) 
 	{
-		if (patients[i]->getId() == id) 
+		if ((*itr).getId() == id)
 		{
-			return patients[i];
+			return &(*itr);
 		}
 	}
 	return nullptr;
 }
 
-Department* Hospital::getDepartmentForPatient(const char* name) const
+bool Hospital::showPatientsInDepartment(const string& departmentName) const
 {
-	for (int i = 0; i < numOfDepartments; i++) 
-	{
-		if (strcmp(departments[i]->getName().c_str(), name) == 0)
-		{
-			return departments[i];
-		}
-	}
-	return nullptr;
-}
-
-Employee* Hospital::getStaff(const char* name) const
-{
-	for (int i = 0; i < numOfEmployees; i++) 
-	{
-		if (strcmp(employees[i]->getName().c_str(), name) == 0)
-		{
-			return employees[i];
-		}
-	}
-
-	return nullptr;
-}
-
-Patient* Hospital::getPatient(int index) const
-{
-	if (index < 0 || index >= numOfPatients) 
-	{
-		return nullptr; // Return nullptr if the index is out of bounds
-	}
-	return patients[index];
-}
- 
-bool Hospital::showPatientsInDepartment(const char* departmentName) const
-{
-	if (!departmentName)
-		return false;
+	vector<Visit*>::const_iterator itr = visits.begin();
+	vector<Visit*>::const_iterator itrEnd = visits.end();
 
 	// Find the department by name
 	const Department* department = getDepartment(departmentName);
@@ -175,17 +103,17 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 	cout << "Patients in department: " << departmentName << endl;
 
 	// Loop through visits to find patients associated with the department
-	for (int i = 0; i < visits.size(); i++)
+	for (; itr != itrEnd; ++itr)
 	{
-		if (visits[i] && visits[i]->getDepartmentForPatient(visits[i]->getPatient()) == department)
+		if (*itr && (*itr)->getDepartmentForPatient((*itr)->getPatient()) == department)
 		{
-			Patient* patient = visits[i]->getPatient(); // Retrieve the patient from the visit
+			Patient* patient = (*itr)->getPatient(); // Retrieve the patient from the visit
 
 			if (patient)
 			{
 				// Get visit date
-				int month = visits[i]->getVisitMonth(); 
-				int day = visits[i]->getVisitDay();
+				int month = (*itr)->getVisitMonth();
+				int day = (*itr)->getVisitDay();
 
 				struct tm timeStruct = {};
 				timeStruct.tm_year = 2025 - 1900;  // Set the year to 2025
@@ -204,13 +132,15 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 				// Display patient details and visit purpose
 				cout << "- " << patient->getName()
 					<< " (ID: " << patient->getId()
-					<< ", purpose: " << visits[i]->getPurpose(); // Display purpose of the visit
+					<< ", purpose: " << (*itr)->getPurpose(); // Display purpose of the visit
 
 				// Determine if it's a checkup or surgery visit
-				if (typeid(*visits[i]) == typeid(SurgeryVisit)) {
+				if (typeid(**itr) == typeid(SurgeryVisit)) 
+				{
 					cout << ", visit type: Surgery";  // Surgery visit
 				}
-				else if (typeid(*visits[i]) == typeid(CheckupVisit)) {
+				else if (typeid(**itr) == typeid(CheckupVisit)) 
+				{
 					cout << ", visit type: Checkup";  // Checkup visit
 				}
 
@@ -220,12 +150,13 @@ bool Hospital::showPatientsInDepartment(const char* departmentName) const
 					<< timeInfo->tm_mday << "/"  
 					<< (timeInfo->tm_mon + 1) << "/"  
 					<< (timeInfo->tm_year + 1900)  
-					<< ", staff member allocated: " << visits[i]->getStaff()->getName()
+					<< ", staff member allocated: " << (*itr)->getStaff()->getName()
 					<< ")" << endl;
 
 				// If it's a surgery visit, display additional info
-				if (typeid(*visits[i]) == typeid(SurgeryVisit)) {
-					SurgeryVisit* surgeryVisit = dynamic_cast<SurgeryVisit*>(visits[i]);
+				if (typeid(**itr) == typeid(SurgeryVisit)) 
+				{
+					SurgeryVisit* surgeryVisit = dynamic_cast<SurgeryVisit*>(*itr);
 					cout << "Surgery Room: " << surgeryVisit->getSurgeryRoomNumber() << endl;
 					cout << "Is the patient fasting? " << (surgeryVisit->getIsFasting() ? "Yes" : "No") << endl;
 				}

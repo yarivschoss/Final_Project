@@ -13,29 +13,32 @@ class Visit
 protected:
     Patient* patient;        // Pointer to the patient
     time_t visitDate;        // Visit date
-    char* purpose;           // Purpose of the visit
+    string purpose;           // Purpose of the visit
     const Department* department;  // Pointer to the department
     Employee* staff;         // Pointer to the staff member (Doctor or Nurse)
 
 public:
     // Constructor
-    Visit(Patient* patient, const char* purpose, const Department* department, Employee* staff, time_t visitDate );
-    virtual const char* getVisitType() const = 0; // Identifies the visit type
+    Visit(Patient* patient, const string& purpose, const Department* department, Employee* staff, time_t visitDate )
+    {
+        setPurpose(purpose);
+    }
+    virtual const string& getVisitType() const = 0; // Identifies the visit type
     virtual time_t getVisitDate() const = 0;  
 
 
     // Destructor
-    virtual ~Visit();
+    virtual ~Visit() { ; }
 
     // Setters
     bool setVisitDate(time_t date);
-    bool setPurpose(const char* purpose);
+    bool setPurpose(const string& purpose);
     bool setDepartment(Department* department);
     bool setStaff(Employee* staff);
 
     // Getters
      
-    const char* getPurpose() const { return purpose; }
+    const string& getPurpose() const { return purpose; }
     const Department* getDepartmentForPatient(const Patient* patient) const 
     {
             if (this->patient == patient)

@@ -7,10 +7,10 @@
 class CheckupVisit : public Visit 
 {
 public:
-    CheckupVisit(Patient* patient, const char* purpose, Department* department, Employee* staff, time_t visitDate);
+    CheckupVisit(Patient* patient, const string& purpose, Department* department, Employee* staff, time_t visitDate);
 
     void show() const override;
-    const char* getVisitType() const override;
+    const string& getVisitType() const override;
 
     time_t getVisitDate() const override
     {

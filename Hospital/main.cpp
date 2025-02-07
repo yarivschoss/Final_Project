@@ -129,7 +129,7 @@ int main()
             hospital.getResearchCenter().showResearchers();
             cout << endl;
             cout << "Choose researcher: ";
-            cin >> name;
+            getline(cin,name);
 
             Researcher* r = hospital.getResearchCenter().getResearcher(name);
 
@@ -156,7 +156,7 @@ int main()
 
             cout << "Choose Researchers" << endl;
             cout << "Researcher 1: ";
-            cin >> name;
+            getline(cin,name);
 
             Researcher* r1 = hospital.getResearchCenter().getResearcher(name);
 
@@ -168,7 +168,7 @@ int main()
             }
 
             cout << "Researcher 2: ";
-            cin >> name;
+            getline(cin,name);
 
             Researcher* r2 = hospital.getResearchCenter().getResearcher(name);
 
@@ -274,7 +274,7 @@ int main()
         case(AddDepartment):
         {
             cout << "Enter department name: ";
-            cin >> name;
+            getline(cin,name);
 
             hospital.addDepartmant(name);
             break;
@@ -306,7 +306,7 @@ int main()
 
                     hospital("doctors");
                     cout << "choose doctor: ";
-                    cin >> name;
+                    getline(cin,name);
 
                     Doctor* D = dynamic_cast<Doctor*>(hospital.getEmployee(name)); //by pointer so we will not create another doctor with the same parameters
 
@@ -318,7 +318,7 @@ int main()
 
                     hospital("departments");
                     cout << "\nchoose department: ";
-                    cin >> name;
+                    getline(cin,name);
 
                     if (!hospital.getDepartment(name)->addEmployee(*D))
                     {
@@ -333,7 +333,7 @@ int main()
                 {
                     hospital.showNurses();
                     cout << "choose nurse: ";
-                    cin >> name;
+                    getline(cin,name);
 
                     Nurse* N = dynamic_cast<Nurse*>(hospital.getEmployee(name)); //by pointer so we will not create another nurse with the same parameters
 
@@ -346,7 +346,7 @@ int main()
 
                     hospital.showDepartments();
                     cout << "\nchoose department: ";
-                    cin >> name;
+                    getline(cin,name);
 
                     if (!hospital.getDepartment(name)->addEmployee(*N))
                     {
@@ -362,7 +362,7 @@ int main()
                 {
                     hospital("surgeons");
                     cout << "choose surgeon: ";
-                    cin >> name;
+                    getline(cin,name);
 
                     Surgeon* S = dynamic_cast<Surgeon*>(hospital.getEmployee(name)); //by pointer so we will not create another doctor with the same parameters
 
@@ -374,7 +374,7 @@ int main()
 
                     hospital("departments");
                     cout << "\nchoose department: ";
-                    cin >> name;
+                    getline(cin,name);
 
                     if (!hospital.getDepartment(name)->addEmployee(*S))
                     {
@@ -407,13 +407,9 @@ int main()
 
         case (AddPatient): {
             // Get patient details from the user
-            char name[MAX_STRING_SIZE];
-            int birthYear;
-            char gender;
 
             cout << "Enter patient's name: ";
-            cin.ignore(); // Clear the input buffer
-            cin.getline(name, MAX_STRING_SIZE);
+            getline(cin, name);
 
             cout << "Enter patient's birth year: ";
             cin >> birthYear;
@@ -452,7 +448,7 @@ int main()
             bool isSurgery = false;
             int room = 0;
             bool fasting = false;
-            char purpose[MAX_STRING_SIZE], departmentName[MAX_STRING_SIZE], staffName[MAX_STRING_SIZE];
+            string purpose, departmentName, staffName;
 
             cout << "Is the patient already in the system? (y/n): ";
             char isExisting;
@@ -461,15 +457,16 @@ int main()
             if (isExisting == 'n' || isExisting == 'N')
             {
                 // Add a new patient
-                cin.ignore();
                 cout << "Enter patient's name: ";
-                cin >> name;
+                cin.ignore();
+                getline(cin,name);
 
                 cout << "Enter patient's birth year: ";
                 cin >> birthYear;
 
                 cout << "Enter patient's gender (m/f): ";
                 cin >> gender;
+                cin.ignore();
 
                 Patient p(Person(name, birthYear, gender));
 
@@ -531,8 +528,8 @@ int main()
             hospital.showDepartments();
 
             cout << "Enter department name: ";
-            cin.ignore();  // To clear any remaining newline characters
-            cin.getline(departmentName, MAX_STRING_SIZE);
+            cin.ignore();
+            getline(cin, departmentName);
 
             const Department* department = hospital.getDepartment(departmentName);
             if (!department)
@@ -555,7 +552,7 @@ int main()
             }
 
             cout << "Enter staff name: ";
-            cin.getline(staffName, MAX_STRING_SIZE);
+            getline(cin, staffName);
 
             const Employee* staff = hospital.getEmployee(staffName);
             if (!staff)
@@ -564,31 +561,24 @@ int main()
                 break;
             }
 
-       
             // Ask for visit date
-
-
                 int month, day;
                 char separator;
 
                 cout << "Enter visit date (MM-DD): ";
                 cin >> month >> separator >> day;
 
-
                 struct tm timeStruct = {};
                 timeStruct.tm_year = 2025 - 1900;  
                 timeStruct.tm_mon = month - 1;     
                 timeStruct.tm_mday = day;          
                 
-
                 time_t visitDate = mktime(&timeStruct);
 
-
             // Ask for the purpose of the visit
-                cout << "Enter visit purpose: ";
-            cin.ignore();  // To clear the input buffer from previous cin
-            cin.getline(purpose, MAX_STRING_SIZE);
-
+            cout << "Enter visit purpose: ";
+            cin.ignore();
+            getline(cin,purpose);
 
             // Add the visit to the hospital
             if (hospital.addVisit(patientID, purpose, departmentName, staffName, visitDate, isSurgery, room, fasting))
@@ -609,7 +599,7 @@ int main()
             hospital.showDepartments();
 
             cout << "Enter department name from the list: ";
-            cin >> name;
+            getline(cin,name);
 
             hospital.showPatientsInDepartment(name.c_str());
             break;
@@ -630,12 +620,14 @@ int main()
 
             // Find the patient by ID
             Patient* patient = hospital.findPatientById(patientID);
-            if (patient) {
+            if (patient) 
+            {
                 cout << "Patient Name: " << patient->getName() << endl;
 
                 // Find the visit associated with the patient
                 Visit* visit = hospital.getVisitByPatientId(patientID);
-                if (visit) {
+                if (visit) 
+                {
                     // Pass the patient to the function as a parameter
                    const Department* department = visit->getDepartmentForPatient(patient);
                     if (department) {

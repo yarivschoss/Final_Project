@@ -20,7 +20,7 @@ protected:
         string name;
 
         cout << "Enter name: ";
-        in >> name;
+        getline(in,name);
         p.setName(name);
 
         cout << "Enter gender(m/f): ";

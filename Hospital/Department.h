@@ -17,7 +17,8 @@ class Department
 
 public:
 
-	int const MAX_DEPARTMENT_SIZE = 20; // Max size of department
+	friend class Hospital;
+//	int const MAX_DEPARTMENT_SIZE = 20; // Max size of department
 	
 private:
 
@@ -25,9 +26,8 @@ private:
 	
 
 	vector<Employee*> employees;
-
-	void operator=(const Department& other) = delete; // coping a department is not allowed
-	Department(const Department& other) = delete; // coping a department is not allowed 
+	// unable to use default c'tor as private member due to C2248 error (visual studio/C++ bug)
+	//Department(const Department& other)  = default; // coping a department is not allowed 
 
 public:
 
@@ -74,7 +74,7 @@ public:
 		cout << "{";
 		for (int i = 1; itr != itrEnd; ++itr, i++)
 		{
-			if (typeid(*itr) == typeid(Surgeon))
+			if (typeid(**itr) == typeid(Surgeon))
 			{
 				cout << (*itr)->getName();
 
@@ -94,7 +94,7 @@ public:
 		cout << "{";
 		for (int i = 1; itr != itrEnd; ++itr, i++)
 		{
-			if (typeid(*itr) == typeid(Doctor) || typeid(*itr) == typeid(ResearcherDoctor) || typeid(*itr) == typeid(Surgeon))
+			if (typeid(**itr) == typeid(Doctor) || typeid(**itr) == typeid(ResearcherDoctor) || typeid(**itr) == typeid(Surgeon))
 			{
 				cout << (*itr)->getName();
 
@@ -114,7 +114,7 @@ public:
 		cout << "{";
 		for (int i = 1; itr != itrEnd; ++itr, i++)
 		{
-			if (typeid(*itr) == typeid(Nurse))
+			if (typeid(**itr) == typeid(Nurse))
 			{
 				cout << (*itr)->getName();
 
@@ -138,7 +138,7 @@ public:
 		os << "\ndoctors: " << endl; //showing doctors in department
 		for (int i = 1; itr != itrEnd; ++itr, i++)
 		{
-			if (typeid(*itr) == typeid(Doctor) || typeid(*itr) == typeid(ResearcherDoctor) || typeid(*itr) == typeid(Surgeon))
+			if (typeid(**itr) == typeid(Doctor) || typeid(**itr) == typeid(ResearcherDoctor) || typeid(**itr) == typeid(Surgeon))
 			{
 				os << *itr;
 
@@ -155,7 +155,7 @@ public:
 		cout << "nurses: " << endl; //showing nurses in department
 		for (int i = 1; itr != itrEnd; ++itr, i++)
 		{
-			if (typeid(*itr) == typeid(Nurse))
+			if (typeid(**itr) == typeid(Nurse))
 			{
 				os << *itr;
 

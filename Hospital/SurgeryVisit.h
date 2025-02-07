@@ -11,11 +11,11 @@ private:
     time_t visitDate;  
 
 public:
-    SurgeryVisit(Patient* patient, const char* purpose, Department* department, 
+    SurgeryVisit(Patient* patient, const string& purpose, Department* department,
         Employee* staff, time_t visitDate, int room, bool fasting);
 
     void show() const override;
-    const char* getVisitType() const override;
+    virtual const string& getVisitType() const override;
 
     time_t getVisitDate() const override
     {

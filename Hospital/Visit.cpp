@@ -3,18 +3,6 @@
 #include <cstring>
 using namespace std;
 
-// Constructor
-Visit::Visit(Patient* patient, const char* purpose,const Department* department, Employee* staff, time_t visitDate)
-    : patient(patient), department(department), staff(staff), visitDate(visitDate), purpose(nullptr)
-{
-    setPurpose(purpose);
-}
-
-// Destructor
-Visit::~Visit()
-{
-    delete[] purpose;
-}
 
 // Setters
  bool Visit::setVisitDate(time_t date)
@@ -25,13 +13,9 @@ Visit::~Visit()
     return true;
 }
 
-bool Visit::setPurpose(const char* purpose)
+bool Visit::setPurpose(const string& purpose)
 {
-    if (!purpose) return false;  // Check if the provided name is valid
-
-    delete[] this->purpose;  // Free previously allocated memory
-    this->purpose = new char[strlen(purpose) + 1];  // Allocate new memory for the name
-    strcpy(this->purpose, purpose);  // Copy the name
+    this->purpose = purpose;
     return true;
 }
 

@@ -84,7 +84,7 @@ public:
 		string name;
 
 		cout << "Enter Research Center name: ";
-		in >> name;
+		getline(in, name);
 		r.setName(name);
 
 		return in;

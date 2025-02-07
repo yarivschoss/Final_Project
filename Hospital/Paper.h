@@ -57,11 +57,11 @@ public:
 		string name;
 
 		cout << "Enter paper name: ";
-		in >> name;
+		getline(in,name);
 		p.setName(name);
 
 		cout << "Enter published magazine name: ";
-		in >> name;
+		getline(in,name);
 		p.setMagazineName(name);
 
 		cout << "Enter publish date (YYYY-MM-DD): ";

@@ -7,12 +7,14 @@ class Patient : public Person
 {
 
 public:
-    friend class Hospital;
+
+    //friend class Department;
 
 private:
     int id;         
 
-    Patient(const Patient& other) : Person(other)  { *this = other; } 
+   // unable to use default c'tor as private member due to C2248 error (visual studio/C++ bug)
+   // Patient(const Patient& other) : Person(other)  { *this = other; } 
     
 
 public:
@@ -23,6 +25,8 @@ public:
     int getId() const { return id; }
  
     friend ostream& operator<<(ostream& os, const Patient& p);
+
+    friend class Hospital;
 };
 
 #endif // __PATIENT_H

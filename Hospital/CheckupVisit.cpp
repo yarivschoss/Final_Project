@@ -5,7 +5,7 @@
 using namespace std;
 
 
-CheckupVisit::CheckupVisit(Patient* patient, const char* purpose, 
+CheckupVisit::CheckupVisit(Patient* patient, const string& purpose,
     Department* department, Employee* staff, time_t visitDate)
     : Visit(patient, purpose, department, staff, visitDate)
 {
@@ -32,7 +32,7 @@ void CheckupVisit::show() const
 }
 
 
-const char* CheckupVisit::getVisitType() const
+const string& CheckupVisit::getVisitType() const
 {
     return "Checkup";
 }
