@@ -4,6 +4,9 @@
 using namespace std;
 
 
+
+
+
 // Setters
  bool Visit::setVisitDate(time_t date)
 {
@@ -34,6 +37,25 @@ bool Visit::setStaff(Employee* staff)
     this->staff = staff;
     return true;
 }
+
+
+
+
+const Department* Visit::getDepartmentForPatient(const Patient* patient) const
+{
+    cout << "Debug: Visit patient: " << this->patient->getName()
+        << ", Input patient: " << patient->getName() << endl;
+
+    if (this->patient == patient)
+    {
+        return department;
+    }
+
+    return nullptr;
+}
+
+
+
 
 // Display function
 void Visit::show() const
@@ -116,6 +138,10 @@ ostream& operator<<(ostream& os, const Visit& v)
 
     return os;
 }
+
+
+
+
 
 
 

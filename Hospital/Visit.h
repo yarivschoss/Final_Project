@@ -19,10 +19,12 @@ protected:
 
 public:
     // Constructor
-    Visit(Patient* patient, const string& purpose, const Department* department, Employee* staff, time_t visitDate )
+    Visit(Patient* patient, const string& purpose, const Department* department, Employee* staff, time_t visitDate)
+        : patient(patient), purpose(purpose), department(department), staff(staff), visitDate(visitDate)
     {
-        setPurpose(purpose);
+       
     }
+
     virtual const string& getVisitType() const = 0; // Identifies the visit type
     virtual time_t getVisitDate() const = 0;  
 
@@ -39,15 +41,12 @@ public:
     // Getters
      
     const string& getPurpose() const { return purpose; }
-    const Department* getDepartmentForPatient(const Patient* patient) const 
-    {
-            if (this->patient == patient)
-            {
-                return department; // Return the department if the patient matches
-            }
-            return nullptr; // Return nullptr if no match
-        
-    }
+    const Department* getDepartmentForPatient(const Patient* patient) const;
+
+
+
+
+
     Employee* getStaff() const { return staff;  }
     Patient* getPatient() const { return patient;  }
 

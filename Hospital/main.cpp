@@ -41,7 +41,7 @@ int main()
         cout << "5. Add Paper to Researcher" << endl; 
         cout << "6. Add Patient" << endl;
         cout << "7. Add Visit" << endl;
-        cout << "8. Show Patients by Department" << endl; 
+        cout << "8. Show Patients visits by Department" << endl; 
         cout << "9. Find Patient by ID" << endl;
         cout << "10. Show system's info" << endl;
         cout << "11. Compare Researchers by number of papers" << endl;
@@ -596,6 +596,7 @@ int main()
         case (ShowPatientsByDepartment):
         {
             // Show patients by department
+
             hospital.showDepartments();
 
             cout << "Enter department name from the list: ";
@@ -607,7 +608,7 @@ int main()
 
         case (FindPatientById):
         {
-            // Display all patient IDs
+            // Display existing patient IDs
             cout << "Existing patient IDs:" << endl;
             for (int i = 0; i < hospital.getNumOfPatients(); ++i)
             {
@@ -620,25 +621,22 @@ int main()
 
             // Find the patient by ID
             Patient* patient = hospital.findPatientById(patientID);
-            if (patient) 
+            if (patient)
             {
+                // Print patient name
                 cout << "Patient Name: " << patient->getName() << endl;
 
                 // Find the visit associated with the patient
                 Visit* visit = hospital.getVisitByPatientId(patientID);
-                if (visit) 
+                if (visit)
                 {
-                    // Pass the patient to the function as a parameter
-                   const Department* department = visit->getDepartmentForPatient(patient);
-                    if (department) {
-                        cout << "Assigned Department: " << department->getName() << endl;
-                    }
-                    else {
-                        cout << "No department assigned yet." << endl;
-                    }
-
-                    // Show the visit type (checkup or surgery)
-                    cout << "Visit Type: " << visit->getVisitType() << endl;
+                    // Check and display visit type (Checkup or Surgery)
+                    if (typeid(*visit) == typeid(SurgeryVisit))
+                        cout << "Visit Type: Surgery" << endl;
+                    else if (typeid(*visit) == typeid(CheckupVisit))
+                        cout << "Visit Type: Checkup" << endl;
+                    else
+                        cout << "Visit Type: Unknown" << endl;
                 }
                 else {
                     cout << "No visit found for the patient." << endl;
@@ -649,6 +647,10 @@ int main()
             }
             break;
         }
+
+
+
+
 
         case (ShowInfo):
         {
