@@ -19,7 +19,7 @@ private:
 
 public:
     Patient(const Person& p) : Person(p) { id = 100000000 + counter++; }
-    virtual ~Patient() { cout << "end patient" << endl; } // consule out for debugging
+    virtual ~Patient() { ; } // consule out for debugging
 
     
     int getId() const { return id; }

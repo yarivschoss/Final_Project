@@ -35,10 +35,8 @@ public:
 	{
 		setName(name);
 	}
-	virtual ~Department()
-	{
-		cout << "Destroy Department" << endl;
-	}
+	virtual ~Department() { ; }
+	
 
 	operator int const() const { return employees.capacity(); } // returns size of department staff
 	operator const string () const { return getName(); } // returns name of department

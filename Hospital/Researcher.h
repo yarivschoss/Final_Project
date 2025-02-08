@@ -5,6 +5,7 @@
 #include "Paper.h"
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Researcher : virtual public Employee
@@ -15,31 +16,42 @@ public:
 	friend class ResearchCenter;
 
 protected:
-	int numOfPapers, maxNumOfPapers;
-	Paper** papers;
+	vector<Paper> papers;
 
-	Researcher(const Researcher& other) : Employee(other) { *this = other; }
-	const Researcher& operator=(const Researcher& other);
-	
-	bool setPapers(Paper* const* papers); // changing the pointers in the array of pointer to Paper is not allowed 
-	
 public:
-	Researcher(const Employee& r) : Employee(r), maxNumOfPapers(DEFAULT_NUM_OF_PAPERS), numOfPapers(0)
-	{ papers = new Paper * [maxNumOfPapers]; }
-	virtual ~Researcher();
+	Researcher(const Employee& r) : Employee(r) { papers.reserve(DEFAULT_NUM_OF_PAPERS); }
+	virtual ~Researcher() { ; }
 	
 
-	int getNumOfPapers() const { return numOfPapers; }
-	const Paper* getPaper(int index) const { return papers[index]; }
+	int getNumOfPapers() const { return papers.size(); }
+	const Paper* getPaper(int index) const 
+	{ 
+		if (index < 0) return nullptr;
+
+		vector<Paper>::const_iterator itr = papers.begin();
+		vector<Paper>::const_iterator itrEnd = papers.end();
+
+		for (int i = 0; i < index; ++itr, i++);
+		return &(*itr);
+	}
 	
-	bool addPaper(const Paper& paper);
+	bool addPaper(const Paper& paper)
+	{
+		papers.push_back(paper);
+		return true;
+	}
 	void showPapers() const
 	{ 
-		for (int i = 0; i < numOfPapers; i++)
+		vector<Paper>::const_iterator itr = papers.begin();
+		vector<Paper>::const_iterator itrEnd = papers.end();
+
+		int size = papers.size();
+
+		for (int i = 0; itr!=itrEnd ; ++itr, i++)
 		{
-			cout << "{" << *papers[i] << "}";
+			cout << "{" << *itr << "}";
 				
-			if (i < numOfPapers - 1) cout << ", ";
+			if (i < size) cout << ", ";
 		}
 	}
 
@@ -58,11 +70,11 @@ public:
 		return in;
 	}
 	
-	bool operator>(const Researcher& other) const { return this->numOfPapers > other.numOfPapers; }
-	bool operator< (const Researcher& other) const { return this->numOfPapers < other.numOfPapers; }
-	bool operator>= (const Researcher& other) const { return this->numOfPapers >= other.numOfPapers; }
-	bool operator<= (const Researcher& other) const { return this->numOfPapers <= other.numOfPapers; }
-	bool operator== (const Researcher& other) const { return this->numOfPapers == other.numOfPapers; }
+	bool operator>(const Researcher& other) const { return this->papers.size() > other.papers.size(); }
+	bool operator< (const Researcher& other) const { return this->papers.size() < other.papers.size(); }
+	bool operator>= (const Researcher& other) const { return this->papers.size() >= other.papers.size(); }
+	bool operator<= (const Researcher& other) const { return this->papers.size() <= other.papers.size(); }
+	bool operator== (const Researcher& other) const { return this->papers.size() == other.papers.size(); }
 };
 
 #endif //__RESEARCHER_H

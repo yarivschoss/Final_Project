@@ -28,7 +28,7 @@ public:
 	Nurse(const Employee& n, const int& experience) : Employee(n), department(nullptr), 
 		experience(experience) { ; }
 
-	virtual ~Nurse() { cout << "fire Nurse" << endl; }
+	virtual ~Nurse() { ; }
 
 	inline bool setExperience(const int& experience);
 	virtual bool setDepartment(Department* department) override;

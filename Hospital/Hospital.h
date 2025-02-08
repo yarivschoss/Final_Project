@@ -58,8 +58,6 @@ public:
 		vector<Visit*>::iterator visitsitrEnd = visits.end();
 		for (; visitsitr != visitsitrEnd; ++visitsitr) // End Visits
 			delete* visitsitr;
-
-		cout << "Destroy Hospital" << endl;
 	}
 	
 	friend ostream& operator<<(ostream& os, const Hospital& h)

@@ -29,7 +29,7 @@ public:
 	Doctor(const Employee& d, const eOccupation occupation) : Employee(d), department(nullptr), 
 		occupation(occupation) { ; }
 
-	virtual ~Doctor() { cout << "fire Doctor" << endl; }
+	virtual ~Doctor() { ; }
 	
 	virtual bool setDepartment(Department* department) override;
 

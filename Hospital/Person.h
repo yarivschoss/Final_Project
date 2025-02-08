@@ -55,7 +55,7 @@ public:
    
     virtual ~Person()  // Virtual destructor to ensure proper memory management if needed
     {
-        cout << "end person" << endl;
+        ;
     }
 
     bool setName(const string& name) // Sets the person's name

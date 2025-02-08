@@ -26,9 +26,10 @@ public:
 		setName(name);
 		setMagazineName(magazineName);
 	}
+	Paper(const Paper& other) = default;
 	~Paper()
 	{
-		cout << "burning paper" << endl;
+		;
 	}
 
 	bool setName(const string& name) // Sets the paper's name

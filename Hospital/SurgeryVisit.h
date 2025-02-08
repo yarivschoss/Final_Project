@@ -4,7 +4,8 @@
 #include "Visit.h"
 #include "Employee.h"  
 
-class SurgeryVisit : public Visit {
+class SurgeryVisit : public Visit 
+{
 private:
     int surgeryRoomNumber;
     bool isFasting;

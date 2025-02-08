@@ -23,7 +23,7 @@ public:
 
     Employee(const Person& e) : Person(e) { employeeNumber = 100000000 + counter++; }
    
-    virtual ~Employee() { cout << "fire employee" << endl; } // console out for debugging
+    virtual ~Employee() { ; } 
 
     const int getEmployeeNumber() const { return employeeNumber; }
 

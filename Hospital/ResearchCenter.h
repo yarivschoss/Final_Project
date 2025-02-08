@@ -31,8 +31,6 @@ public:
 
 		for (; itr != itrEnd; ++itr) // fire researchers
 			delete* itr; // using iterator operator*
-
-		cout << "destroy Research Center" << endl;
 	}
 	
 
