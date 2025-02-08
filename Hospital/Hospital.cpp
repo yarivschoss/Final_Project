@@ -16,9 +16,6 @@ const Patient* Hospital::addPatient(const Patient& patient)
 
 }
 
-
-
-
 bool Hospital::addVisit(int patientID, const string& purpose, const string& departmentName,
 	const string& staffName, time_t visitDate, bool isSurgery, int room, bool fasting)
 {
@@ -64,8 +61,6 @@ bool Hospital::addVisit(int patientID, const string& purpose, const string& depa
 	return true;
 }
 
-
-
 Visit* Hospital::getVisitByPatientId(int patientID) const 
 {
 	// Loop through all visits
@@ -94,8 +89,6 @@ Patient* Hospital::findPatientById(int id)
 	}
 	return nullptr;
 }
-
-
 
 bool Hospital::showPatientsInDepartment(const string& departmentName) const
 {

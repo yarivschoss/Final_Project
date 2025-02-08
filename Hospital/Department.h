@@ -140,7 +140,7 @@ public:
 		{
 			if (typeid(**itr) == typeid(Doctor) || typeid(**itr) == typeid(ResearcherDoctor) || typeid(**itr) == typeid(Surgeon))
 			{
-				os << *itr;
+				os << **itr;
 
 				if (i < size) // Avoid trailing comma
 				{
@@ -157,7 +157,7 @@ public:
 		{
 			if (typeid(**itr) == typeid(Nurse))
 			{
-				os << *itr;
+				os << **itr;
 
 				if (i < size) // Avoid trailing comma
 				{
