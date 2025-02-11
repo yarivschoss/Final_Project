@@ -648,10 +648,6 @@ int main()
             break;
         }
 
-
-
-
-
         case (ShowInfo):
         {
             enum eChoiceShow { ShowDepartments = 1, ShowAllDoctors, ShowAllSurgeons, ShowAllNurses, ShowHospitalStaff, ShowResearchers, ClearConsole, eReturn };
