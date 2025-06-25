@@ -16,7 +16,6 @@
 4. [Getting Started](#getting-started)  
 5. [Building](#building)  
 6. [Sample Run](#sample-run)  
-7. [License](#license)  
 
 ---
 
@@ -130,7 +129,3 @@ Enter your choice: _
 
 *(Options cascade into sub‑menus for adding specific staff types, researchers, papers, etc.)*
 
----
-
-## License
-Distributed under the **MIT License** — see [`LICENSE`](LICENSE) for details.
